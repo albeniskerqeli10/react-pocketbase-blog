@@ -9,23 +9,26 @@ const Home: FC = () => {
 
   useEffect(() => {
     console.log('rerendered');
+
     const getBlogs = async () => {
       const blogs: BlogType[] = await pb.collection('blogs').getFullList({
         sort: '-created',
         expand: 'user',
       });
+
       if (blogs) {
         setBlogs(blogs);
       }
     };
-    void getBlogs();
-    void pb.collection('blogs').subscribe('*', function (e) {
+
+    getBlogs();
+    pb.collection('blogs').subscribe('*', function (e) {
       const newBlog = e.record;
       setBlogs((prevBlogs: BlogType[]) => [newBlog, ...prevBlogs] as BlogType[]);
     });
 
     return () => {
-      void pb.collection('blogs').unsubscribe();
+      pb.collection('blogs').unsubscribe();
     };
   }, []);
 

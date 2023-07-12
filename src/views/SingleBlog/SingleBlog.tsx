@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
 import { useState, useEffect, ChangeEvent, FormEvent, FC, startTransition } from 'react';
-import { Box, Button, Heading, Image, Spinner, Text, Wrap } from '@chakra-ui/react';
+import { Box, Button, Heading, Image, Text, Wrap } from '@chakra-ui/react';
 import { AppState, useStore } from '../../lib/store';
 import EditBlogModal from '../../components/EditBlogModal';
 import { BlogFormValues, BlogType } from '../../types/Blog';
@@ -98,7 +98,7 @@ const SingleBlog: FC = () => {
     });
   };
   if (!blog) {
-    return <Spinner />;
+    return null;
   }
 
   return (
@@ -173,13 +173,11 @@ const SingleBlog: FC = () => {
           />
         )}
         <Text color='white'>@{blog?.expand?.user?.username}</Text>
-        <Text color='gray.300'>
+        <Box color='gray.300'>
           <TimeAgo live={false} datetime={blog.created as string} />
-        </Text>
+        </Box>
       </Box>
-      <Text color='white' bgColor='transparent'>
-        {contentElements}
-      </Text>
+      {contentElements}
     </Box>
   );
 };
