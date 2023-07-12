@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  background-color: #1b1b1d;
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.chakra-modal__content-container {
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.1); /* Black w/ opacity */
+}

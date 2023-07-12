@@ -1,0 +1,45 @@
+{
+  "name": "nextbigthing",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": "Albenis Kerqeli",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.7.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.5",
+    "date-fns": "^2.30.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "framer-motion": "^10.12.18",
+    "pocketbase": "^0.15.2",
+    "prettier": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1",
+    "timeago-react": "^3.0.6",
+    "vite-eslint-plugin": "^1.9.2",
+    "zustand": "^4.3.9"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-react": "^4.0.1",
+    "eslint": "^8.44.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.0"
+  }
+}
