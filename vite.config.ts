@@ -13,7 +13,7 @@ export default defineConfig({
     }),
   ],
 
-  base: './',
+  base: '/',
   // server: {
   //   port: 3000,
   // },
