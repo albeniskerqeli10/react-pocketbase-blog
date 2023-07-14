@@ -1,9 +1,4 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import { Suspense, lazy, FC } from 'react';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -14,6 +9,7 @@ const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
 const Login = lazy(() => import('./routes/Login/Login'));
 const SignUp = lazy(() => import('./routes/SignUp/SignUp'));
 const Profile = lazy(() => import('./routes/Profile/Profile'));
+import User from './routes/User/User';
 const Router: FC = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -61,6 +57,16 @@ const Router: FC = () => {
             <Suspense fallback={<Spinner />}>
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path='user/:id'
+          element={
+            <Suspense fallback={<Spinner />}>
+              <ProtectedRoute>
+                <User />
               </ProtectedRoute>
             </Suspense>
           }

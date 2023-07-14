@@ -1,14 +1,14 @@
 import { LinkBox, Image, LinkOverlay, Heading, Box, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { BlogType } from '../../types/Blog';
-import { FC } from 'react';
-const Blog: FC<BlogType> = ({ id, title, image, avatar, shouldLazyLoad, username }) => {
+import { FC, memo } from 'react';
+const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, width, shouldPreload, username }) => {
   return (
     <LinkBox
       className='blog'
       key={id}
       as='article'
-      width='600px'
+      width={width}
       boxShadow='lg'
       pb='10px'
       bgColor='black'
@@ -24,7 +24,7 @@ const Blog: FC<BlogType> = ({ id, title, image, avatar, shouldLazyLoad, username
           decoding='async'
           width='100%'
           objectFit='cover'
-          fetchpriority='auto'
+          fetchpriority={shouldPreload}
           loading={shouldLazyLoad}
           htmlWidth='600'
           htmlHeight='300'
@@ -45,8 +45,24 @@ const Blog: FC<BlogType> = ({ id, title, image, avatar, shouldLazyLoad, username
           py='10px'
           flexDirection='row'
         >
-          <Image src={avatar} alt=' author avatar' width='30px' rounded='3xl' height='30px' />
-          <Text as={Link} to={`/user/${id}`} color='white' bgColor='transparent'>
+          <Image
+            fetchpriority={shouldPreload}
+            loading={shouldLazyLoad}
+            src={avatar}
+            alt=' author avatar'
+            width='30px'
+            rounded='3xl'
+            height='30px'
+          />
+          <Text
+            as={Link}
+            to={`/user/${user}`}
+            _hover={{
+              textDecoration: 'underline',
+            }}
+            color='white'
+            bgColor='transparent'
+          >
             {username}
           </Text>
         </Box>
@@ -58,4 +74,4 @@ const Blog: FC<BlogType> = ({ id, title, image, avatar, shouldLazyLoad, username
   );
 };
 
-export default Blog;
+export default memo(Blog);

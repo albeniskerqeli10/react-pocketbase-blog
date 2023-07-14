@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
 import { useState, useEffect, FC } from 'react';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
@@ -102,7 +102,7 @@ const SingleBlog: FC = () => {
               <Image src={blog?.expand?.user?.avatar} rounded='full' width='40px' height='40px' alt='avatar' />
             )}
             <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
-              <Text color='white' fontSize='lg'>
+              <Text as={Link} to={`/user/${blog?.user}`} color='white' fontSize='lg'>
                 {blog?.expand?.user?.username}
               </Text>
 

@@ -1,26 +1,34 @@
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { useEffect, Suspense, lazy, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import Spinner from '../../components/Spinner/Spinner';
-import { useStore, AppState } from '../../lib/store';
-import { ExtendedUser } from '../../types/Auth';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-const Profile = () => {
-  const currentUser = useStore((state: AppState) => state.user);
+const User = () => {
+  const { id } = useParams();
   const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
+  const navigate = useNavigate();
   useEffect(() => {
     const getUser = async () => {
-      const userProfile = await pb.collection('users').getOne(currentUser?.id as string, {
-        expand: 'blogs(user)',
-      });
-      if (userProfile) {
-        setUser(userProfile);
+      try {
+        const user = await pb.collection('users').getOne(id as string, {
+          expand: 'blogs(user)',
+        });
+        if (user) {
+          setUser(user);
+        }
+      } catch (err: unknown) {
+        const errorResponse = err as ErrorResponse;
+        if (errorResponse.status === 404) {
+          navigate('/');
+        }
       }
     };
     getUser();
-  }, [currentUser]);
+  }, [id, navigate]);
 
   useEffect;
   return (
@@ -45,9 +53,9 @@ const Profile = () => {
           my='20px'
           alignItems='center'
           justifyContent='start'
-          flexWrap='wrap'
           bgColor='black'
           flexDirection='row'
+          flexWrap='wrap'
         >
           <Image src={user.avatar} alt='user avatar' rounded='sm' width='70px' height='70px' />
 
@@ -64,9 +72,8 @@ const Profile = () => {
               {user.username}
             </Heading>
             <Text fontSize='14px' color='gray.300' bgColor='transparent'>
-              You joined{' '}
+              Joined{' '}
               <TimeAgo
-                live={false}
                 style={{
                   backgroundColor: 'transparent',
                   color: 'inherit',
@@ -117,4 +124,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default User;

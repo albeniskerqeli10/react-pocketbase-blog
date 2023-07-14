@@ -46,6 +46,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
           image: image,
           user: user?.id,
           likes: [],
+          
         });
 
         onClose();

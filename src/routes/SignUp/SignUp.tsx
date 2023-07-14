@@ -59,14 +59,7 @@ const SignUp: FC = () => {
   }, [user, navigate]);
 
   return (
-    <Flex
-      width='100%'
-      minH='80vh'
-      alignItems='center'
-      justifyContent='center'
-      flexWrap='wrap'
-      flexDirection='row'
-    >
+    <Flex width='100%' minH='80vh' alignItems='center' justifyContent='center' flexWrap='wrap' flexDirection='row'>
       <Box
         onSubmit={handleAuth}
         as='form'
@@ -82,14 +75,7 @@ const SignUp: FC = () => {
         minH='450px'
         flexDirection='column'
       >
-        <Heading
-          fontWeight='bold'
-          alignSelf='center'
-          fontSize='2xl'
-          bgColor='transparent'
-          color='white'
-          py='5px'
-        >
+        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='5px'>
           Sign Up
         </Heading>
 
@@ -150,12 +136,7 @@ const SignUp: FC = () => {
           />
         </FormControl>
         {error && (
-          <Text
-            borderBottomColor='red.500'
-            borderBottomWidth='2px'
-            bgColor='transparent'
-            color='white'
-          >
+          <Text borderBottomColor='red.500' borderBottomWidth='2px' bgColor='transparent' color='white'>
             {error}
           </Text>
         )}

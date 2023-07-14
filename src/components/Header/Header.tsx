@@ -35,7 +35,7 @@ const Header: FC = () => {
           textDecoration: 'none',
         }}
         to='/'
-        fontSize='xl'
+        fontSize={['sm', 'md', 'xl']}
         fontWeight='bold'
         color='white'
       >
@@ -44,7 +44,7 @@ const Header: FC = () => {
       <Wrap display='flex' alignItems='end' justifyContent='end' flexDirection='row'>
         {user !== null ? (
           <>
-            <Button fontWeight='normal' onClick={handleModalClick} size='md' colorScheme='red'>
+            <Button fontWeight='normal' onClick={handleModalClick} size={['sm', 'md', 'md']} colorScheme='red'>
               Create
             </Button>
             <CreateBlogModal isOpen={isOpen} onClose={onClose} />
@@ -58,6 +58,7 @@ const Header: FC = () => {
                   border: 'none',
                 }}
                 border='0'
+                size={['sm', 'md', 'md']}
                 bgColor='transparent'
                 as={Button}
               >

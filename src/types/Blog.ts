@@ -6,6 +6,10 @@ export type BlogType = Partial<Record> & {
   content?: string;
   image: string;
   likes: Array<string>;
+  shouldLoad?: 'lazy' | 'eager';
+  shouldPreload?: 'auto' | 'high' | 'low';
+  width?: string;
+  user?: string;
   expand?: {
     user: {
       id: string;

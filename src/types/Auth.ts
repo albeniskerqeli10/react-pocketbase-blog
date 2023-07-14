@@ -1,4 +1,5 @@
 import { Record, Admin } from 'pocketbase';
+import { BlogType } from './Blog';
 
 export interface User {
   id: string;
@@ -7,6 +8,10 @@ export interface User {
   email: string;
   avatar?: string;
   verified?: boolean;
+  created?: Date;
+  expand?: {
+    blogs: BlogType[];
+  };
 }
 
 export type LoginFormValues = {
