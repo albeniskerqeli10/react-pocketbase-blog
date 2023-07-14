@@ -1,30 +1,24 @@
 import { Box, Button, Flex, FormControl, FormLabel, Heading, Text, Input } from '@chakra-ui/react';
-import { useState, useEffect, FC, ChangeEvent, FormEvent, startTransition } from 'react';
+import { useState, useEffect, FC, FormEvent, startTransition } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser, SignUpFormValues } from '../../types/Auth';
+import useForm from '../../hooks/useForm';
 const SignUp: FC = () => {
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
   const setUser = useStore((state: AppState) => state.setUser);
-  const [inputFormValues, setInputFormValues] = useState<SignUpFormValues>({
+  const { values, handleChange, resetForm } = useForm<SignUpFormValues>({
     email: '',
     username: '',
     password: '',
   });
-  const [error, setError] = useState('');
-  const { email, username, password } = inputFormValues;
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputFormValues({
-      ...inputFormValues,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [error, setError] = useState('');
+  const { email, username, password } = values;
 
   const handleAuth = async (e: FormEvent<HTMLFormElement>) => {
-    e.stopPropagation();
     e.preventDefault();
     try {
       if (email !== '' || username !== '' || password !== '') {
@@ -44,6 +38,7 @@ const SignUp: FC = () => {
             navigate('/');
           });
           setError('');
+          resetForm();
         }
       }
     } catch (err: unknown) {
@@ -106,6 +101,7 @@ const SignUp: FC = () => {
             name='email'
             onChange={handleChange}
             type='email'
+            value={values.email || ''}
             color='white'
             bgColor='#1b1b1d'
             py='25px'
@@ -123,12 +119,12 @@ const SignUp: FC = () => {
             name='username'
             onChange={handleChange}
             type='text'
+            value={values.username || ''}
             color='white'
             bgColor='#1b1b1d'
             py='25px'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
-            
             placeholder='Enter your Username'
             required
           />
@@ -140,6 +136,7 @@ const SignUp: FC = () => {
           <Input
             name='password'
             onChange={handleChange}
+            value={values.password || ''}
             color='white'
             minLength={8}
             bgColor='#1b1b1d'

@@ -22,4 +22,8 @@ export type ExtendedUser = User | Record | Admin;
 
 export type ErrorResponse = {
   status: number;
+  data?: {
+    message: string;
+  };
+  message?: string;
 };

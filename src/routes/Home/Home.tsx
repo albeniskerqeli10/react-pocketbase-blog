@@ -1,23 +1,27 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { useEffect, useState, Suspense, lazy, FC } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType } from '../../types/Blog';
-import Spinner from '../../components/shared/Spinner';
+import Spinner from '../../components/Spinner/Spinner';
+import { ErrorResponse } from '../../types/Auth';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Home: FC = () => {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
-
+  const [error, setError] = useState<string>();
   useEffect(() => {
-    console.log('rerendered');
-
     const getBlogs = async () => {
-      const blogs: BlogType[] = await pb.collection('blogs').getFullList({
-        sort: '-created',
-        expand: 'user',
-      });
+      try {
+        const blogs: BlogType[] = await pb.collection('blogs').getFullList({
+          sort: '-created',
+          expand: 'user',
+        });
 
-      if (blogs) {
-        setBlogs(blogs);
+        if (blogs) {
+          setBlogs(blogs);
+        }
+      } catch (err) {
+        const errorResponse = err as ErrorResponse;
+        setError(errorResponse.message);
       }
     };
 
@@ -51,9 +55,17 @@ const Home: FC = () => {
             title={blog.title}
             image={blog.image}
             content={blog.content}
+            avatar={blog?.expand?.user?.avatar}
+            username={blog?.expand?.user?.username}
+            likes={blog.likes}
           />
         ))}
       </Suspense>
+      {error !== '' && (
+        <Text color='white' bgColor='transparent'>
+          {error}
+        </Text>
+      )}
     </Box>
   );
 };

@@ -1,6 +1,6 @@
 import { Button, Box, Wrap, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useState, FC } from 'react';
-import CreateBlogModal from '../CreateBlogModal';
+import CreateBlogModal from '../modals/CreateBlogModal/CreateBlogModal';
 import { Link as RouterLink } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 const Header: FC = () => {
@@ -15,12 +15,18 @@ const Header: FC = () => {
   };
   return (
     <Box
+      as='header'
       width='100%'
       py='10px'
       minH='70px'
+      position='sticky'
+      zIndex='1000'
+      top={0}
+      flexDirection={['row', 'row', 'row']}
       display='flex'
       alignItems='center'
-      justifyContent='space-between'
+      gap={['20px', '0', '0']}
+      justifyContent={['space-around', 'space-between', 'space-between']}
       flexWrap='wrap'
     >
       <Link
@@ -29,19 +35,13 @@ const Header: FC = () => {
           textDecoration: 'none',
         }}
         to='/'
-        fontSize='2xl'
+        fontSize='xl'
         fontWeight='bold'
         color='white'
       >
-        MicroBlog
+        PocketBlog
       </Link>
-      <Wrap
-        display='flex'
-        alignItems='center'
-        justifyContent='center'
-        textAlign='center'
-        flexDirection='row'
-      >
+      <Wrap display='flex' alignItems='end' justifyContent='end' flexDirection='row'>
         {user !== null ? (
           <>
             <Button fontWeight='normal' onClick={handleModalClick} size='md' colorScheme='red'>
@@ -64,7 +64,7 @@ const Header: FC = () => {
                 {user?.username}
               </MenuButton>
               <MenuList border='0' bgColor='black'>
-                <MenuItem color='white' bgColor='transparent'>
+                <MenuItem as={RouterLink} to='/profile' color='white' bgColor='transparent'>
                   Profile
                 </MenuItem>
                 <MenuItem color='white' bgColor='transparent' onClick={logout}>

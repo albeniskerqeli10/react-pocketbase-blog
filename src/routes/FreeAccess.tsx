@@ -2,13 +2,12 @@ import { Box } from '@chakra-ui/react';
 import { useEffect, useState, Suspense, lazy, FC } from 'react';
 import { pb } from '../lib/pocketbase';
 import { BlogType } from '../types/Blog';
-import Spinner from '../components/shared/Spinner';
+import Spinner from '../components/Spinner/Spinner';
 const Blog = lazy(() => import('../components/Blog/Blog'));
 const FreeAccess: FC = () => {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
 
   useEffect(() => {
-    console.log('rerendered');
     const getBlogs = async () => {
       const blogs: BlogType[] = await pb.collection('blogs').getFullList({
         sort: '-created',
@@ -48,6 +47,7 @@ const FreeAccess: FC = () => {
             title={blog.title}
             image={blog.image}
             content={blog.content}
+            likes={blog.likes}
           />
         ))}
       </Suspense>

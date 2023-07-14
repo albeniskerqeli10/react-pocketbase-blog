@@ -9,13 +9,15 @@ import {
   Button,
   Input,
   Box,
+  Spinner,
   Textarea,
 } from '@chakra-ui/react';
-import { ChangeEvent, FormEvent, FC, useState, startTransition } from 'react';
-import { pb } from '../lib/pocketbase';
+import { FormEvent, FC, useState, startTransition } from 'react';
+import { pb } from '../../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
-import { AppState, useStore } from '../lib/store';
-import { BlogFormValues } from '../types/Blog';
+import { AppState, useStore } from '../../../lib/store';
+import { BlogFormValues } from '../../../types/Blog';
+import useForm from '../../../hooks/useForm';
 type CreateBlogModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -23,43 +25,36 @@ type CreateBlogModalProps = {
 
 const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useStore((state: AppState) => state.user);
-  const [inputFormValues, setInputFormValues] = useState<BlogFormValues>({
+  const { values, handleChange, resetForm } = useForm<BlogFormValues>({
     title: '',
-    content: '',
     image: '',
+    content: '',
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setInputFormValues({
-      ...inputFormValues,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const { title, content, image } = values;
 
   const handleCreateBlogPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      if (
-        inputFormValues.title !== '' ||
-        inputFormValues.content !== '' ||
-        inputFormValues.image !== ''
-      ) {
+      if (title !== '' || content !== '' || image !== '') {
         await pb.collection('blogs').create({
-          title: inputFormValues.title,
-          content: inputFormValues.content,
-          image: inputFormValues.image,
+          title: title,
+          content: content,
+          image: image,
           user: user?.id,
+          likes: [],
         });
 
+        onClose();
+
         startTransition(() => {
-          onClose();
           navigate('/');
-        });
-        setInputFormValues({
-          title: '',
-          content: '',
-          image: '',
+          resetForm();
+
+          setIsSubmitting(false);
         });
       }
     } catch (err) {
@@ -68,7 +63,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
   };
   return (
     <>
-      <Modal useInert={false} isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay className='customModal' bg='blackAlpha.200' />
         <ModalContent
           borderWidth='2px'
@@ -94,6 +89,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
               <Input
                 name='title'
                 onChange={handleChange}
+                value={values.title || ''}
                 placeholder='Blog title'
                 _placeholder={{
                   color: 'gray.400',
@@ -104,6 +100,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
                 name='content'
                 resize='horizontal'
                 onChange={handleChange}
+                value={values.content || ''}
                 _placeholder={{
                   color: 'gray.400',
                 }}
@@ -115,6 +112,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
                 name='image'
                 type='url'
                 onChange={handleChange}
+                value={values.image || ''}
                 _placeholder={{
                   color: 'gray.400',
                 }}
@@ -132,9 +130,15 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
             justifyContent='start'
             gap='3'
           >
-            <Button type='submit' fontWeight='normal' colorScheme='red'>
-              Submit
-            </Button>
+            {isSubmitting ? (
+              <Button type='button' disabled={true} fontWeight='normal' colorScheme='red'>
+                <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
+              </Button>
+            ) : (
+              <Button type='submit' fontWeight='normal' colorScheme='red'>
+                Submit
+              </Button>
+            )}
 
             <Button
               type='button'

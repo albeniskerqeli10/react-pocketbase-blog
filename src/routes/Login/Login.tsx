@@ -1,33 +1,25 @@
 import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Text } from '@chakra-ui/react';
-import { useState, useEffect, ChangeEvent, FormEvent, FC, startTransition } from 'react';
+import { useState, useEffect, FormEvent, FC, startTransition } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
-import { ErrorResponse, ExtendedUser, LoginFormValues } from '../../types/Auth';
+import { ErrorResponse, ExtendedUser } from '../../types/Auth';
+import useForm from '../../hooks/useForm';
 const Login: FC = () => {
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
   const setUser = useStore((state: AppState) => state.setUser);
-  const [formInputValues, setFormInputValues] = useState<LoginFormValues>({
+  const { values, handleChange } = useForm({
     email: '',
     password: '',
+    age: '',
   });
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormInputValues({
-      ...formInputValues,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const [error, setError] = useState<string>('');
   const handleAuthLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      if (formInputValues.email !== '' || formInputValues.password !== '') {
-        await pb
-          .collection('users')
-          .authWithPassword(formInputValues.email, formInputValues.password);
+      if (values.email !== '' || values.password !== '') {
+        await pb.collection('users').authWithPassword(values.email, values.password);
         if (pb.authStore.isValid) {
           startTransition(() => {
             setUser(pb.authStore.model as ExtendedUser);
@@ -38,9 +30,9 @@ const Login: FC = () => {
     } catch (err: unknown) {
       const errorResponse = err as ErrorResponse;
       if (errorResponse.status === 400) {
-        setError('Invalid E-mail or Password');
+        setError('Invalid Credentials');
       } else {
-        setError('Something went wrong, please try again later');
+        setError('Something went wrong, please try again');
       }
     }
   };
@@ -116,6 +108,7 @@ const Login: FC = () => {
             border='transparent'
             type='password'
             autoComplete='on'
+            minLength={8}
             placeholder='Enter your Password'
             required
           />

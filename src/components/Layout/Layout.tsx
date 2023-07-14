@@ -9,8 +9,7 @@ const Layout: FC = () => {
   const setUser = useStore((state: AppState) => state.setUser);
   useEffect(() => {
     const changeUser = () => {
-      pb.authStore.onChange((auth) => {
-        console.log('authStore changed', auth);
+      pb.authStore.onChange(() => {
         setUser(pb.authStore.model as ExtendedUser);
       });
     };

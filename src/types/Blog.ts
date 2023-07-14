@@ -5,6 +5,7 @@ export type BlogType = Partial<Record> & {
   title: string;
   content?: string;
   image: string;
+  likes: Array<string>;
   expand?: {
     user: {
       id: string;
@@ -19,4 +20,10 @@ export type BlogFormValues = {
   title: string;
   content: string;
   image: string;
+};
+
+export type BlogActionsProps = {
+  blog: BlogType;
+  // eslint-disable-next-line no-unused-vars
+  onUpdate: (newBlog: BlogType) => void;
 };
