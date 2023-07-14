@@ -5,6 +5,7 @@ import { FC } from 'react';
 const Blog: FC<BlogType> = ({ id, title, image, avatar, username }) => {
   return (
     <LinkBox
+      className='blog'
       key={id}
       as='article'
       width='600px'
@@ -23,6 +24,7 @@ const Blog: FC<BlogType> = ({ id, title, image, avatar, username }) => {
           decoding='async'
           width='100%'
           objectFit='cover'
+          fetchpriority='auto'
           loading='lazy'
           htmlWidth='600'
           htmlHeight='300'
