@@ -17,6 +17,11 @@ const Home: FC = () => {
         });
 
         if (blogs) {
+          const link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'image';
+          link.href = blogs[0].image;
+          document.head.appendChild(link);
           setBlogs(blogs);
         }
       } catch (err) {
@@ -54,6 +59,7 @@ const Home: FC = () => {
             id={blog.id}
             title={blog.title}
             image={blog.image}
+            shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
             content={blog.content}
             avatar={blog?.expand?.user?.avatar}
             username={blog?.expand?.user?.username}

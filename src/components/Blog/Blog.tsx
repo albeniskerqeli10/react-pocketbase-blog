@@ -2,7 +2,7 @@ import { LinkBox, Image, LinkOverlay, Heading, Box, Text } from '@chakra-ui/reac
 import { Link } from 'react-router-dom';
 import { BlogType } from '../../types/Blog';
 import { FC } from 'react';
-const Blog: FC<BlogType> = ({ id, title, image, avatar, username }) => {
+const Blog: FC<BlogType> = ({ id, title, image, avatar, shouldLazyLoad, username }) => {
   return (
     <LinkBox
       className='blog'
@@ -25,7 +25,7 @@ const Blog: FC<BlogType> = ({ id, title, image, avatar, username }) => {
           width='100%'
           objectFit='cover'
           fetchpriority='auto'
-          loading='lazy'
+          loading={shouldLazyLoad}
           htmlWidth='600'
           htmlHeight='300'
           objectPosition='center'
