@@ -43,15 +43,17 @@ const Login: FC = () => {
     }
   }, [user, navigate]);
 
+  const signInWithGoogle = async () => {
+    try {
+      await pb.collection('users').authWithOAuth2({ provider: 'google' });
+      setUser(pb.authStore.model as ExtendedUser);
+    } catch (err: any) {
+      console.log(err, 'ERR');
+    }
+  };
+
   return (
-    <Flex
-      width='100%'
-      minH='80vh'
-      alignItems='center'
-      justifyContent='center'
-      flexWrap='wrap'
-      flexDirection='row'
-    >
+    <Flex width='100%' minH='80vh' alignItems='center' justifyContent='center' flexWrap='wrap' flexDirection='row'>
       <Box
         onSubmit={handleAuthLogin}
         as='form'
@@ -67,14 +69,7 @@ const Login: FC = () => {
         minH='400px'
         flexDirection='column'
       >
-        <Heading
-          fontWeight='bold'
-          alignSelf='center'
-          fontSize='2xl'
-          bgColor='transparent'
-          color='white'
-          py='5px'
-        >
+        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='5px'>
           Login
         </Heading>
         <FormControl bgColor='transparent'>
@@ -116,18 +111,18 @@ const Login: FC = () => {
         <Text fontSize='xs' color='gray.300' bgColor='transparent'>
           Forgot password?
         </Text>
+
         {error !== '' && (
-          <Text
-            borderBottomColor='red.500'
-            borderBottomWidth='2px'
-            bgColor='transparent'
-            color='white'
-          >
+          <Text borderBottomColor='red.500' borderBottomWidth='2px' bgColor='transparent' color='white'>
             {error}
           </Text>
         )}
         <Button type='submit' width='100%' fontWeight='normal' colorScheme='red'>
           Submit
+        </Button>
+
+        <Button type='button' onClick={signInWithGoogle} mb='5' width='100%' fontWeight='normal' colorScheme='blue'>
+          Login with Google
         </Button>
       </Box>
     </Flex>

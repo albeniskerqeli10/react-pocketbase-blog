@@ -40,14 +40,18 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
     try {
       if (title !== '' || content !== '' || image !== '') {
-        await pb.collection('blogs').create({
-          title: title,
-          content: content,
-          image: image,
-          user: user?.id,
-          likes: [],
-          
-        });
+        await pb.collection('blogs').create(
+          {
+            title: title,
+            content: content,
+            image: image,
+            user: user?.id,
+            likes: [],
+          },
+          {
+            expand: 'user',
+          },
+        );
 
         onClose();
 
@@ -141,14 +145,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
               </Button>
             )}
 
-            <Button
-              type='button'
-              fontWeight='normal'
-              colorScheme='red'
-              variant='outline'
-              mr={3}
-              onClick={onClose}
-            >
+            <Button type='button' fontWeight='normal' colorScheme='red' variant='outline' mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

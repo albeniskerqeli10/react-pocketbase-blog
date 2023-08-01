@@ -65,12 +65,22 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
   };
 
   const handleDeleteBlog = async () => {
-    await pb.collection('blogs').delete(blog.id as string);
+    const confirmMsg = confirm('Do you want to delete this blog?');
+    if (confirmMsg) {
+      await pb.collection('blogs').delete(blog.id as string);
 
-    startTransition(() => {
-      navigate('/');
+      startTransition(() => {
+        navigate('/');
+      });
+    }
+  };
+  const handleShareBlog = async () => {
+    await navigator?.share({
+      title: document.title,
+      url: window.location.href,
     });
   };
+
   return (
     <Wrap display='flex' alignItems='end' justifyContent='end' flexDirection='row'>
       <Box display='flex' alignItems='center' justifyContent='center' flexDirection='column' flexWrap='wrap'>
@@ -107,6 +117,9 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
               </MenuItem>
               <MenuItem onClick={handleDeleteBlog} color='white' bgColor='transparent'>
                 Delete
+              </MenuItem>
+              <MenuItem onClick={handleShareBlog} color='white' bgColor='transparent'>
+                Share
               </MenuItem>
             </MenuList>
           </Menu>{' '}
