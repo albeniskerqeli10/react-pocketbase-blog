@@ -1,27 +1,32 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect, FC, startTransition } from 'react';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import { ErrorResponse } from '../../types/Auth';
 import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
+import BlogComments from '../../components/BlogComments/BlogComments';
+import { useStore } from '../../lib/store';
+
 const SingleBlog: FC = () => {
   const [blog, setBlog] = useState<BlogType>({} as BlogType);
   const { id } = useParams();
-
+  const currentUser = useStore((state) => state.user);
   const navigate = useNavigate();
 
   const handleStateUpdate = (updatedBlog: BlogType) => {
-    setBlog(updatedBlog);
+    startTransition(() => {
+      setBlog(updatedBlog);
+    });
   };
+
   useEffect(() => {
     const getSingleBlog = async () => {
       try {
         const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-          expand: 'user',
+          expand: 'user, comments(blog).user',
         });
-
         setBlog(blog);
       } catch (err: unknown) {
         const errorResponse = err as ErrorResponse;
@@ -32,17 +37,33 @@ const SingleBlog: FC = () => {
     };
 
     getSingleBlog();
+    pb.collection('blogs').subscribe('*', async function () {
+      const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
+        expand: 'user, comments(blog).user',
+      });
+      startTransition(() => {
+        setBlog(blog);
+      });
+    });
+
+    return () => {
+      pb.collection('blogs').unsubscribe('*');
+    };
   }, [id, navigate]);
 
   useEffect(() => {
-    pb.collection('blogs').subscribe(id as string, async function () {
-      const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-        expand: 'user',
-      });
-      setBlog(blog);
+    pb.collection('comments').subscribe('*', async function (e) {
+      if (e.record.blog === id) {
+        const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
+          expand: 'user, comments(blog).user',
+        });
+        startTransition(() => {
+          setBlog(blog);
+        });
+      }
     });
     return () => {
-      pb.collection('blogs').unsubscribe(id);
+      pb.collection('comments').unsubscribe('*');
     };
   }, [id]);
 
@@ -102,7 +123,15 @@ const SingleBlog: FC = () => {
               <Image src={blog?.expand?.user?.avatar} rounded='full' width='40px' height='40px' alt='avatar' />
             )}
             <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
-              <Text as={Link} to={`/user/${blog?.user}`} color='white' fontSize='lg'>
+              <Text
+                as={Link}
+                to={currentUser?.id === blog?.user ? '/profile' : `../../user/${blog?.user}`}
+                color='white'
+                _hover={{
+                  textDecoration: 'underline',
+                }}
+                fontSize='lg'
+              >
                 {blog?.expand?.user?.username}
               </Text>
 
@@ -118,12 +147,21 @@ const SingleBlog: FC = () => {
           <BlogActions blog={blog} onUpdate={handleStateUpdate} />
         </Box>
 
-        <Box width='100%' display='flex' flexDirection='row' alignItems='center' gap='20px' justifyContent='start'>
+        <Box
+          width='100%'
+          display='flex'
+          flexDirection='row'
+          alignItems='center'
+          gap='20px'
+          justifyContent='start'
+          flexWrap='wrap'
+        >
           <Heading color='white' fontSize='45px'>
             {blog.title}
           </Heading>
         </Box>
         {splittedContent}
+        <BlogComments blog={blog} />
       </Box>
     )
   );

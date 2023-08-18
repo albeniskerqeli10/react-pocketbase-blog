@@ -47,7 +47,7 @@ const Login: FC = () => {
     try {
       await pb.collection('users').authWithOAuth2({ provider: 'google' });
       setUser(pb.authStore.model as ExtendedUser);
-    } catch (err: any) {
+    } catch (err) {
       console.log(err, 'ERR');
     }
   };
@@ -69,7 +69,7 @@ const Login: FC = () => {
         minH='400px'
         flexDirection='column'
       >
-        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='5px'>
+        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='10px'>
           Login
         </Heading>
         <FormControl bgColor='transparent'>

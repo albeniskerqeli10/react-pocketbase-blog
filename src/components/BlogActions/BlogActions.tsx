@@ -93,44 +93,46 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
           {blog?.likes?.length}
         </Text>
       </Box>
-      {blog.user === user?.id && (
-        <>
-          <Menu isLazy>
-            <MenuButton
-              color='white'
-              _hover={{
-                border: 'none',
-              }}
-              _active={{
-                border: 'none',
-              }}
-              border='0'
-              bgColor='transparent'
-              boxSize={8}
-              paddingBottom='5px'
-              as={IconButton}
-              icon={<MoreVertical size='24' />}
-            ></MenuButton>
-            <MenuList border='0' bgColor='black'>
-              <MenuItem onClick={() => setIsOpen(true)} color='white' bgColor='transparent'>
-                Edit
-              </MenuItem>
-              <MenuItem onClick={handleDeleteBlog} color='white' bgColor='transparent'>
-                Delete
-              </MenuItem>
-              <MenuItem onClick={handleShareBlog} color='white' bgColor='transparent'>
-                Share
-              </MenuItem>
-            </MenuList>
-          </Menu>{' '}
-          <EditBlogModal
-            handleSubmit={handleEditBlogPost}
-            handleChange={handleChange}
-            isOpen={isOpen}
-            onClose={onClose}
-          />
-        </>
-      )}
+      <>
+        <Menu isLazy>
+          <MenuButton
+            color='white'
+            _hover={{
+              border: 'none',
+            }}
+            _active={{
+              border: 'none',
+            }}
+            border='0'
+            bgColor='transparent'
+            boxSize={8}
+            paddingBottom='5px'
+            as={IconButton}
+            icon={<MoreVertical size='24' />}
+          ></MenuButton>
+          <MenuList border='0' bgColor='black'>
+            {blog.user === user?.id && (
+              <>
+                <MenuItem onClick={() => setIsOpen(true)} color='white' bgColor='transparent'>
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={handleDeleteBlog} color='white' bgColor='transparent'>
+                  Delete
+                </MenuItem>
+              </>
+            )}
+            <MenuItem onClick={handleShareBlog} color='white' bgColor='transparent'>
+              Share
+            </MenuItem>
+          </MenuList>
+        </Menu>{' '}
+        <EditBlogModal
+          handleSubmit={handleEditBlogPost}
+          handleChange={handleChange}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      </>
     </Wrap>
   );
 };

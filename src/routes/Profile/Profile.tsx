@@ -22,7 +22,7 @@ const Profile = () => {
   useEffect(() => {
     const getUser = async () => {
       const userProfile = await pb.collection('users').getOne(currentUser?.id as string, {
-        expand: 'blogs(user)',
+        expand: 'user, blogs(user)',
       });
       if (userProfile) {
         setUser(userProfile);
@@ -169,6 +169,7 @@ const Profile = () => {
                     title={blog.title}
                     image={blog.image}
                     content={blog.content}
+                    user={blog.user}
                     avatar={user.avatar}
                     username={user.username}
                     likes={blog.likes}

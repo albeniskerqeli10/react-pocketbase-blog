@@ -1,8 +1,10 @@
 import { LinkBox, Image, LinkOverlay, Heading, Box, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { BlogType } from '../../types/Blog';
-import { FC, memo } from 'react';
+import { FC } from 'react';
+import { useStore } from '../../lib/store';
 const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, width, shouldPreload, username }) => {
+  const currentUser = useStore((state) => state.user);
   return (
     <LinkBox
       className='blog'
@@ -19,27 +21,29 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, wi
       justifyContent='center'
       flexWrap='wrap'
     >
-      <LinkOverlay as={Link} width='100%' display='flex' flexDirection='column' to={`/blog/${id}`}>
-        <Image
-          decoding='async'
-          width='100%'
-          objectFit='cover'
-          fetchpriority={shouldPreload}
-          loading={shouldLazyLoad}
-          htmlWidth='600'
-          htmlHeight='300'
-          objectPosition='center'
-          height='300px'
-          src={image}
-          alt='blog image'
-        />
+      <Box bgColor='inherit' width='100%' display='flex' flexDirection='column'>
+        <LinkOverlay as={Link} to={`/blog/${id}`}>
+          <Image
+            decoding='async'
+            width='100%'
+            objectFit='cover'
+            fetchpriority={shouldPreload}
+            loading={shouldLazyLoad}
+            htmlWidth='600'
+            htmlHeight='300'
+            objectPosition='center'
+            height='300px'
+            src={image}
+            alt='blog image'
+          />
+        </LinkOverlay>
         <Box
           px='10px'
           width='100%'
           display='flex'
+          bgColor='inherit'
           alignItems='center'
           justifyContent='start'
-          bgColor='transparent'
           flexWrap='wrap'
           gap='10px'
           py='10px'
@@ -56,7 +60,8 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, wi
           />
           <Text
             as={Link}
-            to={`/user/${user}`}
+            to={currentUser?.id === user ? '/profile' : `../../user/${user}`}
+            relative='path'
             _hover={{
               textDecoration: 'underline',
             }}
@@ -66,12 +71,13 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, wi
             {username}
           </Text>
         </Box>
-        <Heading fontSize='xl' px='10px' py='5px' bgColor='transparent' color='white'>
+
+        <Heading fontSize='xl' px='10px' py='5px' bgColor='inherit' color='white'>
           {title}
         </Heading>
-      </LinkOverlay>
+      </Box>
     </LinkBox>
   );
 };
 
-export default memo(Blog);
+export default Blog;

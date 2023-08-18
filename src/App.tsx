@@ -5,7 +5,7 @@ import Router from './router';
 const App: FC = () => {
   return (
     <main>
-      <Flex alignItems='center' justifyContent='center' width='100%' min-height='90vh'>
+      <Flex alignItems='center' justifyContent='center' width='100%'>
         <Router />
       </Flex>
     </main>

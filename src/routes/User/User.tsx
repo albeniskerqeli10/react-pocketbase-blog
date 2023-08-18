@@ -104,6 +104,7 @@ const User = () => {
                     id={blog.id}
                     width='100%'
                     title={blog.title}
+                    user={blog.user}
                     image={blog.image}
                     content={blog.content}
                     avatar={user.avatar}

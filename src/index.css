@@ -9,6 +9,8 @@
 html,
 body {
   min-height: 100vh;
+  background-color: #1b1b1d;
+  scrollbar-gutter: stable;
 }
 
 main {
@@ -31,5 +33,13 @@ main {
 
 .blog {
   content-visibility: auto;
-  contain-intrinsic-size: 600px;
+  contain-intrinsic-size: auto 600px;
 }
+
+.commentsList {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1000px;
+}
+/* ::-webkit-scrollbar {
+  display: none;
+} */

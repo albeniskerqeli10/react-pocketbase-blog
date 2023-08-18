@@ -26,9 +26,9 @@ const Home: FC = () => {
     };
 
     getBlogs();
-    pb.collection('blogs').subscribe('*', function (e) {
-      const newBlog = e.record;
-      setBlogs((prevBlogs: BlogType[]) => [newBlog, ...prevBlogs] as BlogType[]);
+    pb.collection('blogs').subscribe('*', async function (e) {
+      const latestBlog = await pb.collection('blogs').getOne(e.record.id, { expand: 'user' });
+      setBlogs((prevBlogs: BlogType[]) => [latestBlog, ...prevBlogs] as BlogType[]);
     });
 
     return () => {
@@ -57,6 +57,7 @@ const Home: FC = () => {
             image={blog.image}
             shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
             shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
+            showAuthorInfo={true}
             content={blog.content}
             avatar={blog?.expand?.user?.avatar}
             username={blog?.expand?.user?.username}
