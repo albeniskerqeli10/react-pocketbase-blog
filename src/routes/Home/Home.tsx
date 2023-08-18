@@ -57,7 +57,6 @@ const Home: FC = () => {
             image={blog.image}
             shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
             shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-            showAuthorInfo={true}
             content={blog.content}
             avatar={blog?.expand?.user?.avatar}
             username={blog?.expand?.user?.username}
