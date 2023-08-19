@@ -1,4 +1,4 @@
-import { Button, Box, Wrap, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useState, FC } from 'react';
 import CreateBlogModal from '../modals/CreateBlogModal/CreateBlogModal';
 import { Link as RouterLink } from 'react-router-dom';
@@ -41,13 +41,13 @@ const Header: FC = () => {
       >
         PocketBlog
       </Link>
-      <Wrap display='flex' alignItems='end' justifyContent='end' flexDirection='row'>
+      <Box display='flex' alignItems='center' justifyContent='center' gap='8px' flexDirection='row' flexWrap='wrap'>
         {user !== null ? (
           <>
             <Button fontWeight='normal' onClick={handleModalClick} size={['sm', 'md', 'md']} colorScheme='red'>
               Create
             </Button>
-            <CreateBlogModal isOpen={isOpen} onClose={onClose} />
+            {isOpen && <CreateBlogModal isOpen={isOpen} onClose={onClose} />}
             <Menu isLazy>
               <MenuButton
                 color='white'
@@ -91,7 +91,7 @@ const Header: FC = () => {
             </Button>
           </>
         )}
-      </Wrap>
+      </Box>
     </Box>
   );
 };

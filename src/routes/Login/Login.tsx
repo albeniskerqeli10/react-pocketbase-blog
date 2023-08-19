@@ -48,7 +48,7 @@ const Login: FC = () => {
       await pb.collection('users').authWithOAuth2({ provider: 'google' });
       setUser(pb.authStore.model as ExtendedUser);
     } catch (err) {
-      console.log(err, 'ERR');
+      /* */
     }
   };
 

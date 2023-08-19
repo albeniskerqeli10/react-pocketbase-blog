@@ -63,7 +63,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
         });
       }
     } catch (err) {
-      console.error('Something went wrong, please try again');
+      /* */
     }
   };
   return (

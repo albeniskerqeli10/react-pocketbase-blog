@@ -1,13 +1,13 @@
-import { Box, Heading, Image, Text } from '@chakra-ui/react';
+import { Box, Heading, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { useEffect, useState, Suspense, lazy } from 'react';
+import { useEffect, useState, Suspense, lazy, FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
-import Spinner from '../../components/Spinner/Spinner';
+import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-const User = () => {
+const User:FC = () => {
   const { id } = useParams();
   const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
   const navigate = useNavigate();
@@ -43,6 +43,9 @@ const User = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
+        <Helmet>
+          <title> {user.username} | MicroBlog</title>
+        </Helmet>
         <Box
           width='100%'
           boxShadow='lg'
@@ -97,7 +100,7 @@ const User = () => {
               gap='20px'
               flexWrap='wrap'
             >
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
                 {user?.expand?.['blogs(user)']?.map((blog: BlogType) => (
                   <Blog
                     key={blog.id}

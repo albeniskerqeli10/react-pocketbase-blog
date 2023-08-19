@@ -3,13 +3,15 @@ import Layout from './components/Layout/Layout';
 import { Suspense, lazy, FC } from 'react';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Spinner from './components/Spinner/Spinner';
-import FreeAccess from './routes/FreeAccess';
+
 const Home = lazy(() => import('./routes/Home/Home'));
 const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
 const Login = lazy(() => import('./routes/Login/Login'));
 const SignUp = lazy(() => import('./routes/SignUp/SignUp'));
 const Profile = lazy(() => import('./routes/Profile/Profile'));
-import User from './routes/User/User';
+const User = lazy(() => import('./routes/User/User'));
+const NoAuthRoute = lazy(() => import('./routes/NoAuthRoute'));
+
 const Router: FC = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -40,7 +42,14 @@ const Router: FC = () => {
             </Suspense>
           }
         />
-        <Route path='freeaccess' element={<FreeAccess />} />
+        <Route
+          path='no-auth-route'
+          element={
+            <Suspense fallback={<Spinner />}>
+              <NoAuthRoute />
+            </Suspense>
+          }
+        />
         <Route
           path='blog/:id'
           element={

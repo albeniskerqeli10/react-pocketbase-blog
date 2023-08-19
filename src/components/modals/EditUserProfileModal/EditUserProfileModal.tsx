@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { FC, ChangeEvent, FormEvent } from 'react';
 
-type EditUserProfileModalType = {
+type EditUserProfileModalProps = {
   isOpen: boolean;
   onClose: () => void;
   // eslint-disable-next-line no-unused-vars
@@ -21,7 +21,7 @@ type EditUserProfileModalType = {
   handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 };
 
-const EditUserProfileModal: FC<EditUserProfileModalType> = ({ handleSubmit, handleChange, isOpen, onClose }) => {
+const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ handleSubmit, handleChange, isOpen, onClose }) => {
   return (
     <>
       <Modal colorScheme='red' isOpen={isOpen} onClose={onClose} isCentered>

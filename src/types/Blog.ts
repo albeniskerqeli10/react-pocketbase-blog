@@ -9,6 +9,7 @@ export type BlogType = Partial<Record> & {
   likes: Array<string>;
   shouldLoad?: 'lazy' | 'eager';
   shouldPreload?: 'auto' | 'high' | 'low';
+  shouldDecode?: 'sync' | 'async';
   width?: string;
   user?: string;
   showAuthorInfo?: boolean;

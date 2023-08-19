@@ -17,6 +17,7 @@ const Comment = ({ comment, userId, handleDeleteComment }: CommentProps) => {
       width='100%'
       display='flex'
       alignItems='center'
+      key={comment.id}
       justifyContent='space-between'
       px='10px'
       gap='10px'

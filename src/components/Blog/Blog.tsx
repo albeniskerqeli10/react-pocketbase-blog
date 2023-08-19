@@ -3,7 +3,18 @@ import { Link } from 'react-router-dom';
 import { BlogType } from '../../types/Blog';
 import { FC } from 'react';
 import { useStore } from '../../lib/store';
-const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, width, shouldPreload, username }) => {
+const Blog: FC<BlogType> = ({
+  id,
+  title,
+  user,
+  image,
+  avatar,
+  shouldLazyLoad,
+  width,
+  shouldPreload,
+  username,
+  shouldDecode,
+}) => {
   const currentUser = useStore((state) => state.user);
   return (
     <LinkBox
@@ -19,12 +30,13 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, wi
       alignItems='start'
       flexDirection='column'
       justifyContent='center'
+      aria-label='Blog post'
       flexWrap='wrap'
     >
       <Box bgColor='inherit' width='100%' display='flex' flexDirection='column'>
         <LinkOverlay as={Link} to={`/blog/${id}`}>
           <Image
-            decoding='async'
+            decoding={shouldDecode}
             width='100%'
             objectFit='cover'
             fetchpriority={shouldPreload}
@@ -55,6 +67,7 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, shouldLazyLoad, wi
             src={avatar}
             alt=' author avatar'
             width='30px'
+            decoding='async'
             rounded='3xl'
             height='30px'
           />

@@ -8,6 +8,7 @@ import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
 import { useStore } from '../../lib/store';
+import { Helmet } from 'react-helmet';
 
 const SingleBlog: FC = () => {
   const [blog, setBlog] = useState<BlogType>({} as BlogType);
@@ -47,7 +48,7 @@ const SingleBlog: FC = () => {
     });
 
     return () => {
-      pb.collection('blogs').unsubscribe('*');
+      pb.collection('blogs').unsubscribe('');
     };
   }, [id, navigate]);
 
@@ -63,7 +64,7 @@ const SingleBlog: FC = () => {
       }
     });
     return () => {
-      pb.collection('comments').unsubscribe('*');
+      pb.collection('comments').unsubscribe('');
     };
   }, [id]);
 
@@ -98,14 +99,20 @@ const SingleBlog: FC = () => {
         alignItems='start'
         justifyContent='start'
       >
+        <Helmet>
+          <title> {blog.title} | MicroBlog</title>
+        </Helmet>
         <Image
-          decoding='async'
+          decoding='sync'
           fetchpriority='high'
           src={blog.image}
           fit='cover'
           objectFit='cover'
           objectPosition='center'
+          loading='eager'
           width='100%'
+          htmlWidth='600px'
+          htmlHeight='400px'
           height='400px'
           alt='blog image'
         />
@@ -120,7 +127,14 @@ const SingleBlog: FC = () => {
         >
           <Box color='gray.300' display='flex' alignItems='start' flexDirection='row' flexWrap='wrap' gap='10px'>
             {blog?.expand?.user?.avatar && (
-              <Image src={blog?.expand?.user?.avatar} rounded='full' width='40px' height='40px' alt='avatar' />
+              <Image
+                src={blog?.expand?.user?.avatar}
+                rounded='full'
+                width='40px'
+                height='40px'
+                decoding='async'
+                alt='avatar'
+              />
             )}
             <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
               <Text

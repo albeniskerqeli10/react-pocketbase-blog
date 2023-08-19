@@ -1,18 +1,18 @@
-import { Box, Heading, Textarea, Button, Spinner } from '@chakra-ui/react';
+import { Box, Heading, Textarea, Button, Spinner, Text } from '@chakra-ui/react';
 import useForm from '../../hooks/useForm';
 import { useStore } from '../../lib/store';
-import { useMemo, FormEvent, Suspense, lazy, useState, startTransition } from 'react';
+import { useMemo, FormEvent, Suspense, lazy, useState, startTransition, FC } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
 const Comment = lazy(() => import('../Comment/Comment'));
-const BlogComments = ({ blog }: Partial<BlogType>) => {
+const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const user = useStore((state) => state.user);
   const { values, handleChange, resetForm } = useForm({
     text: '',
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const createComment = async (e: FormEvent<HTMLFormElement>) => {
+  const handleCreateComment = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (values.text !== '' && user?.id !== null) {
       setIsSubmitting(true);
@@ -28,15 +28,20 @@ const BlogComments = ({ blog }: Partial<BlogType>) => {
     }
   };
 
-  const deleteComment = async (id: number) => {
-    await pb.collection('comments').delete(id.toString());
+  const handleDeleteComment = async (id: number) => {
+    const confirmMsg = confirm('Do you want to delete this comment?');
+    if (confirmMsg) {
+      await pb.collection('comments').delete(id.toString());
+    }
   };
+  console.time('filter array');
 
   const sortedBlogComments: BlogCommentType[] = useMemo(() => {
     return blog?.expand?.['comments(blog)']
       ?.slice()
       ?.sort((a: BlogCommentType, b: BlogCommentType) => Number(new Date(b.created)) - Number(new Date(a.created)));
   }, [blog]);
+  console.timeEnd('filter array');
 
   return (
     <Box
@@ -77,7 +82,7 @@ const BlogComments = ({ blog }: Partial<BlogType>) => {
             <Box
               width='100%'
               as='form'
-              onSubmit={createComment}
+              onSubmit={handleCreateComment}
               display='flex'
               alignItems='flex-start'
               justifyContent='center'
@@ -128,19 +133,21 @@ const BlogComments = ({ blog }: Partial<BlogType>) => {
                 </Button>
               )}
             </Box>
-            <Suspense fallback={<Spinner />}>
-              {sortedBlogComments?.length > 0
-                ? sortedBlogComments?.map((comment: BlogCommentType) => (
-                    <>
-                      <Comment
-                        key={comment.id}
-                        comment={comment}
-                        userId={user?.id}
-                        handleDeleteComment={deleteComment}
-                      />
-                    </>
-                  ))
-                : null}
+            <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
+              {sortedBlogComments?.length > 0 ? (
+                sortedBlogComments?.map((comment: BlogCommentType) => (
+                  <Comment
+                    key={comment.id}
+                    comment={comment}
+                    userId={user?.id}
+                    handleDeleteComment={handleDeleteComment}
+                  />
+                ))
+              ) : (
+                <Text pt='20px' fontWeight='bold' bgColor='transparent' fontSize='md'>
+                  No comments yet. Be the first to share your thoughts!
+                </Text>
+              )}
             </Suspense>
           </Box>
         </Heading>

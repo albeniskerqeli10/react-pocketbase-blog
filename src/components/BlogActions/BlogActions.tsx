@@ -126,12 +126,14 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
             </MenuItem>
           </MenuList>
         </Menu>{' '}
-        <EditBlogModal
-          handleSubmit={handleEditBlogPost}
-          handleChange={handleChange}
-          isOpen={isOpen}
-          onClose={onClose}
-        />
+        {isOpen && (
+          <EditBlogModal
+            handleSubmit={handleEditBlogPost}
+            handleChange={handleChange}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
+        )}
       </>
     </Wrap>
   );

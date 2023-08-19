@@ -1,16 +1,16 @@
-import { Box, Heading, IconButton, Image, Text } from '@chakra-ui/react';
+import { Box, Heading, IconButton, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { useEffect, Suspense, lazy, useState, FormEvent, startTransition } from 'react';
+import { useEffect, Suspense, lazy, useState, FormEvent, startTransition, FC } from 'react';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
-import Spinner from '../../components/Spinner/Spinner';
 import { useStore, AppState } from '../../lib/store';
 import { ExtendedUser } from '../../types/Auth';
 import { Pencil } from '@phosphor-icons/react';
 import EditUserProfileModal from '../../components/modals/EditUserProfileModal/EditUserProfileModal';
 import useForm from '../../hooks/useForm';
+import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-const Profile = () => {
+const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
   const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -66,6 +66,9 @@ const Profile = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
+        <Helmet>
+          <title> Profile | MicroBlog</title>
+        </Helmet>
         <Box
           width='100%'
           boxShadow='lg'
@@ -160,7 +163,7 @@ const Profile = () => {
               gap='20px'
               flexWrap='wrap'
             >
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
                 {user?.expand?.['blogs(user)']?.map((blog: BlogType) => (
                   <Blog
                     key={blog.id}

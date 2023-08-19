@@ -5,7 +5,7 @@ import { BlogType } from '../types/Blog';
 import Spinner from '../components/Spinner/Spinner';
 import { ErrorResponse } from '../types/Auth';
 const Blog = lazy(() => import('../components/Blog/Blog'));
-const FreeAccess: FC = () => {
+const NoAuthRoute: FC = () => {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
   const [error, setError] = useState<string>();
   useEffect(() => {
@@ -26,9 +26,9 @@ const FreeAccess: FC = () => {
     };
 
     getBlogs();
-    pb.collection('blogs').subscribe('*', function (e) {
-      const newBlog = e.record;
-      setBlogs((prevBlogs: BlogType[]) => [newBlog, ...prevBlogs] as BlogType[]);
+    pb.collection('blogs').subscribe('*', async function (e) {
+      const latestBlog = await pb.collection('blogs').getOne(e.record.id, { expand: 'user' });
+      setBlogs((prevBlogs: BlogType[]) => [latestBlog, ...prevBlogs] as BlogType[]);
     });
 
     return () => {
@@ -50,19 +50,20 @@ const FreeAccess: FC = () => {
       <Suspense fallback={<Spinner />}>
         {blogs.map((blog: BlogType) => (
           <Blog
-          key={blog.id}
-          id={blog.id}
-          width='600px'
-          title={blog.title}
-          image={blog.image}
-          shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
-          shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-          content={blog.content}
-          avatar={blog?.expand?.user?.avatar}
-          username={blog?.expand?.user?.username}
-          user={blog.user}
-          likes={blog.likes}
-        />
+            key={blog.id}
+            id={blog.id}
+            width='600px'
+            title={blog.title}
+            image={blog.image}
+            shouldLazyLoad={blogs[0].id === blog.id || blogs[1].id === blog.id ? 'eager' : 'lazy'}
+            shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
+            shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
+            content={blog.content}
+            avatar={blog?.expand?.user?.avatar}
+            username={blog?.expand?.user?.username}
+            user={blog.user}
+            likes={blog.likes}
+          />
         ))}
       </Suspense>
       {error !== '' && (
@@ -73,4 +74,4 @@ const FreeAccess: FC = () => {
     </Box>
   );
 };
-export default FreeAccess;
+export default NoAuthRoute;

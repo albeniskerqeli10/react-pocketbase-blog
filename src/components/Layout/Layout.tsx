@@ -7,22 +7,27 @@ import { pb } from '../../lib/pocketbase';
 import { ExtendedUser } from '../../types/Auth';
 const Layout: FC = () => {
   const setUser = useStore((state) => state.setUser);
+  const logoutUser = useStore((state) => state.logoutUser);
   useEffect(() => {
     const changeUser = () => {
       pb.authStore.onChange(() => {
         setUser(pb.authStore.model as ExtendedUser);
       });
+      if (!pb.authStore.isValid) {
+        logoutUser();
+      }
     };
     changeUser();
-  }, [setUser]);
+  }, [setUser, logoutUser]);
   return (
     <Container
       maxW='1140px'
+      minHeight='80vh'
       display='flex'
       flexDirection='column'
       alignItems='center'
       justifyContent='start'
-      minHeight='80vh'
+      flexWrap='wrap'
     >
       <Header />
       <Outlet />
