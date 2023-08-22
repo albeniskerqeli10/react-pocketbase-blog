@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormLabel, Heading, Text, Input } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Heading, Text, Input, Spinner } from '@chakra-ui/react';
 import { useState, useEffect, FC, FormEvent, startTransition } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
@@ -16,11 +16,13 @@ const SignUp: FC = () => {
   });
 
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { email, username, password } = values;
 
   const handleAuth = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setIsSubmitting(true);
       if (email !== '' || username !== '' || password !== '') {
         await pb.collection('users').create({
           username: username,
@@ -35,13 +37,15 @@ const SignUp: FC = () => {
         if (authSignIn) {
           startTransition(() => {
             setUser(pb.authStore.model as ExtendedUser);
+            setIsSubmitting(false);
             navigate('/');
+            setError('');
+            resetForm();
           });
-          setError('');
-          resetForm();
         }
       }
     } catch (err: unknown) {
+      setIsSubmitting(false);
       const errorResponse = err as ErrorResponse;
 
       if (errorResponse.status === 400) {
@@ -59,7 +63,16 @@ const SignUp: FC = () => {
   }, [user, navigate]);
 
   return (
-    <Flex width='100%' minH='80vh' alignItems='center' justifyContent='center' flexWrap='wrap' flexDirection='row'>
+    <Box
+      as='section'
+      display='flex'
+      width='100%'
+      minH='80vh'
+      alignItems='center'
+      justifyContent='center'
+      flexWrap='wrap'
+      flexDirection='row'
+    >
       <Box
         onSubmit={handleAuth}
         as='form'
@@ -75,7 +88,7 @@ const SignUp: FC = () => {
         minH='450px'
         flexDirection='column'
       >
-        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='5px'>
+        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='10px'>
           Sign Up
         </Heading>
 
@@ -89,6 +102,7 @@ const SignUp: FC = () => {
             type='email'
             value={values.email || ''}
             color='white'
+            fontSize='sm'
             bgColor='#1b1b1d'
             py='25px'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
@@ -109,6 +123,7 @@ const SignUp: FC = () => {
             color='white'
             bgColor='#1b1b1d'
             py='25px'
+            fontSize='sm'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
             placeholder='Enter your Username'
@@ -124,6 +139,7 @@ const SignUp: FC = () => {
             onChange={handleChange}
             value={values.password || ''}
             color='white'
+            fontSize='sm'
             minLength={8}
             bgColor='#1b1b1d'
             py='25px'
@@ -140,11 +156,17 @@ const SignUp: FC = () => {
             {error}
           </Text>
         )}
-        <Button type='submit' width='100%' fontWeight='normal' colorScheme='red'>
-          Submit
-        </Button>
+        {isSubmitting ? (
+          <Button type='button' mt='10px' mb='15px' disabled={true} width='100%' fontWeight='normal' colorScheme='red'>
+            <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
+          </Button>
+        ) : (
+          <Button type='submit' mt='10px' mb='15px' width='100%' fontWeight='normal' colorScheme='red'>
+            Submit
+          </Button>
+        )}
       </Box>
-    </Flex>
+    </Box>
   );
 };
 

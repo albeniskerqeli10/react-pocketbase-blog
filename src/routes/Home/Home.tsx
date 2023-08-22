@@ -1,24 +1,25 @@
-import { Box, Text } from '@chakra-ui/react';
-import { useEffect, useState, Suspense, lazy, FC } from 'react';
+import { useEffect, useState, Suspense, lazy, FC, startTransition, useCallback } from 'react';
+
+import { Box, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
+import Spinner from '../../components/Spinner/Spinner';
+
 import { pb } from '../../lib/pocketbase';
 import { BlogType } from '../../types/Blog';
-import Spinner from '../../components/Spinner/Spinner';
 import { ErrorResponse } from '../../types/Auth';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Home: FC = () => {
   const [blogs, setBlogs] = useState<BlogType[]>([]);
   const [error, setError] = useState<string>();
+  const [sortField, setSortField] = useState('-created');
   useEffect(() => {
     const getBlogs = async () => {
       try {
         const blogs: BlogType[] = await pb.collection('blogs').getFullList({
-          sort: '-created',
+          sort: sortField,
           expand: 'user',
         });
 
-        if (blogs) {
-          setBlogs(blogs);
-        }
+        setBlogs(blogs);
       } catch (err) {
         const errorResponse = err as ErrorResponse;
         setError(errorResponse.message);
@@ -34,11 +35,19 @@ const Home: FC = () => {
     return () => {
       pb.collection('blogs').unsubscribe();
     };
+  }, [sortField]);
+
+  const handleSortBlogs = useCallback((sortField: string) => {
+    console.log(sortField, 'sortname of <Home/>');
+    startTransition(() => {
+      setSortField(sortField);
+    });
   }, []);
 
   return (
     <Box
       width='100%'
+      as='section'
       py='10px'
       display='flex'
       alignItems='center'
@@ -48,6 +57,30 @@ const Home: FC = () => {
       flexWrap='wrap'
     >
       <Suspense fallback={<Spinner />}>
+        <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
+          <Tabs colorScheme='red' color='white'>
+            <TabList display='flex' justifyContent='stretch' border='0'>
+              <Tab
+                _active={{
+                  bgColor: 'transparent',
+                }}
+                display='flex'
+                justifyContent='stretch'
+                onClick={() => sortField !== '-created' && handleSortBlogs('-created')}
+              >
+                Latest
+              </Tab>
+              <Tab
+                _active={{
+                  bgColor: 'transparent',
+                }}
+                onClick={() => sortField !== 'likes' && handleSortBlogs('likes')}
+              >
+                Popular
+              </Tab>
+            </TabList>
+          </Tabs>
+        </Box>
         {blogs.map((blog: BlogType) => (
           <Blog
             key={blog.id}

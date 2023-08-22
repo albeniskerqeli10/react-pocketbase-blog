@@ -7,7 +7,7 @@ import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-const User:FC = () => {
+const User: FC = () => {
   const { id } = useParams();
   const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
   const navigate = useNavigate();
@@ -44,10 +44,11 @@ const User:FC = () => {
         flexWrap='wrap'
       >
         <Helmet>
-          <title> {user.username} | MicroBlog</title>
+          <title> {user.username} | PocketBlog</title>
         </Helmet>
         <Box
           width='100%'
+          as="section"
           boxShadow='lg'
           px='20px'
           display='flex'

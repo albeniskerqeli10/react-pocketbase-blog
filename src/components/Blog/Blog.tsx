@@ -1,8 +1,8 @@
 import { LinkBox, Image, LinkOverlay, Heading, Box, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { BlogType } from '../../types/Blog';
-import { FC } from 'react';
-import { useStore } from '../../lib/store';
+import { FC, memo } from 'react';
+import { AppState, useStore } from '../../lib/store';
 const Blog: FC<BlogType> = ({
   id,
   title,
@@ -15,7 +15,7 @@ const Blog: FC<BlogType> = ({
   username,
   shouldDecode,
 }) => {
-  const currentUser = useStore((state) => state.user);
+  const currentUser = useStore((state:AppState) => state.user);
   return (
     <LinkBox
       className='blog'
@@ -93,4 +93,4 @@ const Blog: FC<BlogType> = ({
   );
 };
 
-export default Blog;
+export default memo(Blog);

@@ -58,6 +58,7 @@ const Profile: FC = () => {
     Object.keys(user).length > 0 && (
       <Box
         width='600px'
+        as='section'
         maxWidth='calc(100% - 10%)'
         py='10px'
         display='flex'

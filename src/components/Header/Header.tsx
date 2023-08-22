@@ -19,14 +19,14 @@ const Header: FC = () => {
       width='100%'
       py='10px'
       minH='70px'
-      position='sticky'
+      position={['static', 'sticky', 'sticky']}
       zIndex='1000'
       top={0}
       flexDirection={['row', 'row', 'row']}
       display='flex'
       alignItems='center'
       gap={['20px', '0', '0']}
-      justifyContent={['space-around', 'space-between', 'space-between']}
+      justifyContent={['center', 'space-between', 'space-between']}
       flexWrap='wrap'
     >
       <Link
@@ -35,16 +35,31 @@ const Header: FC = () => {
           textDecoration: 'none',
         }}
         to='/'
-        fontSize={['sm', 'md', 'xl']}
+        fontSize={['md', 'md', 'xl']}
         fontWeight='bold'
         color='white'
       >
         PocketBlog
       </Link>
-      <Box display='flex' alignItems='center' justifyContent='center' gap='8px' flexDirection='row' flexWrap='wrap'>
+      <Box
+        display='flex'
+        alignItems='center'
+        justifyContent='center'
+        gap={['8px', '8px', '8px']}
+        flexWrap='wrap'
+        width={['100%', 'auto', 'auto']}
+        flexDirection='row'
+      >
         {user !== null ? (
           <>
-            <Button fontWeight='normal' onClick={handleModalClick} size={['sm', 'md', 'md']} colorScheme='red'>
+            <Button
+              width={['100%', 'auto', 'auto']}
+              fontWeight='normal'
+              onClick={handleModalClick}
+              size='md'
+              colorScheme='red'
+              order={["1","0","0"]}
+            >
               Create
             </Button>
             {isOpen && <CreateBlogModal isOpen={isOpen} onClose={onClose} />}
@@ -58,7 +73,7 @@ const Header: FC = () => {
                   border: 'none',
                 }}
                 border='0'
-                size={['sm', 'md', 'md']}
+                size={['md', 'md', 'md']}
                 bgColor='transparent'
                 as={Button}
               >

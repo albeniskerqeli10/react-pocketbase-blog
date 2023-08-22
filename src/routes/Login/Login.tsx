@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Text } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Heading, Input, Spinner, Text } from '@chakra-ui/react';
 import { useState, useEffect, FormEvent, FC, startTransition } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
@@ -15,19 +15,25 @@ const Login: FC = () => {
     age: '',
   });
   const [error, setError] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const handleAuthLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setIsSubmitting(true);
+
       if (values.email !== '' || values.password !== '') {
         await pb.collection('users').authWithPassword(values.email, values.password);
         if (pb.authStore.isValid) {
           startTransition(() => {
             setUser(pb.authStore.model as ExtendedUser);
             navigate('/');
+            setError('');
+            setIsSubmitting(false);
           });
         }
       }
     } catch (err: unknown) {
+      setIsSubmitting(false);
       const errorResponse = err as ErrorResponse;
       if (errorResponse.status === 400) {
         setError('Invalid Credentials');
@@ -53,7 +59,16 @@ const Login: FC = () => {
   };
 
   return (
-    <Flex width='100%' minH='80vh' alignItems='center' justifyContent='center' flexWrap='wrap' flexDirection='row'>
+    <Box
+      width='100%'
+      as='section'
+      minH='80vh'
+      display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flexWrap='wrap'
+      flexDirection='column'
+    >
       <Box
         onSubmit={handleAuthLogin}
         as='form'
@@ -82,6 +97,7 @@ const Login: FC = () => {
             type='email'
             color='white'
             bgColor='#1b1b1d'
+            fontSize='sm'
             py='25px'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
@@ -99,6 +115,7 @@ const Login: FC = () => {
             color='white'
             bgColor='#1b1b1d'
             py='25px'
+            fontSize='sm'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
             type='password'
@@ -117,15 +134,21 @@ const Login: FC = () => {
             {error}
           </Text>
         )}
-        <Button type='submit' width='100%' fontWeight='normal' colorScheme='red'>
-          Submit
-        </Button>
+        {isSubmitting ? (
+          <Button type='button' disabled={true} width='100%' fontWeight='normal' colorScheme='red'>
+            <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
+          </Button>
+        ) : (
+          <Button type='submit' width='100%' fontWeight='normal' colorScheme='red'>
+            Submit
+          </Button>
+        )}
 
         <Button type='button' onClick={signInWithGoogle} mb='5' width='100%' fontWeight='normal' colorScheme='blue'>
           Login with Google
         </Button>
       </Box>
-    </Flex>
+    </Box>
   );
 };
 

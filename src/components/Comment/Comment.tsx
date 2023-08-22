@@ -1,4 +1,5 @@
 import { Box, Image, Text, Button } from '@chakra-ui/react';
+
 import { BlogCommentType } from '../../types/Blog';
 import { User } from '../../types/Auth';
 
@@ -47,6 +48,7 @@ const Comment = ({ comment, userId, handleDeleteComment }: CommentProps) => {
           alignItems='center'
           justifyContent='center'
           gap='10px'
+          flexWrap='wrap'
         >
           <Image
             width='30px'
@@ -67,7 +69,12 @@ const Comment = ({ comment, userId, handleDeleteComment }: CommentProps) => {
         </Text>
       </Box>
       {userId === comment?.expand?.user.id && (
-        <Button fontWeight='normal' onClick={() => handleDeleteComment(comment.id)} colorScheme='red'>
+        <Button
+          fontSize={['sm', 'md', 'md']}
+          fontWeight='normal'
+          onClick={() => handleDeleteComment(comment.id)}
+          colorScheme='red'
+        >
           Delete
         </Button>
       )}

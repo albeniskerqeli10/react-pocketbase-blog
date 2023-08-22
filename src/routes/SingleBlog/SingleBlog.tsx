@@ -7,13 +7,13 @@ import { ErrorResponse } from '../../types/Auth';
 import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
-import { useStore } from '../../lib/store';
+import { AppState, useStore } from '../../lib/store';
 import { Helmet } from 'react-helmet';
 
 const SingleBlog: FC = () => {
   const [blog, setBlog] = useState<BlogType>({} as BlogType);
   const { id } = useParams();
-  const currentUser = useStore((state) => state.user);
+  const currentUser = useStore((state: AppState) => state.user);
   const navigate = useNavigate();
 
   const handleStateUpdate = (updatedBlog: BlogType) => {
@@ -74,7 +74,7 @@ const SingleBlog: FC = () => {
     if (part.startsWith('*') && part.endsWith('*')) {
       const content = part.substring(1, part.length - 1);
       return (
-        <Heading as='h2' fontSize='xl' color='white' key={index}>
+        <Heading as='h2' fontSize={['md', 'md', 'xl']} color='white' key={index}>
           {content}
         </Heading>
       );
@@ -92,6 +92,7 @@ const SingleBlog: FC = () => {
       <Box
         key={blog.id}
         width='100%'
+        as='section'
         py='10px'
         display='flex'
         gap='20px'
@@ -100,7 +101,7 @@ const SingleBlog: FC = () => {
         justifyContent='start'
       >
         <Helmet>
-          <title> {blog.title} | MicroBlog</title>
+          <title> {blog.title} | PocketBlog</title>
         </Helmet>
         <Image
           decoding='sync'
@@ -126,16 +127,15 @@ const SingleBlog: FC = () => {
           flexWrap='wrap'
         >
           <Box color='gray.300' display='flex' alignItems='start' flexDirection='row' flexWrap='wrap' gap='10px'>
-            {blog?.expand?.user?.avatar && (
-              <Image
-                src={blog?.expand?.user?.avatar}
-                rounded='full'
-                width='40px'
-                height='40px'
-                decoding='async'
-                alt='avatar'
-              />
-            )}
+            <Image
+              src={blog?.expand?.user?.avatar}
+              rounded='full'
+              width='40px'
+              height='40px'
+              decoding='async'
+              alt='avatar'
+            />
+
             <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
               <Text
                 as={Link}
@@ -170,7 +170,7 @@ const SingleBlog: FC = () => {
           justifyContent='start'
           flexWrap='wrap'
         >
-          <Heading color='white' fontSize='45px'>
+          <Heading color='white' fontSize={['lg', 'lg', '45px']}>
             {blog.title}
           </Heading>
         </Box>

@@ -1,12 +1,12 @@
-import { Box, Heading, Textarea, Button, Spinner, Text } from '@chakra-ui/react';
+import { Box, Heading, Button, Textarea, Spinner, Text } from '@chakra-ui/react';
 import useForm from '../../hooks/useForm';
-import { useStore } from '../../lib/store';
+import { AppState, useStore } from '../../lib/store';
 import { useMemo, FormEvent, Suspense, lazy, useState, startTransition, FC } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
 const Comment = lazy(() => import('../Comment/Comment'));
 const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
-  const user = useStore((state) => state.user);
+  const user = useStore((state: AppState) => state.user);
   const { values, handleChange, resetForm } = useForm({
     text: '',
   });
@@ -34,14 +34,11 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
       await pb.collection('comments').delete(id.toString());
     }
   };
-  console.time('filter array');
-
   const sortedBlogComments: BlogCommentType[] = useMemo(() => {
     return blog?.expand?.['comments(blog)']
       ?.slice()
       ?.sort((a: BlogCommentType, b: BlogCommentType) => Number(new Date(b.created)) - Number(new Date(a.created)));
   }, [blog]);
-  console.timeEnd('filter array');
 
   return (
     <Box
@@ -67,7 +64,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Heading width='100%' color='white' my='10px' fontSize='30px' bgColor='transparent'>
+        <Heading width='100%' color='white' my='10px' fontSize={['lg', 'lg', '30px']} bgColor='transparent'>
           Comments ({sortedBlogComments?.length || 0})
           <Box
             my='20px'
@@ -115,7 +112,13 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
                 required
               />
               {isSubmitting ? (
-                <Button type='button' disabled={true} fontWeight='normal' colorScheme='red'>
+                <Button
+                  type='button'
+                  disabled={true}
+                  fontWeight='normal'
+                  fontSize={['sm', 'md', 'md']}
+                  colorScheme='red'
+                >
                   <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
                 </Button>
               ) : (
@@ -128,6 +131,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
                   type='submit'
                   fontWeight='normal'
                   colorScheme='red'
+                  fontSize={['sm', 'md', 'md']}
                 >
                   Submit
                 </Button>

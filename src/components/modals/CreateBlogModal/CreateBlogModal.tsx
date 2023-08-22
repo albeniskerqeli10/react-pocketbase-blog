@@ -53,13 +53,12 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
           },
         );
 
-        onClose();
-
         startTransition(() => {
-          navigate('/');
-          resetForm();
+          onClose();
 
+          navigate('/');
           setIsSubmitting(false);
+          resetForm();
         });
       }
     } catch (err) {
