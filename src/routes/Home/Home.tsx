@@ -56,31 +56,31 @@ const Home: FC = () => {
       gap='20px'
       flexWrap='wrap'
     >
+      <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
+        <Tabs colorScheme='red' color='white'>
+          <TabList display='flex' justifyContent='stretch' border='0'>
+            <Tab
+              _active={{
+                bgColor: 'transparent',
+              }}
+              display='flex'
+              justifyContent='stretch'
+              onClick={() => sortField !== '-created' && handleSortBlogs('-created')}
+            >
+              Latest
+            </Tab>
+            <Tab
+              _active={{
+                bgColor: 'transparent',
+              }}
+              onClick={() => sortField !== 'likes' && handleSortBlogs('likes')}
+            >
+              Popular
+            </Tab>
+          </TabList>
+        </Tabs>
+      </Box>
       <Suspense fallback={<Spinner />}>
-        <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
-          <Tabs colorScheme='red' color='white'>
-            <TabList display='flex' justifyContent='stretch' border='0'>
-              <Tab
-                _active={{
-                  bgColor: 'transparent',
-                }}
-                display='flex'
-                justifyContent='stretch'
-                onClick={() => sortField !== '-created' && handleSortBlogs('-created')}
-              >
-                Latest
-              </Tab>
-              <Tab
-                _active={{
-                  bgColor: 'transparent',
-                }}
-                onClick={() => sortField !== 'likes' && handleSortBlogs('likes')}
-              >
-                Popular
-              </Tab>
-            </TabList>
-          </Tabs>
-        </Box>
         {blogs.map((blog: BlogType) => (
           <Blog
             key={blog.id}
