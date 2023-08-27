@@ -52,7 +52,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
       }
     });
     return () => {
-      pb.collection('comments').unsubscribe('');
+      pb.collection('comments').unsubscribe('*');
     };
   }, [blog.id, onUpdate]);
 

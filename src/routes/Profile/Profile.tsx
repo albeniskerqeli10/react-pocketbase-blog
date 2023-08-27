@@ -1,6 +1,8 @@
 import { Box, Heading, IconButton, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { useEffect, Suspense, lazy, useState, FormEvent, startTransition, FC } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* @ts-ignore*/
+import { cache, Suspense, lazy, useState, use, FormEvent, startTransition, FC } from 'react';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { useStore, AppState } from '../../lib/store';
@@ -10,31 +12,29 @@ import EditUserProfileModal from '../../components/modals/EditUserProfileModal/E
 import useForm from '../../hooks/useForm';
 import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
+const getUser = cache(async (id: string) => {
+  const userProfile = await pb.collection('users').getOne(id as string, {
+    expand: 'user, blogs(user)',
+  });
+  return userProfile;
+});
+getUser();
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
-  const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
+
+  const userPromise = use(getUser(currentUser?.id));
+  const [user, setUser] = useState<ExtendedUser>(userPromise as ExtendedUser);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { values, handleChange, resetForm } = useForm({
     username: '',
     email: '',
     avatar: '',
   });
-  useEffect(() => {
-    const getUser = async () => {
-      const userProfile = await pb.collection('users').getOne(currentUser?.id as string, {
-        expand: 'user, blogs(user)',
-      });
-      if (userProfile) {
-        setUser(userProfile);
-      }
-    };
-    getUser();
-  }, [currentUser]);
 
   const handleEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await pb.collection('users').update(
+      const updatedProfile = await pb.collection('users').update(
         user.id as string,
         {
           email: values.email !== '' ? values.email : user.email,
@@ -45,6 +45,7 @@ const Profile: FC = () => {
           expand: 'blogs(user)',
         },
       );
+      setUser(updatedProfile);
       setIsOpen(false);
       startTransition(() => {
         resetForm();

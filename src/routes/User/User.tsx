@@ -1,38 +1,41 @@
 import { Box, Heading, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { useEffect, useState, Suspense, lazy, FC } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/*@ts-ignore*/
+import { useEffect, useState, Suspense, lazy, FC, use, cache } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
+
+const getUser = cache(async (id: string) => {
+  try {
+    const user = await pb.collection('users').getOne(id as string, {
+      expand: 'blogs(user)',
+    });
+    return user;
+  } catch (err: unknown) {
+    const errorResponse = err as ErrorResponse;
+    if (errorResponse.status === 404) {
+      return errorResponse;
+    }
+  }
+});
+
 const User: FC = () => {
   const { id } = useParams();
-  const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
+  const userPromise = use(getUser(id));
+  const [user] = useState<ExtendedUser>(userPromise as ExtendedUser);
   const navigate = useNavigate();
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const user = await pb.collection('users').getOne(id as string, {
-          expand: 'blogs(user)',
-        });
-        if (user) {
-          setUser(user);
-        }
-      } catch (err: unknown) {
-        const errorResponse = err as ErrorResponse;
-        if (errorResponse.status === 404) {
-          navigate('/');
-        }
-      }
-    };
-    getUser();
-  }, [id, navigate]);
-
-  useEffect;
+    if (!user?.id) {
+      navigate('/');
+    }
+  }, [user, navigate]);
   return (
-    Object.keys(user).length > 0 && (
+    user.id && (
       <Box
         width='600px'
         maxWidth='calc(100% - 10%)'
@@ -48,7 +51,7 @@ const User: FC = () => {
         </Helmet>
         <Box
           width='100%'
-          as="section"
+          as='section'
           boxShadow='lg'
           px='20px'
           display='flex'

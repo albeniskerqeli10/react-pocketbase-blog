@@ -1,6 +1,8 @@
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
-import { useState, useEffect, FC, useCallback } from 'react';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* @ts-ignore*/
+import { useState, useEffect, FC, useCallback, cache, use, startTransition } from 'react';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import { ErrorResponse } from '../../types/Auth';
@@ -9,43 +11,45 @@ import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
 import { AppState, useStore } from '../../lib/store';
 import { Helmet } from 'react-helmet';
-
+const getSingleBlog = cache(async (id: string) => {
+  try {
+    const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
+      expand: 'user, comments(blog).user',
+    });
+    return blog;
+  } catch (err: unknown) {
+    const errorResponse = err as ErrorResponse;
+    if (errorResponse.status === 404) {
+      /**/
+    }
+  }
+});
 const SingleBlog: FC = () => {
-  const [blog, setBlog] = useState<BlogType>({} as BlogType);
   const { id } = useParams();
+  const [blog, setBlog] = useState<BlogType>(use(getSingleBlog(id)) as BlogType);
+
   const currentUser = useStore((state: AppState) => state.user);
-  const navigate = useNavigate();
 
   const handleStateUpdate = useCallback((updatedBlog: BlogType) => {
     setBlog(updatedBlog);
   }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getSingleBlog = async () => {
-      try {
-        const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-          expand: 'user, comments(blog).user',
-        });
-        setBlog(blog);
-      } catch (err: unknown) {
-        const errorResponse = err as ErrorResponse;
-        if (errorResponse.status === 404) {
-          navigate('/');
-        }
-      }
-    };
+    if (!blog?.id) {
+      navigate('/');
+    }
 
-    getSingleBlog();
     pb.collection('blogs').subscribe(id as string, async function () {
-      const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-        expand: 'user, comments(blog).user',
+      const blog = await getSingleBlog(id);
+      startTransition(() => {
+        setBlog(blog);
       });
-      setBlog(blog);
     });
     return () => {
-      pb.collection('blogs').unsubscribe(id);
+      pb.collection('blogs').unsubscribe(id as string);
     };
-  }, [id, navigate]);
+  }, [id, blog?.id, navigate]);
 
   const parts = blog?.content?.split(/(\*.*?\*|#.*?#)/);
 
@@ -67,7 +71,7 @@ const SingleBlog: FC = () => {
   });
 
   return (
-    blog.title && (
+    blog?.id && (
       <Box
         key={blog.id}
         width='100%'
@@ -137,7 +141,7 @@ const SingleBlog: FC = () => {
               />
             </Box>
           </Box>
-          <BlogActions blog={blog} onUpdate={handleStateUpdate} />
+          <BlogActions blog={blog} />
         </Box>
 
         <Box

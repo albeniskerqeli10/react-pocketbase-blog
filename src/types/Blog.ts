@@ -32,7 +32,7 @@ export type BlogFormValues = {
 export type BlogActionsProps = {
   blog: BlogType;
   // eslint-disable-next-line no-unused-vars
-  onUpdate: (newBlog: BlogType) => void;
+  // onUpdate: (newBlog: BlogType) => void;
 };
 
 export type BlogCommentType = {

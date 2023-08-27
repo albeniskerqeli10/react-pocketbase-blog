@@ -2,13 +2,13 @@ import { Wrap, Icon, Menu, MenuItem, MenuButton, MenuList, IconButton, Box, Text
 import { FC, useState, startTransition, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useForm from '../../hooks/useForm';
-import { BlogFormValues, BlogActionsProps, BlogType } from '../../types/Blog';
+import { BlogFormValues, BlogActionsProps } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
 import { pb } from '../../lib/pocketbase';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
 
-const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
+const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
@@ -43,7 +43,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
   const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const updatedBlog: BlogType = await pb.collection('blogs').update(
+      await pb.collection('blogs').update(
         blog.id as string,
         {
           title: values.title !== '' ? values.title : blog.title,
@@ -56,7 +56,6 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
       );
 
       startTransition(() => {
-        onUpdate(updatedBlog);
         onClose();
         resetForm();
       });
