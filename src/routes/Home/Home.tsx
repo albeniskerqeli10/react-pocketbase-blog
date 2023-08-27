@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy, FC, startTransition, useCallback } from 'react';
+import { useEffect, useState, Suspense, lazy, FC, useCallback } from 'react';
 
 import { Box, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import Spinner from '../../components/Spinner/Spinner';
@@ -38,10 +38,7 @@ const Home: FC = () => {
   }, [sortField]);
 
   const handleSortBlogs = useCallback((sortField: string) => {
-    console.log(sortField, 'sortname of <Home/>');
-    startTransition(() => {
-      setSortField(sortField);
-    });
+    setSortField(sortField);
   }, []);
 
   return (
@@ -63,8 +60,6 @@ const Home: FC = () => {
               _active={{
                 bgColor: 'transparent',
               }}
-              display='flex'
-              justifyContent='stretch'
               onClick={() => sortField !== '-created' && handleSortBlogs('-created')}
             >
               Latest

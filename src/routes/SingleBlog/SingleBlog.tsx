@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
-import { useState, useEffect, FC, startTransition } from 'react';
+import { useState, useEffect, FC, useCallback } from 'react';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import { ErrorResponse } from '../../types/Auth';
@@ -16,11 +16,9 @@ const SingleBlog: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
   const navigate = useNavigate();
 
-  const handleStateUpdate = (updatedBlog: BlogType) => {
-    startTransition(() => {
-      setBlog(updatedBlog);
-    });
-  };
+  const handleStateUpdate = useCallback((updatedBlog: BlogType) => {
+    setBlog(updatedBlog);
+  }, []);
 
   useEffect(() => {
     const getSingleBlog = async () => {
@@ -38,35 +36,16 @@ const SingleBlog: FC = () => {
     };
 
     getSingleBlog();
-    pb.collection('blogs').subscribe('*', async function () {
+    pb.collection('blogs').subscribe(id as string, async function () {
       const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
         expand: 'user, comments(blog).user',
       });
-      startTransition(() => {
-        setBlog(blog);
-      });
+      setBlog(blog);
     });
-
     return () => {
-      pb.collection('blogs').unsubscribe('');
+      pb.collection('blogs').unsubscribe(id);
     };
   }, [id, navigate]);
-
-  useEffect(() => {
-    pb.collection('comments').subscribe('*', async function (e) {
-      if (e.record.blog === id) {
-        const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-          expand: 'user, comments(blog).user',
-        });
-        startTransition(() => {
-          setBlog(blog);
-        });
-      }
-    });
-    return () => {
-      pb.collection('comments').unsubscribe('');
-    };
-  }, [id]);
 
   const parts = blog?.content?.split(/(\*.*?\*|#.*?#)/);
 
@@ -88,7 +67,7 @@ const SingleBlog: FC = () => {
   });
 
   return (
-    Object.keys(blog).length > 0 && (
+    blog.title && (
       <Box
         key={blog.id}
         width='100%'
@@ -175,7 +154,7 @@ const SingleBlog: FC = () => {
           </Heading>
         </Box>
         {splittedContent}
-        <BlogComments blog={blog} />
+        <BlogComments blog={blog} onUpdate={handleStateUpdate} />
       </Box>
     )
   );

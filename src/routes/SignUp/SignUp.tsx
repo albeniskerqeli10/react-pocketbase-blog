@@ -35,10 +35,11 @@ const SignUp: FC = () => {
         await pb.collection('users').authWithPassword(email, password);
         const authSignIn = await pb.collection('user').authWithPassword(email, password);
         if (authSignIn) {
+          setUser(pb.authStore.model as ExtendedUser);
+          navigate('/');
+
           startTransition(() => {
-            setUser(pb.authStore.model as ExtendedUser);
             setIsSubmitting(false);
-            navigate('/');
             setError('');
             resetForm();
           });

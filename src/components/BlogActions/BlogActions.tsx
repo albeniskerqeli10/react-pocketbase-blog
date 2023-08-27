@@ -23,7 +23,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
 
   const handleLikeBlog = async () => {
     const existingBlogLikes: Array<string> = blog.likes;
-    pb.collection('blogs').update(blog.id, {
+    await pb.collection('blogs').update(blog.id, {
       likes: [...existingBlogLikes, user?.id],
       user: blog.user,
     });
@@ -54,6 +54,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
           expand: 'user',
         },
       );
+
       startTransition(() => {
         onUpdate(updatedBlog);
         onClose();
@@ -69,9 +70,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
     if (confirmMsg) {
       await pb.collection('blogs').delete(blog.id as string);
 
-      startTransition(() => {
-        navigate('/');
-      });
+      navigate('/');
     }
   };
   const handleShareBlog = async () => {

@@ -94,7 +94,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
                 name='title'
                 onChange={handleChange}
                 value={values.title || ''}
-                placeholder='Blog title'
+                placeholder='Title'
                 _placeholder={{
                   color: 'gray.400',
                 }}
@@ -102,13 +102,14 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
               />
               <Textarea
                 name='content'
-                resize='horizontal'
+                resize='none'
+                minHeight='120px'
                 onChange={handleChange}
                 value={values.content || ''}
                 _placeholder={{
                   color: 'gray.400',
                 }}
-                placeholder={`Blog content (Use * for H1 like *This is a heading* )`}
+                placeholder={`Content (Use * for H1 e.g *This is a heading* )`}
                 required
               />
 
@@ -120,7 +121,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
                 _placeholder={{
                   color: 'gray.400',
                 }}
-                placeholder='Paste your image url here'
+                placeholder='Image Url'
                 required
               />
             </Box>

@@ -12,7 +12,7 @@ const Login: FC = () => {
   const { values, handleChange } = useForm({
     email: '',
     password: '',
-    age: '',
+  age: '',
   });
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -24,9 +24,9 @@ const Login: FC = () => {
       if (values.email !== '' || values.password !== '') {
         await pb.collection('users').authWithPassword(values.email, values.password);
         if (pb.authStore.isValid) {
+          setUser(pb.authStore.model as ExtendedUser);
+          navigate('/');
           startTransition(() => {
-            setUser(pb.authStore.model as ExtendedUser);
-            navigate('/');
             setError('');
             setIsSubmitting(false);
           });

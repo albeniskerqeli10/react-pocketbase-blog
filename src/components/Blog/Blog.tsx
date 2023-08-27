@@ -15,7 +15,7 @@ const Blog: FC<BlogType> = ({
   username,
   shouldDecode,
 }) => {
-  const currentUser = useStore((state:AppState) => state.user);
+  const currentUser = useStore((state: AppState) => state.user);
   return (
     <LinkBox
       className='blog'

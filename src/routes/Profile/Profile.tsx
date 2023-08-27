@@ -45,8 +45,8 @@ const Profile: FC = () => {
           expand: 'blogs(user)',
         },
       );
+      setIsOpen(false);
       startTransition(() => {
-        setIsOpen(false);
         resetForm();
       });
     } catch (err) {

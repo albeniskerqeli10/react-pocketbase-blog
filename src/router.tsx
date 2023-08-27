@@ -3,6 +3,7 @@ import Layout from './components/Layout/Layout';
 import { Suspense, lazy, FC } from 'react';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Spinner from './components/Spinner/Spinner';
+import ErrorPage from './routes/ErrorPage';
 
 const Home = lazy(() => import('./routes/Home/Home'));
 const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
@@ -15,7 +16,7 @@ const NoAuthRoute = lazy(() => import('./routes/NoAuthRoute'));
 const Router: FC = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path='/' element={<Layout />}>
+      <Route path='/' element={<Layout />} errorElement={<ErrorPage />}>
         <Route
           index
           element={

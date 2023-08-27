@@ -4,14 +4,12 @@ import Router from './router';
 import { Helmet } from 'react-helmet';
 const App: FC = () => {
   return (
-    <main>
+    <Flex as='main' display='flex' alignItems='center' justifyContent='center' width='100%' flexWrap='wrap'>
       <Helmet>
         <title>{document.title}</title>
       </Helmet>
-      <Flex alignItems='center' justifyContent='center' width='100%'>
-        <Router />
-      </Flex>
-    </main>
+      <Router />
+    </Flex>
   );
 };
 

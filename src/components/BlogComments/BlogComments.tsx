@@ -1,11 +1,11 @@
 import { Box, Heading, Button, Textarea, Spinner, Text } from '@chakra-ui/react';
 import useForm from '../../hooks/useForm';
 import { AppState, useStore } from '../../lib/store';
-import { useMemo, FormEvent, Suspense, lazy, useState, startTransition, FC } from 'react';
+import { useMemo, FormEvent, Suspense, lazy, useState, startTransition, FC, useEffect } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
 const Comment = lazy(() => import('../Comment/Comment'));
-const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
+const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
   const user = useStore((state: AppState) => state.user);
   const { values, handleChange, resetForm } = useForm({
     text: '',
@@ -39,6 +39,22 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
       ?.slice()
       ?.sort((a: BlogCommentType, b: BlogCommentType) => Number(new Date(b.created)) - Number(new Date(a.created)));
   }, [blog]);
+
+  useEffect(() => {
+    pb.collection('comments').subscribe('*', async function (e) {
+      if (e.record.blog === blog.id) {
+        const updatedBlog: BlogType = await pb.collection('blogs').getOne(blog.id as string, {
+          expand: 'user, comments(blog).user',
+        });
+        startTransition(() => {
+          onUpdate(updatedBlog);
+        });
+      }
+    });
+    return () => {
+      pb.collection('comments').unsubscribe('');
+    };
+  }, [blog.id, onUpdate]);
 
   return (
     <Box
