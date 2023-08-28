@@ -16,7 +16,7 @@ export default defineConfig({
 
   base: '/',
   server: {
-    port: 4000,
+    port: 8000,
   },
   build: {
     rollupOptions: {

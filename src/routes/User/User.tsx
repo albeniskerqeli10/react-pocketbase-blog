@@ -1,33 +1,24 @@
 import { Box, Heading, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-/*@ts-ignore*/
-import { useEffect, useState, Suspense, lazy, FC, use, cache } from 'react';
+
+import { useEffect, Suspense, lazy, FC, use, cache } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ErrorResponse, ExtendedUser } from '../../types/Auth';
+import { ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 const getUser = cache(async (id: string) => {
-  try {
-    const user = await pb.collection('users').getOne(id as string, {
-      expand: 'blogs(user)',
-    });
-    return user;
-  } catch (err: unknown) {
-    const errorResponse = err as ErrorResponse;
-    if (errorResponse.status === 404) {
-      return errorResponse;
-    }
-  }
+  const user = await pb.collection('users').getOne(id as string, {
+    expand: 'blogs(user)',
+  });
+  return user;
 });
 
 const User: FC = () => {
   const { id } = useParams();
-  const userPromise = use(getUser(id));
-  const [user] = useState<ExtendedUser>(userPromise as ExtendedUser);
+  const user: ExtendedUser = use(getUser(id as string));
   const navigate = useNavigate();
   useEffect(() => {
     if (!user?.id) {
@@ -85,7 +76,7 @@ const User: FC = () => {
                   backgroundColor: 'transparent',
                   color: 'inherit',
                 }}
-                datetime={user.created as Date}
+                datetime={user.created}
               />
             </Text>
           </Box>

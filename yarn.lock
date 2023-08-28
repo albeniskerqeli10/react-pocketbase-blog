@@ -1367,10 +1367,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.2.14":
-  version "18.2.14"
-  resolved "https://registry.npmjs.org/@types/react/-/react-18.2.14.tgz"
-  integrity sha512-A0zjq+QN/O0Kpe30hA1GidzyFjatVvrpIvWLxD+xv67Vt91TWWgco9IvrJBkeyHm1trGaFS/FSGqPlhyeZRm0g==
+"@types/react@*", "@types/react@^18.2.21":
+  version "18.2.21"
+  resolved "https://registry.npmjs.org/@types/react/-/react-18.2.21.tgz"
+  integrity sha512-neFKG/sBAwGxHgXiIxnbm3/AAVQ/cMRS93hvBpg8xYRbeQSPVABp9U2bRnPf0iI4+Ucdv3plSxKK+3CW2ENJxA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -3012,13 +3012,13 @@ react-clientside-effect@^1.2.6:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
-react-dom@^18.3.0-canary-98f3f14d2-20230818:
-  version "18.3.0-canary-98f3f14d2-20230818"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.0-canary-98f3f14d2-20230818.tgz"
-  integrity sha512-5aMI6lbBvdT4C7ZmvmPCPYM6IImS3x+lbOceaP9dyP0j4179rllTQ2fv8Vko1xgvCtxdX41ZnFBjWGoGV/iBmw==
+react-dom@^0.0.0-experimental-ab31a9ed2-20230824:
+  version "0.0.0-experimental-ab31a9ed2-20230824"
+  resolved "https://registry.npmjs.org/react-dom/-/react-dom-0.0.0-experimental-ab31a9ed2-20230824.tgz"
+  integrity sha512-YRKw2KvMIpuXiTZSM0WcsYCfTWEqA+5tiLKitbwilwzWia8mbrwWb9BqO31hzOt00gOtcILdRaWxl7ZiJO+HXA==
   dependencies:
     loose-envify "^1.1.0"
-    scheduler "0.24.0-canary-98f3f14d2-20230818"
+    scheduler "0.0.0-experimental-ab31a9ed2-20230824"
 
 react-fast-compare@^3.1.1, react-fast-compare@3.2.1:
   version "3.2.1"
@@ -3105,10 +3105,10 @@ react-style-singleton@^2.2.1:
     invariant "^2.2.4"
     tslib "^2.0.0"
 
-react@^18.3.0-canary-98f3f14d2-20230818:
-  version "18.3.0-canary-98f3f14d2-20230818"
-  resolved "https://registry.npmjs.org/react/-/react-18.3.0-canary-98f3f14d2-20230818.tgz"
-  integrity sha512-TfboqZ7a2sCWEwCKJybT5PXhQgoljiiQKBDEOMINayg7tjhaDHBUeD2rcgoIQGo+a9HOJ6qbtJVjxIGRIMVKtw==
+react@^0.0.0-experimental-ab31a9ed2-20230824:
+  version "0.0.0-experimental-ab31a9ed2-20230824"
+  resolved "https://registry.npmjs.org/react/-/react-0.0.0-experimental-ab31a9ed2-20230824.tgz"
+  integrity sha512-gkiikMxUxqMu/OySRzaLTRk1T6zZJFXzbnPLAfzYu9PXIk+Gov8e0RBQ65g83ctAvFpzGLSpTmpytPVMI6glFA==
   dependencies:
     loose-envify "^1.1.0"
 
@@ -3184,10 +3184,10 @@ safe-regex-test@^1.0.0:
     get-intrinsic "^1.1.3"
     is-regex "^1.1.4"
 
-scheduler@0.24.0-canary-98f3f14d2-20230818:
-  version "0.24.0-canary-98f3f14d2-20230818"
-  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.24.0-canary-98f3f14d2-20230818.tgz"
-  integrity sha512-sdrwF7c53b+K+7GQ2TRPGJmMp5v2wG9WCMIS18sWIHlTFKrFMgmZ2nt8AU9+mgWjorKxgxljZ+Qruk9GtVYYZQ==
+scheduler@0.0.0-experimental-ab31a9ed2-20230824:
+  version "0.0.0-experimental-ab31a9ed2-20230824"
+  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.0.0-experimental-ab31a9ed2-20230824.tgz"
+  integrity sha512-RX8gvYues3GCjAKqo4TZzSBWPD5Y8GKmIzDwdIL7FkMF38Ey+m/fI4xgKWLebqecSW7tHo9czU38hAyBykUJJQ==
   dependencies:
     loose-envify "^1.1.0"
 

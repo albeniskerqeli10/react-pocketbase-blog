@@ -1,8 +1,17 @@
 import { Box, Heading, IconButton, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-/* @ts-ignore*/
-import { cache, Suspense, lazy, useState, use, FormEvent, startTransition, FC } from 'react';
+
+import {
+  cache,
+  Suspense,
+  lazy,
+  useState,
+  use,
+  FormEvent,
+  startTransition,
+  FC,
+  unstable_useCacheRefresh as useCacheRefresh,
+} from 'react';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { useStore, AppState } from '../../lib/store';
@@ -18,23 +27,23 @@ const getUser = cache(async (id: string) => {
   });
   return userProfile;
 });
-getUser();
+
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
 
-  const userPromise = use(getUser(currentUser?.id));
-  const [user, setUser] = useState<ExtendedUser>(userPromise as ExtendedUser);
+  const user: ExtendedUser = use(getUser(currentUser?.id as string));
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { values, handleChange, resetForm } = useForm({
     username: '',
     email: '',
     avatar: '',
   });
+  const refresh = useCacheRefresh();
 
   const handleEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const updatedProfile = await pb.collection('users').update(
+      await pb.collection('users').update(
         user.id as string,
         {
           email: values.email !== '' ? values.email : user.email,
@@ -45,9 +54,10 @@ const Profile: FC = () => {
           expand: 'blogs(user)',
         },
       );
-      setUser(updatedProfile);
-      setIsOpen(false);
+
       startTransition(() => {
+        refresh();
+        setIsOpen(false);
         resetForm();
       });
     } catch (err) {
@@ -116,7 +126,7 @@ const Profile: FC = () => {
                     backgroundColor: 'transparent',
                     color: 'inherit',
                   }}
-                  datetime={user.created as Date}
+                  datetime={user.created}
                 />
               </Text>
             </Box>

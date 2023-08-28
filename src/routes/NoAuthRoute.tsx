@@ -1,50 +1,46 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { useEffect, useState, Suspense, lazy, FC, use, cache, startTransition } from 'react';
+import {
+  useEffect,
+  useState,
+  Suspense,
+  lazy,
+  FC,
+  use,
+  unstable_useCacheRefresh as useCacheRefresh,
+  cache,
+  startTransition,
+} from 'react';
 
 import { Box, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
 import Spinner from '../components/Spinner/Spinner';
 
 import { pb } from '../lib/pocketbase';
 import { BlogType } from '../types/Blog';
-import { ErrorResponse } from '../types/Auth';
 const Blog = lazy(() => import('../components/Blog/Blog'));
 const getBlogs = cache(async (sortField: string) => {
-  try {
-    const blogs: BlogType[] = await pb.collection('blogs').getFullList({
-      sort: sortField,
-      expand: 'user',
-    });
-    return blogs;
-  } catch (err) {
-    const errorResponse = err as ErrorResponse;
-    return errorResponse;
-  }
+  const blogs: BlogType[] = await pb.collection('blogs').getFullList({
+    sort: sortField,
+    expand: 'user',
+  });
+  return blogs;
 });
 const NoAuthRoute: FC = () => {
   const [sortField, setSortField] = useState('-created');
-  const blogsPromise = use(getBlogs(sortField));
-  const [blogs, setBlogs] = useState<BlogType[]>(blogsPromise);
-  if (blogsPromise[0].title !== blogs[0].title) {
-    setBlogs(blogsPromise);
-  }
-  const [error] = useState<string>();
-  useEffect(() => {
-    // startTransition(() => {
-    //   setBlogs(blogsPromise);
-    // });
+  const blogs: BlogType[] = use(getBlogs(sortField));
+  const refresh = useCacheRefresh();
 
+  const [error] = useState<string>();
+
+  useEffect(() => {
     pb.collection('blogs').subscribe('*', async function () {
-      const blogs = await getBlogs('-created');
       startTransition(() => {
-        setBlogs(blogs);
+        refresh();
       });
     });
 
     return () => {
       pb.collection('blogs').unsubscribe('*');
     };
-  }, []);
+  }, [refresh]);
 
   const handleSortBlogs = async (sortName: string) => {
     startTransition(() => {

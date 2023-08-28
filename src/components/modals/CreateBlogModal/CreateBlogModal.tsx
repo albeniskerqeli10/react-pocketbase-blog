@@ -1,3 +1,6 @@
+// "react": "^18.3.0-canary-98f3f14d2-20230818",
+// "react-dom": "^18.3.0-canary-98f3f14d2-20230818",
+
 import {
   Modal,
   ModalOverlay,
@@ -12,7 +15,7 @@ import {
   Spinner,
   Textarea,
 } from '@chakra-ui/react';
-import { FormEvent, FC, useState, startTransition } from 'react';
+import { FormEvent, FC, useState, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { pb } from '../../../lib/pocketbase';
 import { useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../../lib/store';
@@ -54,9 +57,8 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
         );
 
         startTransition(() => {
-          onClose();
-
           navigate('/');
+          onClose();
           setIsSubmitting(false);
           resetForm();
         });

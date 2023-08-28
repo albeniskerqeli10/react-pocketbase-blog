@@ -1,8 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-/* @ts-ignore*/
-import { useState, useEffect, FC, useCallback, cache, use, startTransition } from 'react';
+
+import { useEffect, FC, cache, use, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import { ErrorResponse } from '../../types/Auth';
@@ -10,6 +9,7 @@ import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
 import { AppState, useStore } from '../../lib/store';
+
 import { Helmet } from 'react-helmet';
 const getSingleBlog = cache(async (id: string) => {
   try {
@@ -26,30 +26,26 @@ const getSingleBlog = cache(async (id: string) => {
 });
 const SingleBlog: FC = () => {
   const { id } = useParams();
-  const [blog, setBlog] = useState<BlogType>(use(getSingleBlog(id)) as BlogType);
+  const blog = use(getSingleBlog(id as string));
 
   const currentUser = useStore((state: AppState) => state.user);
 
-  const handleStateUpdate = useCallback((updatedBlog: BlogType) => {
-    setBlog(updatedBlog);
-  }, []);
   const navigate = useNavigate();
-
+  const refresh = useCacheRefresh();
   useEffect(() => {
     if (!blog?.id) {
       navigate('/');
     }
 
     pb.collection('blogs').subscribe(id as string, async function () {
-      const blog = await getSingleBlog(id);
       startTransition(() => {
-        setBlog(blog);
+        refresh();
       });
     });
     return () => {
       pb.collection('blogs').unsubscribe(id as string);
     };
-  }, [id, blog?.id, navigate]);
+  }, [id, blog?.id, refresh, navigate]);
 
   const parts = blog?.content?.split(/(\*.*?\*|#.*?#)/);
 
@@ -158,7 +154,7 @@ const SingleBlog: FC = () => {
           </Heading>
         </Box>
         {splittedContent}
-        <BlogComments blog={blog} onUpdate={handleStateUpdate} />
+        <BlogComments blog={blog} />
       </Box>
     )
   );
