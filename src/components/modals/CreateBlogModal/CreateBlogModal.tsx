@@ -12,61 +12,65 @@ import {
   Button,
   Input,
   Box,
-  Spinner,
   Textarea,
 } from '@chakra-ui/react';
-import { FormEvent, FC, useState, startTransition } from 'react';
+import { FC, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
+
 import { pb } from '../../../lib/pocketbase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AppState, useStore } from '../../../lib/store';
-import { BlogFormValues } from '../../../types/Blog';
-import useForm from '../../../hooks/useForm';
+import SubmitButton from '../../UI/SubmitButton';
+// import { BlogFormValues } from '../../../types/Blog';
+// import useForm from '../../../hooks/useForm';
 type CreateBlogModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+type ActionForm = {
+  // eslint-disable-next-line no-unused-vars
+  get(name: string): string;
+}
+
 const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const location = useLocation();
+  // const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useStore((state: AppState) => state.user);
-  const { values, handleChange, resetForm } = useForm<BlogFormValues>({
-    title: '',
-    image: '',
-    content: '',
-  });
+  // const { values, handleChange, resetForm } = useForm<BlogFormValues>({
+  //   title: '',
+  //   image: '',
+  //   content: '',
+  // });
+  const refresh = useCacheRefresh();
 
-  const { title, content, image } = values;
-
-  const handleCreateBlogPost = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      if (title !== '' || content !== '' || image !== '') {
-        await pb.collection('blogs').create(
-          {
-            title: title,
-            content: content,
-            image: image,
-            user: user?.id,
-            likes: [],
-          },
-          {
-            expand: 'user',
-          },
-        );
-
+  const createBlogPostAction = async (formData: ActionForm | FormData) => {
+    const title = formData.get('title');
+    const content = formData.get('content');
+    const image = formData.get('image');
+    if (title !== '' || content !== '' || image !== '') {
+      await pb.collection('blogs').create(
+        {
+          title: title,
+          content: content,
+          image: image,
+          user: user?.id,
+          likes: [],
+        },
+        {
+          expand: 'user',
+        },
+      );
+      if (location.pathname !== '/') {
         startTransition(() => {
+          refresh();
           navigate('/');
-          onClose();
-          setIsSubmitting(false);
-          resetForm();
         });
       }
-    } catch (err) {
-      /* */
+      onClose();
     }
   };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -74,7 +78,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
         <ModalContent
           borderWidth='2px'
           borderColor='#1b1b1d'
-          onSubmit={handleCreateBlogPost}
+          action={createBlogPostAction}
           boxShadow='xl'
           as='form'
           bgColor='black'
@@ -94,8 +98,6 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
             >
               <Input
                 name='title'
-                onChange={handleChange}
-                value={values.title || ''}
                 placeholder='Title'
                 _placeholder={{
                   color: 'gray.400',
@@ -106,8 +108,6 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
                 name='content'
                 resize='none'
                 minHeight='120px'
-                onChange={handleChange}
-                value={values.content || ''}
                 _placeholder={{
                   color: 'gray.400',
                 }}
@@ -118,8 +118,6 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
               <Input
                 name='image'
                 type='url'
-                onChange={handleChange}
-                value={values.image || ''}
                 _placeholder={{
                   color: 'gray.400',
                 }}
@@ -137,16 +135,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
             justifyContent='start'
             gap='3'
           >
-            {isSubmitting ? (
-              <Button type='button' disabled={true} fontWeight='normal' colorScheme='red'>
-                <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
-              </Button>
-            ) : (
-              <Button type='submit' fontWeight='normal' colorScheme='red'>
-                Submit
-              </Button>
-            )}
-
+            <SubmitButton />
             <Button type='button' fontWeight='normal' colorScheme='red' variant='outline' mr={3} onClick={onClose}>
               Close
             </Button>

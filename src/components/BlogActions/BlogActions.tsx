@@ -1,5 +1,5 @@
 import { Wrap, Icon, Menu, MenuItem, MenuButton, MenuList, IconButton, Box, Text } from '@chakra-ui/react';
-import { FC, useState, startTransition, FormEvent } from 'react';
+import { FC, useState, startTransition, FormEvent, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useForm from '../../hooks/useForm';
 import { BlogFormValues, BlogActionsProps } from '../../types/Blog';
@@ -12,6 +12,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
+  const refresh = useCacheRefresh();
   const { values, handleChange, resetForm } = useForm<BlogFormValues>({
     title: '',
     content: '',
@@ -69,7 +70,10 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
     if (confirmMsg) {
       await pb.collection('blogs').delete(blog.id as string);
 
-      navigate('/');
+      startTransition(() => {
+        refresh();
+        navigate('/');
+      });
     }
   };
   const handleShareBlog = async () => {

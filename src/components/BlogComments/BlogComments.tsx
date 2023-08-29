@@ -33,10 +33,8 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
         user: user?.id,
         blog: blog.id,
       });
-      startTransition(() => {
-        setIsSubmitting(false);
-        resetForm();
-      });
+      setIsSubmitting(false);
+      resetForm();
     }
   };
 

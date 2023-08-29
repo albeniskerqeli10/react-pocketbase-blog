@@ -16,7 +16,7 @@ import Spinner from '../../components/Spinner/Spinner';
 import { pb } from '../../lib/pocketbase';
 import { BlogType } from '../../types/Blog';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-const getBlogs = cache(async (sortField: string) => {
+export const getBlogs = cache(async (sortField: string) => {
   const blogs: BlogType[] = await pb.collection('blogs').getFullList({
     sort: sortField,
     expand: 'user',
@@ -36,11 +36,7 @@ const Home: FC = () => {
         refresh();
       });
     });
-
-    return () => {
-      pb.collection('blogs').unsubscribe('*');
-    };
-  }, [refresh]);
+  });
 
   const handleSortBlogs = async (sortName: string) => {
     startTransition(() => {

@@ -58,7 +58,7 @@ const Header: FC = () => {
               onClick={handleModalClick}
               size='md'
               colorScheme='red'
-              order={["1","0","0"]}
+              order={['1', '0', '0']}
             >
               Create
             </Button>
