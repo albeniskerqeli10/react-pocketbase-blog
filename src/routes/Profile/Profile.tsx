@@ -19,7 +19,6 @@ import { ExtendedUser } from '../../types/Auth';
 import { Pencil } from '@phosphor-icons/react';
 import EditUserProfileModal from '../../components/modals/EditUserProfileModal/EditUserProfileModal';
 import useForm from '../../hooks/useForm';
-import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const getUser = cache(async (id: string) => {
   const userProfile = await pb.collection('users').getOne(id as string, {
@@ -78,9 +77,7 @@ const Profile: FC = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Helmet>
-          <title> Profile | MicroBlog</title>
-        </Helmet>
+        <title> Profile | MicroBlog</title>
         <Box
           width='100%'
           boxShadow='lg'

@@ -35,7 +35,7 @@ const Header: FC = () => {
           textDecoration: 'none',
         }}
         to='/'
-        fontSize={['md', 'md', 'xl']}
+        fontSize={['md', 'md', 'lg']}
         fontWeight='bold'
         color='white'
       >

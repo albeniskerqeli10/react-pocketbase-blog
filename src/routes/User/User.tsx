@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
-import { Helmet } from 'react-helmet';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 const getUser = cache(async (id: string) => {
@@ -37,9 +36,7 @@ const User: FC = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Helmet>
-          <title> {user.username} | PocketBlog</title>
-        </Helmet>
+        <title> {user.username} | PocketBlog</title>
         <Box
           width='100%'
           as='section'
