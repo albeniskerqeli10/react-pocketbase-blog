@@ -29,3 +29,7 @@ Feel free to explore and contribute if you're interested!
 ### Login Page
 
 ![react-pocketbase-blog vercel app_login(Desktop-4K)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/be1e8db1-7abd-40b5-bf6a-fbfcd5c00e09)
+
+## Additional information 
+
+You can find an alternative version of this blog application in the `dev` branch where I've been testing out some upcoming/experimental React features.
