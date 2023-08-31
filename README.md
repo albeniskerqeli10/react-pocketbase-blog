@@ -1,10 +1,18 @@
-# React-Pocketbase-Blog
+# Introduction
 
-A microblog web app built with **React**, **Typescript**, **PocketBase(SQLite)** and **Vite**
+Welcome to PocketBlog, a simple blog application developed by me using React, Pocketbase(with SQlite), and some other libraries such as React Router, Chakra-UI, and Zustand.
 
-Other libraries:**React Router**, **Chakra UI** and **Zustand**
+## Roadmap
 
-## Project Screenshots
+- [ ] Rich Text Editor
+- [ ] Social Login
+- [ ] Categories and Tags
+- [ ] Search Functionality
+- [ ] Email Verification
+
+Feel free to explore and contribute if you're interested!
+
+## Screenshots
 
 ### Homepage
 
@@ -21,3 +29,7 @@ Other libraries:**React Router**, **Chakra UI** and **Zustand**
 ### Login Page
 
 ![react-pocketbase-blog vercel app_login(Desktop-4K)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/be1e8db1-7abd-40b5-bf6a-fbfcd5c00e09)
+
+## Additional information
+
+You can find an alternative version of this blog application in the `dev` branch where I've been testing out some upcoming/experimental React features.

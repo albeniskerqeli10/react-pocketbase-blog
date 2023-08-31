@@ -25,6 +25,7 @@ const getSingleBlog = cache(async (id: string) => {
 });
 const SingleBlog: FC = () => {
   const { id } = useParams();
+  getSingleBlog;
   const blog = use(getSingleBlog(id as string));
 
   const currentUser = useStore((state: AppState) => state.user);
@@ -34,13 +35,13 @@ const SingleBlog: FC = () => {
   useEffect(() => {
     if (!blog?.id) {
       navigate('/');
-    }
-
-    pb.collection('blogs').subscribe(id as string, async function () {
-      startTransition(() => {
-        refresh();
+    } else {
+      pb.collection('blogs').subscribe(blog?.id as string, async function () {
+        startTransition(() => {
+          refresh();
+        });
       });
-    });
+    }
     return () => {
       pb.collection('blogs').unsubscribe(id as string);
     };
@@ -79,9 +80,7 @@ const SingleBlog: FC = () => {
           alignItems='start'
           justifyContent='start'
         >
-          <title>{blog.title}</title>
-          <link rel='preload' href={blog.image} as='image' />
-
+          <title>{`${blog.title} | PocketBlog`}</title>
           <Image
             decoding='sync'
             fetchpriority='high'
@@ -109,9 +108,10 @@ const SingleBlog: FC = () => {
               <Image
                 src={blog?.expand?.user?.avatar}
                 rounded='full'
+                fetchpriority='high'
                 width='40px'
                 height='40px'
-                decoding='async'
+                decoding='sync'
                 alt='avatar'
               />
 

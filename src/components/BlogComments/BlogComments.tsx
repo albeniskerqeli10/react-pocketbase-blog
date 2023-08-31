@@ -1,40 +1,37 @@
-import { Box, Heading, Button, Textarea, Spinner, Text } from '@chakra-ui/react';
-import useForm from '../../hooks/useForm';
+import { Box, Heading, Textarea, Spinner, Text } from '@chakra-ui/react';
 import { AppState, useStore } from '../../lib/store';
 
 import {
   useMemo,
-  FormEvent,
   Suspense,
   lazy,
-  useState,
   startTransition,
   FC,
+  useRef,
   useEffect,
   unstable_useCacheRefresh as useCacheRefresh,
 } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
+import SubmitButton from '../UI/SubmitButton';
 const Comment = lazy(() => import('../Comment/Comment'));
 const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const user = useStore((state: AppState) => state.user);
-  const { values, handleChange, resetForm } = useForm({
-    text: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const form = useRef<null>(null);
   const refresh = useCacheRefresh();
 
-  const handleCreateComment = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (values.text !== '' && user?.id !== null) {
-      setIsSubmitting(true);
+  const createCommentAction = async (formData: FormData) => {
+    const text = formData.get('text');
+    if (text !== '' && user?.id !== null) {
       await pb.collection('comments').create({
-        text: values.text,
+        text: text,
         user: user?.id,
         blog: blog.id,
       });
-      setIsSubmitting(false);
-      resetForm();
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      /* @ts-ignore*/
+      form.current.reset();
     }
   };
 
@@ -101,8 +98,10 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
           >
             <Box
               width='100%'
+              ref={form}
               as='form'
-              onSubmit={handleCreateComment}
+              action={createCommentAction}
+              // onSubmit={handleCreateComment}
               display='flex'
               alignItems='flex-start'
               justifyContent='center'
@@ -120,8 +119,6 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
             >
               <Textarea
                 resize='none'
-                value={values.text}
-                onChange={handleChange}
                 rounded='none'
                 name='text'
                 placeholder='Write a comment'
@@ -134,31 +131,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
                 }}
                 required
               />
-              {isSubmitting ? (
-                <Button
-                  type='button'
-                  disabled={true}
-                  fontWeight='normal'
-                  fontSize={['sm', 'md', 'md']}
-                  colorScheme='red'
-                >
-                  <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
-                </Button>
-              ) : (
-                <Button
-                  outline='0'
-                  _focus={{
-                    outline: '0px',
-                    border: '0',
-                  }}
-                  type='submit'
-                  fontWeight='normal'
-                  colorScheme='red'
-                  fontSize={['sm', 'md', 'md']}
-                >
-                  Submit
-                </Button>
-              )}
+              <SubmitButton size='md' />
             </Box>
             <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
               {sortedBlogComments?.length > 0 ? (

@@ -17,18 +17,5 @@ export default defineConfig({
   base: '/',
   server: {
     port: 8000,
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString();
-          }
-        },
-      },
-    },
-  },
+  }
 });

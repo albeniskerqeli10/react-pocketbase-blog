@@ -17,6 +17,7 @@ const getUser = cache(async (id: string) => {
 
 const User: FC = () => {
   const { id } = useParams();
+  getUser(id as string);
   const user: ExtendedUser = use(getUser(id as string));
   const navigate = useNavigate();
   useEffect(() => {

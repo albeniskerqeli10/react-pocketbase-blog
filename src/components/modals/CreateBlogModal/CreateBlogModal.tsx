@@ -30,7 +30,7 @@ type CreateBlogModalProps = {
 type ActionForm = {
   // eslint-disable-next-line no-unused-vars
   get(name: string): string;
-}
+};
 
 const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
     const content = formData.get('content');
     const image = formData.get('image');
     if (title !== '' || content !== '' || image !== '') {
-      await pb.collection('blogs').create(
+      const createdBlog = await pb.collection('blogs').create(
         {
           title: title,
           content: content,
@@ -61,10 +61,12 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
           expand: 'user',
         },
       );
+      startTransition(() => {
+        navigate(`/blog/${createdBlog.id}`);
+      });
       if (location.pathname !== '/') {
         startTransition(() => {
           refresh();
-          navigate('/');
         });
       }
       onClose();

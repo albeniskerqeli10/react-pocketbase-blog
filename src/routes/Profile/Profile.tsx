@@ -29,7 +29,7 @@ const getUser = cache(async (id: string) => {
 
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
-
+  getUser(currentUser?.id as string);
   const user: ExtendedUser = use(getUser(currentUser?.id as string));
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { values, handleChange, resetForm } = useForm({
@@ -77,7 +77,7 @@ const Profile: FC = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <title> Profile | MicroBlog</title>
+        <title> Profile | PocketBlog</title>
         <Box
           width='100%'
           boxShadow='lg'

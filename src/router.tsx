@@ -7,6 +7,7 @@ import ErrorPage from './routes/ErrorPage';
 
 const Home = lazy(() => import('./routes/Home/Home'));
 const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
+const CreateBlog = lazy(() => import('./routes/CreateBlog/CreateBlog'));
 const Login = lazy(() => import('./routes/Login/Login'));
 const SignUp = lazy(() => import('./routes/SignUp/SignUp'));
 const Profile = lazy(() => import('./routes/Profile/Profile'));
@@ -51,6 +52,17 @@ const Router: FC = () => {
             </Suspense>
           }
         />
+        <Route
+          path='create-blog'
+          element={
+            <Suspense fallback={<Spinner />}>
+              <ProtectedRoute>
+                <CreateBlog />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route path='search?q=' element={<h1>Search App</h1>} />
         <Route
           path='blog/:id'
           element={

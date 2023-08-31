@@ -12,7 +12,7 @@ const Login: FC = () => {
   const { values, handleChange } = useForm({
     email: '',
     password: '',
-  age: '',
+    age: '',
   });
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

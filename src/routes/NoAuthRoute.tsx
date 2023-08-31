@@ -10,25 +10,29 @@ import {
   startTransition,
 } from 'react';
 
-import { Box, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
+import { Box, Tab, TabList, Tabs } from '@chakra-ui/react';
 import Spinner from '../components/Spinner/Spinner';
 
 import { pb } from '../lib/pocketbase';
 import { BlogType } from '../types/Blog';
 const Blog = lazy(() => import('../components/Blog/Blog'));
-const getBlogs = cache(async (sortField: string) => {
-  const blogs: BlogType[] = await pb.collection('blogs').getFullList({
+type BlogsType = {
+  items: BlogType[];
+};
+
+export const getBlogs = cache(async (sortField: string) => {
+  const blogs: BlogsType = await pb.collection('blogs').getList(0, 20, {
     sort: sortField,
     expand: 'user',
   });
-  return blogs;
+  return blogs.items;
 });
 const NoAuthRoute: FC = () => {
   const [sortField, setSortField] = useState('-created');
-  const blogs: BlogType[] = use(getBlogs(sortField));
-  const refresh = useCacheRefresh();
+  getBlogs('-created');
 
-  const [error] = useState<string>();
+  const blogs = use(getBlogs(sortField));
+  const refresh = useCacheRefresh();
 
   useEffect(() => {
     pb.collection('blogs').subscribe('*', async function () {
@@ -36,10 +40,6 @@ const NoAuthRoute: FC = () => {
         refresh();
       });
     });
-
-    return () => {
-      pb.collection('blogs').unsubscribe('*');
-    };
   }, [refresh]);
 
   const handleSortBlogs = async (sortName: string) => {
@@ -90,7 +90,7 @@ const NoAuthRoute: FC = () => {
             width='600px'
             title={blog.title}
             image={blog.image}
-            shouldLazyLoad={blogs[0].id === blog.id || blogs[1].id === blog.id ? 'eager' : 'lazy'}
+            shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
             shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
             shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
             content={blog.content}
@@ -101,11 +101,6 @@ const NoAuthRoute: FC = () => {
           />
         ))}
       </Suspense>
-      {error !== '' && (
-        <Text color='white' bgColor='transparent'>
-          {error}
-        </Text>
-      )}
     </Box>
   );
 };

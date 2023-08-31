@@ -16,8 +16,8 @@ const ErrorPage = () => {
       <Heading bgColor='transparent' color='white'>
         404 Not Found
       </Heading>
-      <Button onClick={() => history.back()} colorScheme='red' size='lg'>
-        Go Back
+      <Button onClick={() => window.location.reload()} colorScheme='red' size='lg'>
+        Reload
       </Button>
     </Flex>
   );

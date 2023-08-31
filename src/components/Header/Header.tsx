@@ -1,18 +1,12 @@
-import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { useState, FC } from 'react';
-import CreateBlogModal from '../modals/CreateBlogModal/CreateBlogModal';
-import { Link as RouterLink } from 'react-router-dom';
+import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList, Input } from '@chakra-ui/react';
+import { FC } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 const Header: FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const user = useStore((state: AppState) => state.user);
   const logout = useStore((state: AppState) => state.logoutUser);
-  const onClose = () => {
-    setIsOpen(false);
-  };
-  const handleModalClick = () => {
-    setIsOpen(true);
-  };
+
+  const navigate = useNavigate();
   return (
     <Box
       as='header'
@@ -41,6 +35,19 @@ const Header: FC = () => {
       >
         PocketBlog
       </Link>
+      <Box flex='0.6' display='flex' alignItems='center' justifyContent='center' flexDirection='row' flexWrap='wrap'>
+        <Input
+          bgColor='black'
+          color='white'
+          py='23px'
+          border='0'
+          _placeholder={{
+            color: 'white',
+          }}
+          type='search'
+          placeholder='Search blogs'
+        />
+      </Box>
       <Box
         display='flex'
         alignItems='center'
@@ -55,14 +62,13 @@ const Header: FC = () => {
             <Button
               width={['100%', 'auto', 'auto']}
               fontWeight='normal'
-              onClick={handleModalClick}
+              onClick={() => navigate('/create-blog')}
               size='md'
               colorScheme='red'
               order={['1', '0', '0']}
             >
               Create
             </Button>
-            {isOpen && <CreateBlogModal isOpen={isOpen} onClose={onClose} />}
             <Menu isLazy>
               <MenuButton
                 color='white'
