@@ -45,7 +45,6 @@ main {
 } */
 
 section {
-  animation: transitionIn 0.75s;
 }
 
 @keyframes transitionIn {
