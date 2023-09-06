@@ -11,6 +11,7 @@ const Blog: FC<BlogType> = ({
   avatar,
   shouldLazyLoad,
   width,
+  priority,
   shouldPreload,
   username,
   shouldDecode,
@@ -40,7 +41,7 @@ const Blog: FC<BlogType> = ({
             decoding={shouldDecode}
             width='100%'
             objectFit='cover'
-            fetchpriority={shouldPreload}
+            fetchpriority={priority}
             loading={shouldLazyLoad}
             htmlWidth='600'
             htmlHeight='300'

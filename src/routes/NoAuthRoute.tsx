@@ -6,27 +6,16 @@ import {
   FC,
   use,
   unstable_useCacheRefresh as useCacheRefresh,
-  cache,
   startTransition,
 } from 'react';
 
 import { Box, Tab, TabList, Tabs } from '@chakra-ui/react';
-import Spinner from '../components/Spinner/Spinner';
+import Spinner from '../components/UI/Spinner/Spinner';
 
 import { pb } from '../lib/pocketbase';
 import { BlogType } from '../types/Blog';
+import { getBlogs } from '../services/blog';
 const Blog = lazy(() => import('../components/Blog/Blog'));
-type BlogsType = {
-  items: BlogType[];
-};
-
-export const getBlogs = cache(async (sortField: string) => {
-  const blogs: BlogsType = await pb.collection('blogs').getList(0, 20, {
-    sort: sortField,
-    expand: 'user',
-  });
-  return blogs.items;
-});
 const NoAuthRoute: FC = () => {
   const [sortField, setSortField] = useState('-created');
   getBlogs('-created');

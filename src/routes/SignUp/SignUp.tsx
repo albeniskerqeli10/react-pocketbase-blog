@@ -32,8 +32,8 @@ const SignUp: FC = () => {
           avatar: `${`https://avatar.oxro.io/avatar.svg?name=${username.toUpperCase()}`}`,
           emailVisibility: true,
         });
-        await pb.collection('users').authWithPassword(email, password);
-        const authSignIn = await pb.collection('user').authWithPassword(email, password);
+        // await pb.collection('users').authWithPassword(email, password);
+        const authSignIn = await pb.collection('users').authWithPassword(email, password);
         if (authSignIn) {
           setUser(pb.authStore.model as ExtendedUser);
           navigate('/');

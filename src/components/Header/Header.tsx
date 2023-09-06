@@ -1,12 +1,11 @@
-import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList, Input } from '@chakra-ui/react';
-import { FC } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { FC, memo } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
+import SearchBox from '../SearchBox/SearchBox';
 const Header: FC = () => {
   const user = useStore((state: AppState) => state.user);
   const logout = useStore((state: AppState) => state.logoutUser);
-
-  const navigate = useNavigate();
   return (
     <Box
       as='header'
@@ -35,34 +34,23 @@ const Header: FC = () => {
       >
         PocketBlog
       </Link>
-      <Box flex='0.6' display='flex' alignItems='center' justifyContent='center' flexDirection='row' flexWrap='wrap'>
-        <Input
-          bgColor='black'
-          color='white'
-          py='23px'
-          border='0'
-          _placeholder={{
-            color: 'white',
-          }}
-          type='search'
-          placeholder='Search blogs'
-        />
-      </Box>
-      <Box
-        display='flex'
-        alignItems='center'
-        justifyContent='center'
-        gap={['8px', '8px', '8px']}
-        flexWrap='wrap'
-        width={['100%', 'auto', 'auto']}
-        flexDirection='row'
-      >
-        {user !== null ? (
-          <>
+      {user !== null ? (
+        <>
+          <SearchBox />
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            gap={['8px', '8px', '8px']}
+            flexWrap='wrap'
+            width={['100%', 'auto', 'auto']}
+            flexDirection='row'
+          >
             <Button
+              as={RouterLink}
+              to='/create-blog'
               width={['100%', 'auto', 'auto']}
               fontWeight='normal'
-              onClick={() => navigate('/create-blog')}
               size='md'
               colorScheme='red'
               order={['1', '0', '0']}
@@ -94,27 +82,35 @@ const Header: FC = () => {
                 </MenuItem>
               </MenuList>
             </Menu>{' '}
-          </>
-        ) : (
-          <>
-            <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red'>
-              Sign In
-            </Button>
-            <Button
-              fontWeight='normal'
-              as={RouterLink}
-              to='/signup'
-              size='md'
-              colorScheme='black'
-              border='2px solid white'
-            >
-              Sign Up
-            </Button>
-          </>
-        )}
-      </Box>
+          </Box>
+        </>
+      ) : (
+        <Box
+          display='flex'
+          alignItems='center'
+          justifyContent='center'
+          gap={['8px', '8px', '8px']}
+          flexWrap='wrap'
+          width={['100%', 'auto', 'auto']}
+          flexDirection='row'
+        >
+          <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red'>
+            Sign In
+          </Button>
+          <Button
+            fontWeight='normal'
+            as={RouterLink}
+            to='/signup'
+            size='md'
+            colorScheme='black'
+            border='2px solid white'
+          >
+            Sign Up
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
 
-export default Header;
+export default memo(Header);

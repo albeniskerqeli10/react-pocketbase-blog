@@ -19,7 +19,7 @@ import { FC, startTransition, unstable_useCacheRefresh as useCacheRefresh } from
 import { pb } from '../../../lib/pocketbase';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppState, useStore } from '../../../lib/store';
-import SubmitButton from '../../UI/SubmitButton';
+import SubmitButton from '../../UI/SubmitButton/SubmitButton';
 // import { BlogFormValues } from '../../../types/Blog';
 // import useForm from '../../../hooks/useForm';
 type CreateBlogModalProps = {

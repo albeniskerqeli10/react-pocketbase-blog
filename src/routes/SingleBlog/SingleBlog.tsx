@@ -1,33 +1,18 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
 
-import { useEffect, FC, cache, use, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
+import { useEffect, FC, use, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
-import { BlogType } from '../../types/Blog';
-import { ErrorResponse } from '../../types/Auth';
 import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
 import { AppState, useStore } from '../../lib/store';
-
-const getSingleBlog = cache(async (id: string) => {
-  try {
-    const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-      expand: 'user, comments(blog).user',
-    });
-    return blog;
-  } catch (err: unknown) {
-    const errorResponse = err as ErrorResponse;
-    if (errorResponse.status === 404) {
-      /**/
-    }
-  }
-});
+import { getSingleBlog } from '../../services/blog';
+import { BlogType } from '../../types/Blog';
 const SingleBlog: FC = () => {
   const { id } = useParams();
-  getSingleBlog;
-  const blog = use(getSingleBlog(id as string));
-
+  getSingleBlog(id as string);
+  const blog = use(getSingleBlog(id as string)) as BlogType;
   const currentUser = useStore((state: AppState) => state.user);
 
   const navigate = useNavigate();
@@ -81,6 +66,7 @@ const SingleBlog: FC = () => {
           justifyContent='start'
         >
           <title>{`${blog.title} | PocketBlog`}</title>
+          <link rel='preload' as='image' href={blog.image} />
           <Image
             decoding='sync'
             fetchpriority='high'

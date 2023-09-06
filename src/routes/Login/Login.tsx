@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import useForm from '../../hooks/useForm';
+
 const Login: FC = () => {
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
@@ -49,13 +50,14 @@ const Login: FC = () => {
     }
   }, [user, navigate]);
 
-  const signInWithGoogle = async () => {
-    try {
-      await pb.collection('users').authWithOAuth2({ provider: 'google' });
-      setUser(pb.authStore.model as ExtendedUser);
-    } catch (err) {
-      /* */
-    }
+  const signInWithGithub = async () => {
+    const user = await pb.collection('users').authWithOAuth2({ provider: 'github' });
+    console.log(user, 'USER');
+    await pb.collection('users').update(pb?.authStore?.model?.id as string, {
+      avatar: user?.meta?.avatarUrl,
+    });
+
+    setUser(pb.authStore.model as ExtendedUser);
   };
 
   return (
@@ -144,9 +146,36 @@ const Login: FC = () => {
           </Button>
         )}
 
-        <Button type='button' onClick={signInWithGoogle} mb='5' width='100%' fontWeight='normal' colorScheme='blue'>
-          Login with Google
-        </Button>
+        <Box
+          width='100%'
+          display='flex'
+          alignItems='center'
+          justifyContent='space-between'
+          flexDirection='row'
+          flexWrap='wrap'
+          bgColor='transparent'
+          gap='10px'
+        >
+          <Button
+            type='button'
+            onClick={signInWithGithub}
+            mb='5'
+            width='auto'
+            fontWeight='normal'
+            bgColor='#171717'
+            color='white'
+            flexGrow='1'
+            border='1px'
+            borderStyle='solid'
+            borderColor='#333'
+            _hover={{
+              bgColor: 'white',
+              color: 'black',
+            }}
+          >
+            Continue with Github
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

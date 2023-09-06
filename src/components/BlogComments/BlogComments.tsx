@@ -13,11 +13,10 @@ import {
 } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
-import SubmitButton from '../UI/SubmitButton';
+import SubmitButton from '../UI/SubmitButton/SubmitButton';
 const Comment = lazy(() => import('../Comment/Comment'));
 const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const user = useStore((state: AppState) => state.user);
-
   const form = useRef<null>(null);
   const refresh = useCacheRefresh();
 
@@ -35,12 +34,6 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
     }
   };
 
-  const handleDeleteComment = async (id: number) => {
-    const confirmMsg = confirm('Do you want to delete this comment?');
-    if (confirmMsg) {
-      await pb.collection('comments').delete(id.toString());
-    }
-  };
   const sortedBlogComments: BlogCommentType[] = useMemo(() => {
     return blog?.expand?.['comments(blog)']
       ?.slice()
@@ -136,12 +129,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
             <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
               {sortedBlogComments?.length > 0 ? (
                 sortedBlogComments?.map((comment: BlogCommentType) => (
-                  <Comment
-                    key={comment.id}
-                    comment={comment}
-                    userId={user?.id}
-                    handleDeleteComment={handleDeleteComment}
-                  />
+                  <Comment key={comment.id} comment={comment} userId={user?.id} />
                 ))
               ) : (
                 <Text pt='20px' fontWeight='bold' bgColor='transparent' fontSize='md'>

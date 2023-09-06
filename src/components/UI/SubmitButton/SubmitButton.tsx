@@ -3,14 +3,16 @@ import { Button, Spinner } from '@chakra-ui/react';
 
 type SubmitButtonProps = {
   size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
 };
 
-const SubmitButton = ({ size }: SubmitButtonProps) => {
+const SubmitButton = ({ size, fullWidth }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
   return (
     <Button
       type='submit'
       outline='0'
+      width={`${fullWidth ? '100%' : 'auto'}`}
       _focus={{
         outline: '0px',
         border: '0',
@@ -23,7 +25,7 @@ const SubmitButton = ({ size }: SubmitButtonProps) => {
     >
       {pending ? (
         <>
-          <Spinner size={`${size || 'md'}`} color='white' mr={4} bgColor='transparent' /> Submitting
+          <Spinner size='sm' color='white' mr={4} bgColor='transparent' /> Submitting
         </>
       ) : (
         'Submit'

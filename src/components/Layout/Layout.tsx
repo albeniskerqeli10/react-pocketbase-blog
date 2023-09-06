@@ -13,7 +13,7 @@ const Layout: FC = () => {
       pb.authStore.onChange(() => {
         setUser(pb.authStore.model as ExtendedUser);
       });
-      if (!pb.authStore.isValid) {
+      if (!pb.authStore.isValid === true) {
         logoutUser();
       }
     };
