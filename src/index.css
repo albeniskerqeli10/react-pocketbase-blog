@@ -9,7 +9,6 @@
 html,
 body {
   min-height: 100vh;
-  background-color: #1b1b1d;
   scrollbar-gutter: stable;
 }
 
@@ -57,4 +56,48 @@ section {
     opacity: 1;
     /* transform: rotateX(0); */
   }
+}
+
+::file-selector-button {
+  color: white;
+  background-color: #1b1b1d;
+  border: 0;
+  cursor: pointer;
+}
+
+.quill {
+  width: 100%;
+  border: none;
+  background-color: transparent;
+}
+
+.ql-toolbar {
+  background-color: black;
+  border-color: transparent !important;
+  border-bottom: 2px solid #1b1b1d !important;
+}
+
+.ql-container {
+  background-color: black !important;
+  background: black !important;
+  border: 0 !important;
+}
+
+.ql-editor {
+  background-color: black;
+  min-height: 200px;
+}
+
+.ql-editor p {
+  background-color: transparent;
+}
+.quill > .ql-container > .ql-editor.ql-blank::before {
+  color: white;
+  font-family: inherit;
+  font-style: normal;
+  font-size: 1rem;
+}
+
+strong {
+  background-color: transparent;
 }

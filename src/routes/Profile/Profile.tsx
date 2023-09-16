@@ -130,22 +130,30 @@ const Profile: FC = () => {
           </Box>
           <IconButton
             onClick={() => setIsOpen(true)}
-            bgColor='transparent'
             aria-label='edit profile'
+            bgColor="#0766eb"
             _hover={{
-              border: '0',
-              bgColor: 'blue.500',
+              bgColor:"blue.600"
+              
             }}
             _active={{
               bgColor: 'transparent',
+              transition:"1s ease-in all "
+              
             }}
+            color='white'
+
+
             icon={
               <Pencil
+              size={40}
+              
                 style={{
                   backgroundColor: 'transparent',
+                  padding:"5px",
+                  borderRadius:"5px"
+                  
                 }}
-                fontSize='30'
-                color='white'
               />
             }
           />

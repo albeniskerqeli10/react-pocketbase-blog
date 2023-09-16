@@ -4,6 +4,7 @@ import { Suspense, lazy, FC } from 'react';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Spinner from './components/UI/Spinner/Spinner';
 import ErrorPage from './routes/ErrorPage';
+import Skeleton from './components/UI/Skeleton/Skeleton';
 const Home = lazy(() => import('./routes/Home/Home'));
 const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
 const CreateBlog = lazy(() => import('./routes/CreateBlog/CreateBlog'));
@@ -74,7 +75,7 @@ const Router: FC = () => {
         <Route
           path='blog/:id'
           element={
-            <Suspense fallback={<Spinner />}>
+            <Suspense fallback={<Skeleton width='100%' mainSkeletonHeight='400px' />}>
               <ProtectedRoute>
                 <SingleBlog />
               </ProtectedRoute>

@@ -9,9 +9,8 @@ import {
   startTransition,
 } from 'react';
 
-import { Box, Tab, TabList, Tabs } from '@chakra-ui/react';
-import Spinner from '../../components/UI/Spinner/Spinner';
-
+import { Box, Heading, Tab, TabList, Tabs } from '@chakra-ui/react';
+import Skeleton from '../../components/UI/Skeleton/Skeleton';
 import { pb } from '../../lib/pocketbase';
 import { BlogType } from '../../types/Blog';
 import { getBlogs } from '../../services/blog';
@@ -73,24 +72,34 @@ const Home: FC = () => {
           </TabList>
         </Tabs>
       </Box>
-      <Suspense fallback={<Spinner />}>
-        {blogs.map((blog: BlogType) => (
-          <Blog
-            key={blog.id}
-            id={blog.id}
-            width='600px'
-            title={blog.title}
-            image={blog.image}
-            shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
-            shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-            shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
-            content={blog.content}
-            avatar={blog?.expand?.user?.avatar}
-            username={blog?.expand?.user?.username}
-            user={blog.user}
-            likes={blog.likes}
-          />
+      <Suspense
+        fallback={Array.from({ length: 10 }, (_, index) => (
+          <Skeleton key={index} />
         ))}
+      >
+        {blogs.length <= 0 ? (
+          <Heading color='white' bgColor='white'>
+            No Blogs yet
+          </Heading>
+        ) : (
+          blogs.map((blog: BlogType) => (
+            <Blog
+              key={blog.id}
+              id={blog.id}
+              width='600px'
+              title={blog.title}
+              image={blog.image}
+              shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
+              shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
+              shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
+              content={blog.content}
+              avatar={blog?.expand?.user?.avatar}
+              username={blog?.expand?.user?.username}
+              user={blog.user}
+              likes={blog.likes}
+            />
+          ))
+        )}
       </Suspense>
     </Box>
   );

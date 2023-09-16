@@ -23,14 +23,16 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const createCommentAction = async (formData: FormData) => {
     const text = formData.get('text');
     if (text !== '' && user?.id !== null) {
-      await pb.collection('comments').create({
+await pb.collection('comments').create({
         text: text,
         user: user?.id,
         blog: blog.id,
       });
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       /* @ts-ignore*/
-      form.current.reset();
+        form?.current?.reset();
+      
     }
   };
 

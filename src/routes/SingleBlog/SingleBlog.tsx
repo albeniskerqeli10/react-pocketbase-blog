@@ -9,14 +9,17 @@ import BlogComments from '../../components/BlogComments/BlogComments';
 import { AppState, useStore } from '../../lib/store';
 import { getSingleBlog } from '../../services/blog';
 import { BlogType } from '../../types/Blog';
+import DOMPurify from 'dompurify';
+
 const SingleBlog: FC = () => {
   const { id } = useParams();
   getSingleBlog(id as string);
   const blog = use(getSingleBlog(id as string)) as BlogType;
   const currentUser = useStore((state: AppState) => state.user);
-
   const navigate = useNavigate();
   const refresh = useCacheRefresh();
+  const sanitizedContent = DOMPurify.sanitize(blog.content);
+
   useEffect(() => {
     if (!blog?.id) {
       navigate('/');
@@ -31,25 +34,6 @@ const SingleBlog: FC = () => {
       pb.collection('blogs').unsubscribe(id as string);
     };
   }, [id, blog?.id, refresh, navigate]);
-
-  const parts = blog?.content?.split(/(\*.*?\*|#.*?#)/);
-
-  const splittedContent = parts?.map((part: string, index: number) => {
-    if (part.startsWith('*') && part.endsWith('*')) {
-      const content = part.substring(1, part.length - 1);
-      return (
-        <Heading as='h2' fontSize={['md', 'md', 'xl']} color='white' key={index}>
-          {content}
-        </Heading>
-      );
-    } else {
-      return (
-        <Text width='100%' key={index} fontSize='sm' paddingBottom='30px' lineHeight='30px' color='gray.100'>
-          {part}
-        </Text>
-      );
-    }
-  });
 
   return (
     blog?.id && (
@@ -66,7 +50,6 @@ const SingleBlog: FC = () => {
           justifyContent='start'
         >
           <title>{`${blog.title} | PocketBlog`}</title>
-          <link rel='preload' as='image' href={blog.image} />
           <Image
             decoding='sync'
             fetchpriority='high'
@@ -135,11 +118,16 @@ const SingleBlog: FC = () => {
             justifyContent='start'
             flexWrap='wrap'
           >
-            <Heading color='white' fontSize={['lg', 'lg', '45px']}>
+            <Heading width='100%' color='white' fontSize={['lg', 'lg', '45px']}>
               {blog.title}
             </Heading>
           </Box>
-          {splittedContent}
+          <Box
+            bgColor='transparent'
+            color='white'
+            width='100%'
+            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+          />
           <BlogComments blog={blog} />
         </Box>
       </>

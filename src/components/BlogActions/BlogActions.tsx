@@ -5,10 +5,13 @@ import useForm from '../../hooks/useForm';
 import { BlogFormValues, BlogActionsProps } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
-import { pb } from '../../lib/pocketbase';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
+import { deleteBlog, editBlog, likeBlog, unlikeBlog } from '../../services/blog';
 
 const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
+
+
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
@@ -23,52 +26,46 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   };
 
   const handleLikeBlog = async () => {
-    const existingBlogLikes: Array<string> = blog.likes;
-    await pb.collection('blogs').update(blog.id, {
-      likes: [...existingBlogLikes, user?.id],
-      user: blog.user,
-    });
-  };
+   if(user?.id) {
+     return await likeBlog({
+      blog:blog,
+      userID:user?.id
+     })
+   }
+  }
 
   const handleUnlikeBlog = async () => {
-    const existingBlogLikes: Array<string> = blog.likes;
-
-    const newLikes = existingBlogLikes?.filter((likeId: string) => likeId !== user?.id);
-
-    await pb.collection('blogs').update(blog.id, {
-      likes: newLikes,
-      user: blog.user,
-    });
+    if(user?.id) {
+      return await unlikeBlog({
+        blog:blog,
+        userID:user.id
+      })
+    }
   };
 
   const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await pb.collection('blogs').update(
-        blog.id as string,
-        {
-          title: values.title !== '' ? values.title : blog.title,
-          content: values.content !== '' ? values.content : blog.content,
-          image: values.image !== '' ? values.image : blog.image,
-        },
-        {
-          expand: 'user',
-        },
-      );
-
-      startTransition(() => {
+      const editedBlog = await editBlog({
+        blog:blog,
+        values:values
+      })
+      if (editedBlog) {
+        startTransition(() => {
         onClose();
         resetForm();
       });
-    } catch (err) {
-      alert('Something went wrong, try again');
-    }
+      }
   };
-
+ 
   const handleDeleteBlog = async () => {
+
+if(!blog.id) {
+  return console.error("Blog is undefined");
+}
+
     const confirmMsg = confirm('Do you want to delete this blog?');
     if (confirmMsg) {
-      await pb.collection('blogs').delete(blog.id as string);
+      await deleteBlog(blog.id);
 
       startTransition(() => {
         refresh();
@@ -82,6 +79,8 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
       url: window.location.href,
     });
   };
+
+
 
   return (
     <Wrap display='flex' alignItems='end' justifyContent='end' flexDirection='row'>

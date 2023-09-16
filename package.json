@@ -17,6 +17,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@phosphor-icons/react": "^2.0.10",
     "@uploadcare/upload-client": "^6.6.1",
+    "dompurify": "^3.0.5",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
@@ -32,6 +33,7 @@
     "zustand": "^4.3.9"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.2",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.6",
     "@types/react-helmet": "^6.1.6",

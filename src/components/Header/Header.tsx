@@ -57,7 +57,7 @@ const Header: FC = () => {
             >
               Create
             </Button>
-            <Menu isLazy>
+            <Menu isLazy={true}>
               <MenuButton
                 color='white'
                 _hover={{

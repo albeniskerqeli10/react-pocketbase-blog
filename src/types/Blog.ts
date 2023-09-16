@@ -2,9 +2,9 @@ import { Record } from 'pocketbase';
 import { ReactNode } from 'react';
 import { ExtendedUser } from './Auth';
 export type BlogType = Partial<Record> & {
-  id: string;
+  id?: string;
   title: string;
-  content?: string;
+  content: string;
   image: string;
   likes: Array<string>;
   shouldLoad?: 'lazy' | 'eager';
@@ -21,6 +21,13 @@ export type BlogType = Partial<Record> & {
       created: ReactNode;
     };
   };
+};
+
+
+
+export type ActionForm = {
+  // eslint-disable-next-line no-unused-vars
+  get(name: FormDataEntryValue ): FormDataEntryValue;
 };
 
 export type BlogFormValues = {
@@ -43,3 +50,13 @@ export type BlogCommentType = {
     user: ExtendedUser;
   };
 };
+
+export type EditBlogType = {
+  blog:BlogType;
+  values:BlogFormValues
+}
+
+export type LikeBlogType = {
+  blog:BlogType;
+  userID:string | number;
+}

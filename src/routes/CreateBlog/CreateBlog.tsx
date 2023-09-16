@@ -1,71 +1,52 @@
-import { Box, Button, Heading, Input, Textarea } from '@chakra-ui/react';
+import { Box, Button, Heading, Input } from '@chakra-ui/react';
 import { startTransition, unstable_useCacheRefresh as useCacheRefresh, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../lib/store';
-import { pb } from '../../lib/pocketbase';
 import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
 import { client } from '../../lib/upload';
+import { addBlog } from '../../services/blog';
+import { BlogType } from '../../types/Blog';
+import ReactQuill from 'react-quill';
+import { toolbarModules } from '../../utils';
+import 'react-quill/dist/quill.snow.css';
 
-type ActionForm = {
-  // eslint-disable-next-line no-unused-vars
-  get(name: string): string;
-};
 const CreateBlog = () => {
   const refresh = useCacheRefresh();
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
   const [inputType, setInputType] = useState('file');
+  const [content, setContent] = useState('');
 
-  const createBlogPostAction = async (formData: ActionForm | FormData) => {
+  const createBlogPostAction = async (formData: FormData) => {
+    let imageSource = null;
     const title = formData.get('title');
-    const content = formData.get('content');
-    const image = formData.get('image');
-    if (inputType === 'file') {
-      const filey = await client.uploadFile(image);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const image: any = formData.get('image');
 
-      const createdBlog = await pb.collection('blogs').create(
-        {
-          title: title,
-          content: content,
-          image: filey
-            ? `${filey.cdnUrl}-/format/auto/-/quality/smart/`
-            : 'https://placehold.co/600x400/000000/FFFFFF/webp?text=Image',
-          user: user?.id, // grab user id which is stored in browser storage,
-          likes: [], // generate an empty array for every created blog,
-        },
-        {
-          expand: 'user',
-        },
-      );
-      startTransition(() => {
-        navigate(`/blog/${createdBlog.id}`);
-      });
-      if (location.pathname !== '/') {
-        startTransition(() => {
-          refresh();
-        });
-      }
+    if (inputType === 'file' && (image?.type?.match('image.*') as string)) {
+      const filey = await client.uploadFile(image);
+      imageSource = `${filey.cdnUrl}-/format/auto/-/quality/smart/`;
+    } else if (inputType === 'url') {
+      imageSource = image;
     } else {
-      const createdBlog = await pb.collection('blogs').create(
-        {
-          title: title,
-          content: content,
-          image: image,
-          user: user?.id, // grab user id which is stored in browser storage,
-          likes: [], // generate an empty array for every created blog,
-        },
-        {
-          expand: 'user',
-        },
-      );
+      alert('Please upload a valid image');
+    }
+
+    if (imageSource !== null) {
+      const blog = await addBlog({
+        title: title,
+        content: content,
+        image: imageSource,
+        user: user?.id, // grab user id which is stored in browser storage,
+        likes: [], // generate an empty array for every created blog,
+      } as BlogType);
+
       startTransition(() => {
-        navigate(`/blog/${createdBlog.id}`);
-      });
-      if (location.pathname !== '/') {
-        startTransition(() => {
+        navigate(`/blog/${blog.id}`);
+        if (location.pathname !== '/') {
           refresh();
-        });
-      }
+        }
+      });
     }
   };
 
@@ -98,12 +79,11 @@ const CreateBlog = () => {
         <Input
           name='title'
           boxShadow='sm'
-          rounded='sm'
+          rounded='md'
           bgColor='black'
-          borderWidth='1px'
-          borderColor='#333'
           my='5px'
           py='25px'
+          border='0'
           type='text'
           placeholder='Title'
           _placeholder={{
@@ -111,23 +91,16 @@ const CreateBlog = () => {
           }}
           required
         />
-
-        <Textarea
-          name='content'
-          border='1px'
-          borderColor='#333'
-          resize='none'
-          boxShadow='sm'
-          rounded='sm'
-          bgColor='black'
-          _placeholder={{
-            color: 'white',
-          }}
-          minH='200px'
-          my='5px'
+        <ReactQuill
+          modules={toolbarModules}
+          theme='snow'
           placeholder='Content'
-          required
+          className='editor'
+          id='editor'
+          value={content}
+          onChange={setContent}
         />
+
         <Box
           width='100%'
           display='flex'
@@ -135,8 +108,6 @@ const CreateBlog = () => {
           justifyContent='center'
           flexDirection='row'
           flexWrap='wrap'
-          border='1px'
-          borderColor='#333'
           bgColor='black'
           gap='5px'
           px='5px'
@@ -146,14 +117,15 @@ const CreateBlog = () => {
               name='image'
               color='white'
               width='auto'
-              border='0'
               boxShadow='sm'
               py='5px'
-              rounded='sm'
+              rounded='md'
               flex='1'
               accept='image/*'
               my='5px'
               type='file'
+              title=' '
+              border='0'
               placeholder='File'
               _placeholder={{
                 color: 'white',
@@ -168,7 +140,7 @@ const CreateBlog = () => {
               border='0'
               boxShadow='sm'
               py='25px'
-              rounded='sm'
+              rounded='md'
               flex='1'
               my='5px'
               type='url'
@@ -182,6 +154,15 @@ const CreateBlog = () => {
           <Button
             tabIndex={-1}
             type='button'
+            bgColor='transparent'
+            _hover={{
+              bgColor: 'white',
+              borderColor: 'white',
+              color: 'black',
+            }}
+            border='2px solid white'
+            color='white'
+            rounded='md'
             onClick={() => (inputType === 'file' ? setInputType('url') : setInputType('file'))}
           >
             {inputType === 'file' ? 'URL' : 'File Upload'}

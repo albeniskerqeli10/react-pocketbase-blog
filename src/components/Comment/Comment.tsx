@@ -102,14 +102,14 @@ const Comment = ({ comment, userId }: CommentProps) => {
               flexWrap='wrap'
               gap='10px'
             >
-              <SubmitButton />
+              <SubmitButton size='sm' />
               <Button
                 color='white'
                 _hover={{
                   bgColor: 'white',
                   color: 'black',
                 }}
-                size='md'
+                size='sm'
                 type='button'
                 variant='outline'
                 onClick={() => handleEditState(false)}
@@ -171,7 +171,12 @@ const Comment = ({ comment, userId }: CommentProps) => {
             fontSize={['sm', 'md', 'md']}
             fontWeight='normal'
             onClick={() => handleEditState(true)}
-            colorScheme='blue'
+            bgColor="#0766eb"
+            _hover={{
+              bgColor:"blue.500"
+            }}
+            
+            color="white"
             icon={
               <Pencil
                 style={{

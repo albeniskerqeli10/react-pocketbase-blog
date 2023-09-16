@@ -90,6 +90,17 @@ const Blog: FC<BlogType> = ({
         <Heading fontSize='xl' px='10px' py='5px' bgColor='inherit' color='white'>
           {title}
         </Heading>
+        <Box
+          color='white'
+          bgColor='transparent'
+          width='100%'
+          display='flex'
+          px='10px'
+          alignItems='center'
+          justifyContent='start'
+          gap='10px'
+          flexDirection='row'
+        ></Box>
       </Box>
     </LinkBox>
   );
