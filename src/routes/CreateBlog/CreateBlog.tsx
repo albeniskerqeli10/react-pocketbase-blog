@@ -37,8 +37,8 @@ const CreateBlog = () => {
         title: title,
         content: content,
         image: imageSource,
-        user: user?.id, // grab user id which is stored in browser storage,
-        likes: [], // generate an empty array for every created blog,
+        user: user?.id,
+        likes: [], 
       } as BlogType);
 
       startTransition(() => {
