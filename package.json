@@ -17,6 +17,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@phosphor-icons/react": "^2.0.10",
     "@uploadcare/upload-client": "^6.6.1",
+    "@vercel/analytics": "^1.0.2",
     "dompurify": "^3.0.5",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
