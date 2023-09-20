@@ -171,12 +171,11 @@ const Comment = ({ comment, userId }: CommentProps) => {
             fontSize={['sm', 'md', 'md']}
             fontWeight='normal'
             onClick={() => handleEditState(true)}
-            bgColor="#0766eb"
+            bgColor='#0766eb'
             _hover={{
-              bgColor:"blue.500"
+              bgColor: 'blue.500',
             }}
-            
-            color="white"
+            color='white'
             icon={
               <Pencil
                 style={{

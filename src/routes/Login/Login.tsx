@@ -1,7 +1,8 @@
-import { Box, Button, FormControl, FormLabel, Heading, Input, Spinner, Text } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Heading, Link, Input, Spinner, Text } from '@chakra-ui/react';
 import { useState, useEffect, FormEvent, FC, startTransition } from 'react';
+
 import { pb } from '../../lib/pocketbase';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import useForm from '../../hooks/useForm';
@@ -175,6 +176,23 @@ const Login: FC = () => {
           >
             Continue with Github
           </Button>
+          <Box
+            width='100%'
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            flexDirection='row'
+            backgroundColor='transparent'
+            color='white'
+            flexWrap='wrap'
+          >
+            <Text textAlign='center' backgroundColor='transparent'>
+              Don&apos;t have an account?{' '}
+              <Link colorScheme='red' color='red.500' as={RouterLink} to='/signup'>
+                Register
+              </Link>
+            </Text>
+          </Box>
         </Box>
       </Box>
     </Box>

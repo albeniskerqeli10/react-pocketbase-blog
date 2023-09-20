@@ -113,7 +113,7 @@ const User: FC = () => {
           </>
         ) : (
           <Heading py='30px' color='white' bgColor='transparent'>
-            No Blogs Yet
+            No blogs yet
           </Heading>
         )}
       </Box>

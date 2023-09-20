@@ -7,7 +7,6 @@ import {
   lazy,
   startTransition,
   FC,
-  useRef,
   useEffect,
   unstable_useCacheRefresh as useCacheRefresh,
 } from 'react';
@@ -17,22 +16,17 @@ import SubmitButton from '../UI/SubmitButton/SubmitButton';
 const Comment = lazy(() => import('../Comment/Comment'));
 const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const user = useStore((state: AppState) => state.user);
-  const form = useRef<null>(null);
   const refresh = useCacheRefresh();
 
   const createCommentAction = async (formData: FormData) => {
     const text = formData.get('text');
     if (text !== '' && user?.id !== null) {
-await pb.collection('comments').create({
+      await pb.collection('comments').create({
         text: text,
         user: user?.id,
         blog: blog.id,
+        likes: [],
       });
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      /* @ts-ignore*/
-        form?.current?.reset();
-      
     }
   };
 
@@ -79,7 +73,7 @@ await pb.collection('comments').create({
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Heading width='100%' color='white' my='10px' fontSize={['lg', 'lg', '30px']} bgColor='transparent'>
+        <Heading width='100%' color='white' my='10px' fontSize={['md', 'lg', '20px']} bgColor='transparent'>
           Comments ({sortedBlogComments?.length || 0})
           <Box
             my='20px'
@@ -93,10 +87,8 @@ await pb.collection('comments').create({
           >
             <Box
               width='100%'
-              ref={form}
               as='form'
               action={createCommentAction}
-              // onSubmit={handleCreateComment}
               display='flex'
               alignItems='flex-start'
               justifyContent='center'

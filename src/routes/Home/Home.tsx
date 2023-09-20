@@ -73,7 +73,7 @@ const Home: FC = () => {
         </Tabs>
       </Box>
       <Suspense
-        fallback={Array.from({ length: 10 }, (_, index) => (
+        fallback={Array.from({ length: 3 }, (_, index) => (
           <Skeleton key={index} />
         ))}
       >

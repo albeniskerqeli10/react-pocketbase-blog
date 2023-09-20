@@ -23,11 +23,9 @@ export type BlogType = Partial<Record> & {
   };
 };
 
-
-
 export type ActionForm = {
   // eslint-disable-next-line no-unused-vars
-  get(name: FormDataEntryValue ): FormDataEntryValue;
+  get(name: FormDataEntryValue): FormDataEntryValue;
 };
 
 export type BlogFormValues = {
@@ -46,17 +44,18 @@ export type BlogCommentType = {
   id: number;
   text: string;
   created: string | number | Date;
+  likes?: [];
   expand?: {
     user: ExtendedUser;
   };
 };
 
 export type EditBlogType = {
-  blog:BlogType;
-  values:BlogFormValues
-}
+  blog: BlogType;
+  values: BlogFormValues;
+};
 
 export type LikeBlogType = {
-  blog:BlogType;
-  userID:string | number;
-}
+  blog: BlogType;
+  userID: string | number;
+};

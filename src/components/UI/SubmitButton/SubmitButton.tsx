@@ -1,6 +1,6 @@
 import { experimental_useFormStatus as useFormStatus } from 'react-dom';
 import { Button, Spinner } from '@chakra-ui/react';
-
+import { useEffect } from 'react';
 type SubmitButtonProps = {
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
@@ -8,6 +8,13 @@ type SubmitButtonProps = {
 
 const SubmitButton = ({ size, fullWidth }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
+
+  useEffect(() => {
+    if (!pending) {
+      const form = document.querySelector('form');
+      form?.reset();
+    }
+  }, [pending]);
   return (
     <Button
       type='submit'

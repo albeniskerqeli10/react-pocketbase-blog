@@ -1,10 +1,8 @@
 import { Box, Input } from '@chakra-ui/react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { startTransition } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 const SearchBox = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+  const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
   return (
     <Box flex='0.6' display='flex' alignItems='center' justifyContent='center' flexDirection='row' flexWrap='wrap'>
@@ -12,16 +10,14 @@ const SearchBox = () => {
         bgColor='black'
         color='white'
         py='23px'
+        defaultValue={query || ''}
         border='0'
-        value={query || ''}
         onChange={(e) => {
-          startTransition(() => {
-            if (e.target.value !== '') {
-              navigate(`/search?q=${e.target.value}`);
-            } else {
-              navigate(`/`);
-            }
-          });
+          if (e.target.value !== '') {
+            navigate(`/search?q=${e.target.value}`);
+          } else {
+            navigate(`/`);
+          }
         }}
         _placeholder={{
           color: 'white',
