@@ -29,12 +29,6 @@ const Header: FC = () => {
         }}
         to='/'
         className='logo'
-        onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-          })
-        }
         fontSize={['md', 'md', 'lg']}
         fontWeight='bold'
         color='white'
