@@ -1,9 +1,16 @@
 * {
   margin: 0;
   padding: 0;
+  /* background-color: #101013; */
   background-color: #1b1b1d;
+  /* background-color: #18181c; */
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
+}
+input,
+select,
+textarea {
+  font-size: 16px !important;
 }
 
 html,
@@ -60,7 +67,7 @@ section {
 
 ::file-selector-button {
   color: white;
-  background-color: #1b1b1d;
+  background-color: black;
   border: 0;
   cursor: pointer;
 }
@@ -72,19 +79,19 @@ section {
 }
 
 .ql-toolbar {
-  background-color: black;
+  background-color: #0c0c0e;
   border-color: transparent !important;
   border-bottom: 2px solid #1b1b1d !important;
 }
 
 .ql-container {
-  background-color: black !important;
-  background: black !important;
+  background-color: #0c0c0e !important;
+  background: #0c0c0e !important;
   border: 0 !important;
 }
 
 .ql-editor {
-  background-color: black;
+  background-color: #0c0c0e;
   min-height: 200px;
 }
 

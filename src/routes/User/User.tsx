@@ -41,7 +41,7 @@ const User: FC = () => {
         <Box
           width='100%'
           as='section'
-          boxShadow='lg'
+          boxShadow='md'
           px='20px'
           display='flex'
           gap='20px'
@@ -49,7 +49,7 @@ const User: FC = () => {
           my='20px'
           alignItems='center'
           justifyContent='start'
-          bgColor='black'
+          bgColor='#0c0c0e'
           flexDirection='row'
           flexWrap='wrap'
         >

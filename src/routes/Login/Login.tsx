@@ -1,46 +1,34 @@
-import { Box, Button, FormControl, FormLabel, Heading, Link, Input, Spinner, Text } from '@chakra-ui/react';
-import { useState, useEffect, FormEvent, FC, startTransition } from 'react';
+import { Box, Button, FormControl, FormLabel, Heading, Link, Input, Text } from '@chakra-ui/react';
+import { useEffect, FC } from 'react';
 
 import { pb } from '../../lib/pocketbase';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
-import useForm from '../../hooks/useForm';
-
+import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import { experimental_useFormState as useFormState } from 'react-dom';
 const Login: FC = () => {
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
-  const setUser = useStore((state: AppState) => state.setUser);
-  const { values, handleChange } = useForm({
-    email: '',
-    password: '',
-    age: '',
-  });
-  const [error, setError] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const handleAuthLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setIsSubmitting(true);
 
-      if (values.email !== '' || values.password !== '') {
-        await pb.collection('users').authWithPassword(values.email, values.password);
-        if (pb.authStore.isValid) {
-          setUser(pb.authStore.model as ExtendedUser);
-          navigate('/');
-          startTransition(() => {
-            setError('');
-            setIsSubmitting(false);
-          });
-        }
+  const setUser = useStore((state: AppState) => state.setUser);
+  const loginAction = async (_prevState: object, formData: FormData) => {
+    const email = formData.get('email');
+    const password = formData.get('password');
+    try {
+      await pb.collection('users').authWithPassword(email as string, password as string);
+      if (pb.authStore.isValid) {
+        setUser(pb.authStore.model as ExtendedUser);
+        navigate('/');
       }
     } catch (err: unknown) {
-      setIsSubmitting(false);
       const errorResponse = err as ErrorResponse;
       if (errorResponse.status === 400) {
-        setError('Invalid Credentials');
+        return { message: 'Invalid Credentials' };
       } else {
-        setError('Something went wrong, please try again');
+        return { message: 'Something went wrong, please try again' };
       }
     }
   };
@@ -50,7 +38,9 @@ const Login: FC = () => {
       navigate('/');
     }
   }, [user, navigate]);
-
+  const [state, formAction] = useFormState(loginAction, {
+    message: null,
+  });
   const signInWithGithub = async () => {
     const user = await pb.collection('users').authWithOAuth2({ provider: 'github' });
     console.log(user, 'USER');
@@ -70,21 +60,22 @@ const Login: FC = () => {
       alignItems='center'
       justifyContent='center'
       flexWrap='wrap'
-      flexDirection='column'
+      flexDirection='row'
     >
       <Box
-        onSubmit={handleAuthLogin}
+        action={formAction}
         as='form'
         width='400px'
         px='20px'
         display='flex'
-        bgColor='black'
+        bgColor='#0c0c0e'
         boxShadow='lg'
         alignItems='start'
         justifyContent='center'
         py='10px'
         gap='20px'
         minH='400px'
+        rounded='sm'
         flexDirection='column'
       >
         <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='10px'>
@@ -96,7 +87,6 @@ const Login: FC = () => {
           </FormLabel>
           <Input
             name='email'
-            onChange={handleChange}
             type='email'
             color='white'
             bgColor='#1b1b1d'
@@ -114,7 +104,6 @@ const Login: FC = () => {
           </FormLabel>
           <Input
             name='password'
-            onChange={handleChange}
             color='white'
             bgColor='#1b1b1d'
             py='25px'
@@ -132,20 +121,12 @@ const Login: FC = () => {
           Forgot password?
         </Text>
 
-        {error !== '' && (
+        {state.message !== null && (
           <Text borderBottomColor='red.500' borderBottomWidth='2px' bgColor='transparent' color='white'>
-            {error}
+            {state.message}
           </Text>
         )}
-        {isSubmitting ? (
-          <Button type='button' disabled={true} width='100%' fontWeight='normal' colorScheme='red'>
-            <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
-          </Button>
-        ) : (
-          <Button type='submit' width='100%' fontWeight='normal' colorScheme='red'>
-            Submit
-          </Button>
-        )}
+        <SubmitButton fullWidth />
 
         <Box
           width='100%'
@@ -163,12 +144,9 @@ const Login: FC = () => {
             mb='5'
             width='auto'
             fontWeight='normal'
-            bgColor='#171717'
+            bgColor='black'
             color='white'
             flexGrow='1'
-            border='1px'
-            borderStyle='solid'
-            borderColor='#333'
             _hover={{
               bgColor: 'white',
               color: 'black',

@@ -28,6 +28,13 @@ const Header: FC = () => {
           textDecoration: 'none',
         }}
         to='/'
+        className='logo'
+        onClick={() =>
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          })
+        }
         fontSize={['md', 'md', 'lg']}
         fontWeight='bold'
         color='white'
@@ -54,6 +61,7 @@ const Header: FC = () => {
               size='md'
               colorScheme='red'
               order={['1', '0', '0']}
+              boxShadow='sm'
             >
               Create
             </Button>
@@ -73,7 +81,7 @@ const Header: FC = () => {
               >
                 {user?.username}
               </MenuButton>
-              <MenuList border='0' bgColor='black'>
+              <MenuList border='0' rounded='sm' bgColor='#0c0c0e' boxShadow='md'>
                 <MenuItem as={RouterLink} to='/profile' color='white' bgColor='transparent'>
                   Profile
                 </MenuItem>
@@ -94,7 +102,7 @@ const Header: FC = () => {
           width={['100%', 'auto', 'auto']}
           flexDirection='row'
         >
-          <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red'>
+          <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red' boxShadow='sm'>
             Sign In
           </Button>
           <Button
@@ -104,6 +112,7 @@ const Header: FC = () => {
             size='md'
             colorScheme='black'
             border='2px solid white'
+            boxShadow='sm'
           >
             Sign Up
           </Button>

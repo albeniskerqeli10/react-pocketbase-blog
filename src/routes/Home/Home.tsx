@@ -1,40 +1,30 @@
-import {
-  useEffect,
-  useState,
-  Suspense,
-  lazy,
-  FC,
-  use,
-  unstable_useCacheRefresh as useCacheRefresh,
-  startTransition,
-} from 'react';
+import { useEffect, useState, FC, use, unstable_useCacheRefresh as useCacheRefresh, startTransition } from 'react';
 
-import { Box, Heading, Tab, TabList, Tabs } from '@chakra-ui/react';
-import Skeleton from '../../components/UI/Skeleton/Skeleton';
+import { Box, Tab, TabList, Tabs } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
+import { getBlogs } from '../../services/blogAPI';
+import BlogsList from '../../components/BlogsList/BlogsList';
 import { BlogType } from '../../types/Blog';
-import { getBlogs } from '../../services/blog';
-const Blog = lazy(() => import('../../components/Blog/Blog'));
-
 const Home: FC = () => {
   getBlogs('-created');
 
   const [sortField, setSortField] = useState('-created');
 
-  const blogs = use(getBlogs(sortField));
-  const refresh = useCacheRefresh();
+  const blogs = use(getBlogs(sortField)) as BlogType[];
+
+  const refreshCache = useCacheRefresh();
 
   useEffect(() => {
     pb.collection('blogs').subscribe('*', async function () {
       startTransition(() => {
-        refresh();
+        refreshCache();
       });
     });
-  }, [refresh]);
+  }, [refreshCache]);
 
-  const handleSortBlogs = async (sortName: string) => {
+  const handleSortBlogs = async (fieldName: string) => {
     startTransition(() => {
-      setSortField(sortName);
+      setSortField(fieldName);
     });
   };
 
@@ -72,35 +62,7 @@ const Home: FC = () => {
           </TabList>
         </Tabs>
       </Box>
-      <Suspense
-        fallback={Array.from({ length: 3 }, (_, index) => (
-          <Skeleton key={index} />
-        ))}
-      >
-        {blogs.length <= 0 ? (
-          <Heading color='white' bgColor='white'>
-            No Blogs yet
-          </Heading>
-        ) : (
-          blogs.map((blog: BlogType) => (
-            <Blog
-              key={blog.id}
-              id={blog.id}
-              width='600px'
-              title={blog.title}
-              image={blog.image}
-              shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
-              shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-              shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
-              content={blog.content}
-              avatar={blog?.expand?.user?.avatar}
-              username={blog?.expand?.user?.username}
-              user={blog.user}
-              likes={blog.likes}
-            />
-          ))
-        )}
-      </Suspense>
+      <BlogsList blogs={blogs} />
     </Box>
   );
 };

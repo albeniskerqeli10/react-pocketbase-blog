@@ -25,7 +25,7 @@ const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ handleSubmit, han
   return (
     <>
       <Modal colorScheme='red' isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay bgColor='blackAlpha.300' />
+        <ModalOverlay bgColor='rgba(0,0,0,0.6)' />
         <ModalContent onSubmit={handleSubmit} borderWidth='2px' borderColor='#1b1b1d' as='form' bgColor='black'>
           <ModalHeader bgColor='transparent' color='white'>
             Change Account Details

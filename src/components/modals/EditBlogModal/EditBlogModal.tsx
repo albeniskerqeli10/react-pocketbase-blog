@@ -26,14 +26,8 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, isO
   return (
     <>
       <Modal colorScheme='red' useInert={false} isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay bgColor='blackAlpha.300' />
-        <ModalContent
-          onSubmit={handleSubmit}
-          borderWidth='2px'
-          borderColor='#1b1b1d'
-          as='form'
-          bgColor='black'
-        >
+        <ModalOverlay bgColor='rgba(0,0,0,0.6)' />
+        <ModalContent onSubmit={handleSubmit} borderWidth='2px' borderColor='#1b1b1d' as='form' bgColor='black'>
           <ModalHeader bgColor='transparent' color='white'>
             Edit this Blog Post
           </ModalHeader>
@@ -88,14 +82,7 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, isO
             <Button type='submit' fontWeight='normal' colorScheme='red'>
               Submit
             </Button>
-            <Button
-              type='button'
-              fontWeight='normal'
-              colorScheme='red'
-              variant='outline'
-              mr={3}
-              onClick={onClose}
-            >
+            <Button type='button' fontWeight='normal' color='white' variant='outline' mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { pb } from '../lib/pocketbase';
-import { BlogType, EditBlogType, LikeBlogType } from '../types/Blog';
+import { BlogType, EditBlogType, LikeBlogType, LikeCommentType } from '../types/Blog';
 import { redirect } from 'react-router-dom';
 import { ErrorResponse } from '../types/Auth';
 
@@ -10,19 +10,27 @@ type BlogsType = {
 
 // GET requests
 export const getBlogs = cache(async (sortField: string) => {
-  const blogs: BlogsType = await pb.collection('blogs').getList(0, 20, {
-    sort: sortField,
-    expand: 'user',
-  });
-  return blogs.items;
+  try {
+    const blogs: BlogsType = await pb.collection('blogs').getList(0, 20, {
+      sort: sortField,
+      expand: 'user',
+    });
+    return blogs.items;
+  } catch (err: unknown) {
+    console.error('Something went wrong' + err);
+  }
 });
 
 export const getAllBlogs = cache(async (sortField: string) => {
-  const blogs: BlogsType['items'] = await pb.collection('blogs').getFullList({
-    sort: sortField,
-    expand: 'user',
-  });
-  return blogs;
+  try {
+    const blogs: BlogsType['items'] = await pb.collection('blogs').getFullList({
+      sort: sortField,
+      expand: 'user',
+    });
+    return blogs;
+  } catch (err: unknown) {
+    console.error('Something went wrong' + err);
+  }
 });
 
 export const getSingleBlog = cache(async (id: string) => {
@@ -40,13 +48,22 @@ export const getSingleBlog = cache(async (id: string) => {
   }
 });
 
+export const getBlogTags = cache(async () => {
+  const tags = await pb.collection('tags').getFullList();
+  return tags;
+});
+
 // POST requests
 export const addBlog = async (blogData: BlogType) => {
-  const blog = await pb.collection('blogs').create(blogData, {
-    expand: 'user',
-  });
+  try {
+    const blog = await pb.collection('blogs').create(blogData, {
+      expand: 'user',
+    });
 
-  return blog;
+    return blog;
+  } catch (err: unknown) {
+    console.error('Something went wrong' + err);
+  }
 };
 
 // PUT requests
@@ -89,7 +106,37 @@ export const unlikeBlog = async ({ blog, userID }: LikeBlogType) => {
     user: blog.user,
   });
 };
+
+export const likeComment = async ({ comment, userID }: LikeCommentType) => {
+  if (!comment.id || !userID) {
+    return console.error('Comment is undefined.');
+  }
+  const existingCommentLikes: Array<string> = comment.likes;
+  return await pb.collection('comments').update(comment.id, {
+    likes: [...existingCommentLikes, userID],
+    user: comment.user,
+  });
+};
+
+export const unlikeComment = async ({ comment, userID }: LikeCommentType) => {
+  if (!comment.id) {
+    return console.error('Comment is undefined.');
+  }
+  const existingCommentLikes: Array<string> = comment.likes;
+
+  const newLikes = existingCommentLikes.filter((likeId: string) => likeId !== userID);
+
+  return await pb.collection('comments').update(comment.id, {
+    likes: newLikes,
+    user: comment.user,
+  });
+};
+
 // DELETE requests
 export const deleteBlog = async (id: string) => {
-  return await pb.collection('blogs').delete(id as string);
+  if (!id) {
+    return console.error('Blog ID is undefined');
+  } else {
+    return await pb.collection('blogs').delete(id as string);
+  }
 };

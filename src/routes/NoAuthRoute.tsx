@@ -1,35 +1,24 @@
-import {
-  useEffect,
-  useState,
-  Suspense,
-  lazy,
-  FC,
-  use,
-  unstable_useCacheRefresh as useCacheRefresh,
-  startTransition,
-} from 'react';
+import { useEffect, useState, FC, use, unstable_useCacheRefresh as useCacheRefresh, startTransition } from 'react';
 
 import { Box, Tab, TabList, Tabs } from '@chakra-ui/react';
-import Spinner from '../components/UI/Spinner/Spinner';
-
 import { pb } from '../lib/pocketbase';
 import { BlogType } from '../types/Blog';
-import { getBlogs } from '../services/blog';
-const Blog = lazy(() => import('../components/Blog/Blog'));
+import { getBlogs } from '../services/blogAPI';
+import BlogsList from '../components/BlogsList/BlogsList';
 const NoAuthRoute: FC = () => {
   const [sortField, setSortField] = useState('-created');
   getBlogs('-created');
 
-  const blogs = use(getBlogs(sortField));
-  const refresh = useCacheRefresh();
+  const blogs = use(getBlogs(sortField)) as BlogType[];
+  const refreshCache = useCacheRefresh();
 
   useEffect(() => {
     pb.collection('blogs').subscribe('*', async function () {
       startTransition(() => {
-        refresh();
+        refreshCache();
       });
     });
-  }, [refresh]);
+  }, [refreshCache]);
 
   const handleSortBlogs = async (sortName: string) => {
     startTransition(() => {
@@ -71,25 +60,7 @@ const NoAuthRoute: FC = () => {
           </TabList>
         </Tabs>
       </Box>
-      <Suspense fallback={<Spinner />}>
-        {blogs.map((blog: BlogType) => (
-          <Blog
-            key={blog.id}
-            id={blog.id}
-            width='600px'
-            title={blog.title}
-            image={blog.image}
-            shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
-            shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-            shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
-            content={blog.content}
-            avatar={blog?.expand?.user?.avatar}
-            username={blog?.expand?.user?.username}
-            user={blog.user}
-            likes={blog.likes}
-          />
-        ))}
-      </Suspense>
+      <BlogsList blogs={blogs} />
     </Box>
   );
 };

@@ -6,16 +6,13 @@ import { BlogFormValues, BlogActionsProps } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
-import { deleteBlog, editBlog, likeBlog, unlikeBlog } from '../../services/blog';
+import { deleteBlog, editBlog, likeBlog, unlikeBlog } from '../../services/blogAPI';
 
 const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
-
-
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
-  const refresh = useCacheRefresh();
+  const refreshCache = useCacheRefresh();
   const { values, handleChange, resetForm } = useForm<BlogFormValues>({
     title: '',
     content: '',
@@ -26,49 +23,48 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   };
 
   const handleLikeBlog = async () => {
-   if(user?.id) {
-     return await likeBlog({
-      blog:blog,
-      userID:user?.id
-     })
-   }
-  }
+    if (user?.id) {
+      return await likeBlog({
+        blog: blog,
+        userID: user?.id,
+      });
+    }
+  };
 
   const handleUnlikeBlog = async () => {
-    if(user?.id) {
+    if (user?.id) {
       return await unlikeBlog({
-        blog:blog,
-        userID:user.id
-      })
+        blog: blog,
+        userID: user.id,
+      });
     }
   };
 
   const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-      const editedBlog = await editBlog({
-        blog:blog,
-        values:values
-      })
-      if (editedBlog) {
-        startTransition(() => {
+    const editedBlog = await editBlog({
+      blog: blog,
+      values: values,
+    });
+    if (editedBlog) {
+      startTransition(() => {
         onClose();
         resetForm();
       });
-      }
+    }
   };
- 
-  const handleDeleteBlog = async () => {
 
-if(!blog.id) {
-  return console.error("Blog is undefined");
-}
+  const handleDeleteBlog = async () => {
+    if (!blog.id) {
+      return console.error('Blog is undefined');
+    }
 
     const confirmMsg = confirm('Do you want to delete this blog?');
     if (confirmMsg) {
       await deleteBlog(blog.id);
 
       startTransition(() => {
-        refresh();
+        refreshCache();
         navigate('/');
       });
     }
@@ -79,8 +75,6 @@ if(!blog.id) {
       url: window.location.href,
     });
   };
-
-
 
   return (
     <Wrap display='flex' alignItems='end' justifyContent='end' flexDirection='row'>
@@ -109,9 +103,9 @@ if(!blog.id) {
             boxSize={8}
             paddingBottom='5px'
             as={IconButton}
-            icon={<MoreVertical size='24' />}
+            icon={<MoreVertical weight='fill' size='24' />}
           ></MenuButton>
-          <MenuList border='0' bgColor='black'>
+          <MenuList border='0' bgColor='#1b1b1d'>
             {blog.user === user?.id && (
               <>
                 <MenuItem onClick={() => setIsOpen(true)} color='white' bgColor='transparent'>

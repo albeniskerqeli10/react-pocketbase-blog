@@ -7,7 +7,7 @@ import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
 import { AppState, useStore } from '../../lib/store';
-import { getSingleBlog } from '../../services/blog';
+import { getSingleBlog } from '../../services/blogAPI';
 import { BlogType } from '../../types/Blog';
 import DOMPurify from 'dompurify';
 
@@ -17,7 +17,7 @@ const SingleBlog: FC = () => {
   const blog = use(getSingleBlog(id as string)) as BlogType;
   const currentUser = useStore((state: AppState) => state.user);
   const navigate = useNavigate();
-  const refresh = useCacheRefresh();
+  const refreshCache = useCacheRefresh();
   const sanitizedContent = DOMPurify.sanitize(blog.content);
 
   useEffect(() => {
@@ -26,14 +26,14 @@ const SingleBlog: FC = () => {
     } else {
       pb.collection('blogs').subscribe(blog?.id as string, async function () {
         startTransition(() => {
-          refresh();
+          refreshCache();
         });
       });
     }
     return () => {
       pb.collection('blogs').unsubscribe(id as string);
     };
-  }, [id, blog?.id, refresh, navigate]);
+  }, [id, blog?.id, refreshCache, navigate]);
 
   return (
     blog?.id && (
@@ -54,6 +54,7 @@ const SingleBlog: FC = () => {
             decoding='sync'
             fetchpriority='high'
             src={blog.image}
+            rounded='sm'
             fit='cover'
             objectFit='cover'
             objectPosition='center'

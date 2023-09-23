@@ -7,6 +7,8 @@ import { pb } from '../../lib/pocketbase';
 import { Pencil } from '@phosphor-icons/react';
 import { useState } from 'react';
 import SubmitButton from '../UI/SubmitButton/SubmitButton';
+import CommentActions from './CommentActions';
+import TimeAgo from 'timeago-react';
 type CommentProps = {
   comment: BlogCommentType;
   userId?: User['id'];
@@ -39,24 +41,22 @@ const Comment = ({ comment, userId }: CommentProps) => {
       className='comment'
       width='100%'
       display='flex'
+      py='10px'
       alignItems='center'
       key={comment.id}
       justifyContent='space-between'
       px='10px'
       gap='10px'
       flexDirection='row'
-      bgColor='black'
+      bgColor='#0c0c0e'
       flexWrap='wrap'
       minHeight='100px'
       rounded='sm'
-      border='1px'
-      borderColor='#282828	'
-      borderStyle='solid'
       boxShadow='lg'
     >
       <Box
         bgColor='transparent'
-        gap='10px'
+        gap='15px'
         display='flex'
         alignItems='start'
         justifyContent='center'
@@ -93,6 +93,7 @@ const Comment = ({ comment, userId }: CommentProps) => {
               }}
               required
             />
+
             <Box
               bgColor='transparent'
               display='flex'
@@ -140,22 +141,36 @@ const Comment = ({ comment, userId }: CommentProps) => {
                 alt='user avatar'
               />
 
-              <Link
-                to={userId === comment?.expand?.user?.id ? '/profile' : `/user/${comment?.expand?.user?.id}`}
-                as={RouterLink}
-                bgColor='transparent'
-                fontSize='sm'
-                fontWeight='normal'
-              >
-                {comment?.expand?.user?.username}
-              </Link>
+              <Box display='flex' gap='2px' bgColor='transparent' flexDirection='column' flexWrap='wrap'>
+                <Link
+                  to={userId === comment?.expand?.user?.id ? '/profile' : `/user/${comment?.expand?.user?.id}`}
+                  as={RouterLink}
+                  bgColor='transparent'
+                  fontSize='sm'
+                  fontWeight='normal'
+                >
+                  {comment?.expand?.user?.username}
+                </Link>
+                <TimeAgo
+                  style={{
+                    fontSize: '12px',
+                    color: '#CBD5E0',
+                    backgroundColor: 'transparent',
+                    fontWeight: 'normal',
+                  }}
+                  live={false}
+                  datetime={comment.created as string}
+                />
+              </Box>
             </Box>
             <Text bgColor='transparent' fontSize='md' fontWeight='normal'>
               {comment.text}
             </Text>
+            <CommentActions comment={comment} />
           </>
         )}
       </Box>
+
       {userId === comment?.expand?.user.id && (
         <Box
           display='flex'

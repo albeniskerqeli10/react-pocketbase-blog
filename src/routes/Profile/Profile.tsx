@@ -37,7 +37,7 @@ const Profile: FC = () => {
     email: '',
     avatar: '',
   });
-  const refresh = useCacheRefresh();
+  const refreshCache = useCacheRefresh();
 
   const handleEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,7 +55,7 @@ const Profile: FC = () => {
       );
 
       startTransition(() => {
-        refresh();
+        refreshCache();
         setIsOpen(false);
         resetForm();
       });
@@ -80,7 +80,7 @@ const Profile: FC = () => {
         <title> Profile | PocketBlog</title>
         <Box
           width='100%'
-          boxShadow='lg'
+          boxShadow='md'
           px='20px'
           display='flex'
           gap='20px'
@@ -89,7 +89,7 @@ const Profile: FC = () => {
           alignItems='center'
           justifyContent='space-between'
           flexWrap='wrap'
-          bgColor='black'
+          bgColor='#0c0c0e'
           flexDirection='row'
         >
           <Box
@@ -115,6 +115,7 @@ const Profile: FC = () => {
               <Heading bgColor='transparent' color='white'>
                 {user.username}
               </Heading>
+
               <Text fontSize='14px' color='gray.300' bgColor='transparent'>
                 You joined{' '}
                 <TimeAgo
@@ -131,28 +132,22 @@ const Profile: FC = () => {
           <IconButton
             onClick={() => setIsOpen(true)}
             aria-label='edit profile'
-            bgColor="#0766eb"
+            bgColor='#0766eb'
             _hover={{
-              bgColor:"blue.600"
-              
+              bgColor: 'blue.600',
             }}
             _active={{
               bgColor: 'transparent',
-              transition:"1s ease-in all "
-              
+              transition: '1s ease-in all ',
             }}
             color='white'
-
-
             icon={
               <Pencil
-              size={40}
-              
+                size={40}
                 style={{
                   backgroundColor: 'transparent',
-                  padding:"5px",
-                  borderRadius:"5px"
-                  
+                  padding: '5px',
+                  borderRadius: '5px',
                 }}
               />
             }

@@ -9,7 +9,8 @@ inject({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-createRoot(document.getElementById('root')!).render(
+
+createRoot(document.getElementById('root') as HTMLElement).render(
   <ChakraProvider>
     <App />
   </ChakraProvider>,

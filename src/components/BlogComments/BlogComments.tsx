@@ -16,7 +16,7 @@ import SubmitButton from '../UI/SubmitButton/SubmitButton';
 const Comment = lazy(() => import('../Comment/Comment'));
 const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const user = useStore((state: AppState) => state.user);
-  const refresh = useCacheRefresh();
+  const refreshCache = useCacheRefresh();
 
   const createCommentAction = async (formData: FormData) => {
     const text = formData.get('text');
@@ -40,14 +40,14 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
     pb.collection('comments').subscribe('*', async function (e) {
       if (e.record.blog === blog.id) {
         startTransition(() => {
-          refresh();
+          refreshCache();
         });
       }
     });
     return () => {
       pb.collection('comments').unsubscribe('*');
     };
-  }, [blog.id, refresh]);
+  }, [blog.id, refreshCache]);
 
   return (
     <Box
@@ -96,7 +96,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
               py='20px'
               gap='20px'
               flexDirection='column'
-              bgColor='black'
+              bgColor='#0c0c0e'
               flexWrap='wrap'
               minHeight='100px'
               border='1px'

@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../lib/store';
 import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
 import { client } from '../../lib/upload';
-import { addBlog } from '../../services/blog';
+import { addBlog } from '../../services/blogAPI';
 import { BlogType } from '../../types/Blog';
 import ReactQuill from 'react-quill';
 import { toolbarModules } from '../../utils';
 import 'react-quill/dist/quill.snow.css';
 
 const CreateBlog = () => {
-  const refresh = useCacheRefresh();
+  const refreshCache = useCacheRefresh();
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
   const [inputType, setInputType] = useState('file');
@@ -38,14 +38,12 @@ const CreateBlog = () => {
         content: content,
         image: imageSource,
         user: user?.id,
-        likes: [], 
+        likes: [],
       } as BlogType);
 
       startTransition(() => {
-        navigate(`/blog/${blog.id}`);
-        if (location.pathname !== '/') {
-          refresh();
-        }
+        navigate(`/blog/${blog?.id}`);
+        refreshCache();
       });
     }
   };
@@ -80,7 +78,7 @@ const CreateBlog = () => {
           name='title'
           boxShadow='sm'
           rounded='md'
-          bgColor='black'
+          bgColor='#0c0c0e'
           my='5px'
           py='25px'
           border='0'
@@ -108,7 +106,7 @@ const CreateBlog = () => {
           justifyContent='center'
           flexDirection='row'
           flexWrap='wrap'
-          bgColor='black'
+          bgColor='#0c0c0e'
           gap='5px'
           px='5px'
         >

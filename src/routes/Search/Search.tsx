@@ -1,12 +1,13 @@
 import { useSearchParams } from 'react-router-dom';
-import { getAllBlogs } from '../../services/blog';
+import { getAllBlogs } from '../../services/blogAPI';
 import { Suspense, lazy, use, useMemo } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
-import Spinner from '../../components/UI/Spinner/Spinner';
+import Skeleton from '../../components/UI/Skeleton/Skeleton';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Search = () => {
-  const blogs = use(getAllBlogs('-created'));
+  getAllBlogs('-created');
+  const blogs = use(getAllBlogs('-created')) as BlogType[];
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
   const filteredBlogs = useMemo(
@@ -26,7 +27,11 @@ const Search = () => {
       gap='20px'
       flexWrap='wrap'
     >
-      <Suspense fallback={<Spinner />}>
+      <Suspense
+        fallback={Array.from({ length: 3 }, (_, index) => (
+          <Skeleton key={index} />
+        ))}
+      >
         {filteredBlogs.length > 0 ? (
           filteredBlogs.map((blog: BlogType) => (
             <Blog

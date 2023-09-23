@@ -7,8 +7,10 @@ const SearchBox = () => {
   return (
     <Box flex='0.6' display='flex' alignItems='center' justifyContent='center' flexDirection='row' flexWrap='wrap'>
       <Input
-        bgColor='black'
+        // 232229
+        bgColor=' #0c0c0e'
         color='white'
+        boxShadow='md'
         py='23px'
         defaultValue={query || ''}
         border='0'

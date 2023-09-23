@@ -41,13 +41,14 @@ export type BlogActionsProps = {
 };
 
 export type BlogCommentType = {
-  id: number;
+  id: string;
   text: string;
   created: string | number | Date;
-  likes?: [];
+  likes: Array<string>;
   expand?: {
     user: ExtendedUser;
   };
+  user: ExtendedUser;
 };
 
 export type EditBlogType = {
@@ -57,5 +58,10 @@ export type EditBlogType = {
 
 export type LikeBlogType = {
   blog: BlogType;
+  userID: string | number;
+};
+
+export type LikeCommentType = {
+  comment: BlogCommentType;
   userID: string | number;
 };
