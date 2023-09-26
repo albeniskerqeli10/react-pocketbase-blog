@@ -89,7 +89,6 @@ export const likeBlog = async ({ blog, userID }: LikeBlogType) => {
   const existingBlogLikes: Array<string> = blog.likes;
   return await pb.collection('blogs').update(blog.id, {
     likes: [...existingBlogLikes, userID],
-    user: userID,
   });
 };
 
