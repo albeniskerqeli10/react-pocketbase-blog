@@ -26,7 +26,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
     if (user?.id) {
       return await likeBlog({
         blog: blog,
-        userID: user?.id,
+        userID: user.id,
       });
     }
   };
@@ -105,7 +105,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
             as={IconButton}
             icon={<MoreVertical weight='fill' size='24' />}
           ></MenuButton>
-          <MenuList border='0' bgColor='#1b1b1d'>
+          <MenuList border='0' bgColor='#0c0c0e'>
             {blog.user === user?.id && (
               <>
                 <MenuItem onClick={() => setIsOpen(true)} color='white' bgColor='transparent'>
@@ -126,6 +126,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
             handleSubmit={handleEditBlogPost}
             handleChange={handleChange}
             isOpen={isOpen}
+            blog={blog}
             onClose={onClose}
           />
         )}

@@ -16,13 +16,14 @@ import { FC, ChangeEvent, FormEvent } from 'react';
 type EditBlogModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  blog: any;
   // eslint-disable-next-line no-unused-vars
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
   // eslint-disable-next-line no-unused-vars
   handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 };
 
-const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, isOpen, onClose }) => {
+const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, blog, isOpen, onClose }) => {
   return (
     <>
       <Modal colorScheme='red' useInert={false} isOpen={isOpen} onClose={onClose} isCentered>
@@ -44,6 +45,7 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, isO
               <Input
                 name='title'
                 onChange={handleChange}
+                defaultValue={blog.title}
                 placeholder='Blog title'
                 _placeholder={{
                   color: 'gray.400',
@@ -51,12 +53,14 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, isO
               />
               <Textarea
                 name='content'
+                defaultValue={blog.content}
                 resize='horizontal'
+                minHeight='300px'
                 onChange={handleChange}
                 _placeholder={{
                   color: 'gray.400',
                 }}
-                placeholder={`Blog content (Use * for H1 like *This is a heading* )`}
+                placeholder={`Blog content`}
               />
 
               <Input
@@ -66,6 +70,7 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, isO
                 _placeholder={{
                   color: 'gray.400',
                 }}
+                defaultValue={blog.image}
                 placeholder='Paste your image url here'
               />
             </Box>

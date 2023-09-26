@@ -21,10 +21,10 @@ export const getBlogs = cache(async (sortField: string) => {
   }
 });
 
-export const getAllBlogs = cache(async (sortField: string) => {
+export const searchBlogs = cache(async (query: string) => {
   try {
     const blogs: BlogsType['items'] = await pb.collection('blogs').getFullList({
-      sort: sortField,
+      filter: `title~"${query}"`,
       expand: 'user',
     });
     return blogs;
@@ -83,13 +83,13 @@ export const editBlog = async ({ blog, values }: EditBlogType) => {
 };
 
 export const likeBlog = async ({ blog, userID }: LikeBlogType) => {
-  if (!blog.id || !userID) {
+  if (!blog.id) {
     return console.error('Blog is undefined.');
   }
   const existingBlogLikes: Array<string> = blog.likes;
   return await pb.collection('blogs').update(blog.id, {
     likes: [...existingBlogLikes, userID],
-    user: blog.user,
+    user: userID,
   });
 };
 

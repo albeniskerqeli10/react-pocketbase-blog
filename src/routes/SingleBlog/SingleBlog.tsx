@@ -127,6 +127,7 @@ const SingleBlog: FC = () => {
             bgColor='transparent'
             color='white'
             width='100%'
+            className="content"
             dangerouslySetInnerHTML={{ __html: sanitizedContent }}
           />
           <BlogComments blog={blog} />

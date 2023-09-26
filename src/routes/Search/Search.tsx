@@ -1,27 +1,29 @@
-import { useSearchParams } from 'react-router-dom';
-import { getAllBlogs } from '../../services/blogAPI';
-import { Suspense, lazy, use, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { searchBlogs } from '../../services/blogAPI';
+import { Suspense, lazy, use, useEffect } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import Skeleton from '../../components/UI/Skeleton/Skeleton';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Search = () => {
-  getAllBlogs('-created');
-  const blogs = use(getAllBlogs('-created')) as BlogType[];
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('q');
-  const filteredBlogs = useMemo(
-    () => blogs.filter((blog) => blog.title.toLowerCase().includes(query?.toLowerCase() as string)),
-    [blogs, query],
-  );
-  return (
+
+  const searchQuery = searchParams.get('q') as string;
+  const blogs = searchQuery !== '' ? (use(searchBlogs(searchQuery)) as BlogType[]) : [];
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!searchQuery || searchQuery === '') {
+      navigate('/');
+    }
+  }, [searchQuery, navigate]);
+  return searchQuery.length > 0 ? (
     <Box
       width='100%'
       as='section'
       py='10px'
       display='flex'
       minHeight='80vh'
-      alignItems='center'
+      alignItems='start'
       justifyContent='start'
       flexDirection='row'
       gap='20px'
@@ -32,17 +34,21 @@ const Search = () => {
           <Skeleton key={index} />
         ))}
       >
-        {filteredBlogs.length > 0 ? (
-          filteredBlogs.map((blog: BlogType) => (
+        {' '}
+        <Heading width='100%' fontWeight='normal' fontSize='20px' color='white'>
+          Displaying results for <b>{searchQuery}</b>
+        </Heading>
+        {blogs?.length > 0 ? (
+          blogs?.map((blog: BlogType) => (
             <Blog
               key={blog.id}
               id={blog.id}
               width='600px'
               title={blog.title}
               image={blog.image}
-              shouldPreload={filteredBlogs[0].id === blog.id ? 'high' : 'low'}
-              shouldLazyLoad={filteredBlogs[0].id === blog.id ? 'eager' : 'lazy'}
-              shouldDecode={filteredBlogs[0].id === blog.id ? 'sync' : 'async'}
+              shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
+              shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
+              shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
               content={blog.content}
               avatar={blog?.expand?.user?.avatar}
               username={blog?.expand?.user?.username}
@@ -57,7 +63,7 @@ const Search = () => {
         )}
       </Suspense>
     </Box>
-  );
+  ) : null;
 };
 
 export default Search;

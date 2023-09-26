@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
+import { StrictMode } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import '@fontsource/roboto/400.css'; // Defaults to weight 400
 
@@ -11,7 +12,9 @@ inject({
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 
 createRoot(document.getElementById('root') as HTMLElement).render(
-  <ChakraProvider>
-    <App />
-  </ChakraProvider>,
+  <StrictMode>
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
+  </StrictMode>,
 );

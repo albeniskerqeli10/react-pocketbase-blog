@@ -3,9 +3,19 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 const SearchBox = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
   const query = searchParams.get('q');
   return (
-    <Box flex='0.6' display='flex' alignItems='center' justifyContent='center' flexDirection='row' flexWrap='wrap'>
+    <Box
+      flex={['initial', 0.8, 0.6]}
+      width={['100%', 'auto', 'auto']}
+      order={[1, 0, 0]}
+      display='flex'
+      alignItems='center'
+      justifyContent='center'
+      flexDirection='row'
+      flexWrap='wrap'
+    >
       <Input
         // 232229
         bgColor=' #0c0c0e'

@@ -55,7 +55,7 @@ const Home: FC = () => {
               _active={{
                 bgColor: 'transparent',
               }}
-              onClick={() => sortField !== 'likes' && handleSortBlogs('likes')}
+              onClick={() => sortField !== 'likes' && handleSortBlogs('-likes.length')}
             >
               Popular
             </Tab>

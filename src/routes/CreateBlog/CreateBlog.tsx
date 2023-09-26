@@ -6,9 +6,7 @@ import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
 import { client } from '../../lib/upload';
 import { addBlog } from '../../services/blogAPI';
 import { BlogType } from '../../types/Blog';
-import ReactQuill from 'react-quill';
-import { toolbarModules } from '../../utils';
-import 'react-quill/dist/quill.snow.css';
+import Editor from '../../components/UI/Editor/Editor';
 
 const CreateBlog = () => {
   const refreshCache = useCacheRefresh();
@@ -40,9 +38,8 @@ const CreateBlog = () => {
         user: user?.id,
         likes: [],
       } as BlogType);
-
+      navigate(`/blog/${blog?.id}`);
       startTransition(() => {
-        navigate(`/blog/${blog?.id}`);
         refreshCache();
       });
     }
@@ -89,15 +86,7 @@ const CreateBlog = () => {
           }}
           required
         />
-        <ReactQuill
-          modules={toolbarModules}
-          theme='snow'
-          placeholder='Content'
-          className='editor'
-          id='editor'
-          value={content}
-          onChange={setContent}
-        />
+        <Editor content={content} setContent={setContent} />
 
         <Box
           width='100%'

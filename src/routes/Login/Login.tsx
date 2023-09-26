@@ -43,7 +43,6 @@ const Login: FC = () => {
   });
   const signInWithGithub = async () => {
     const user = await pb.collection('users').authWithOAuth2({ provider: 'github' });
-    console.log(user, 'USER');
     await pb.collection('users').update(pb?.authStore?.model?.id as string, {
       avatar: user?.meta?.avatarUrl,
     });

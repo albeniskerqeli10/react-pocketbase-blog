@@ -1,4 +1,4 @@
-import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList, Avatar } from '@chakra-ui/react';
 import { FC, memo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
@@ -19,7 +19,7 @@ const Header: FC = () => {
       display='flex'
       alignItems='center'
       gap={['20px', '0', '0']}
-      justifyContent={['center', 'space-between', 'space-between']}
+      justifyContent={['space-between', 'space-between', 'space-between']}
       flexWrap='wrap'
     >
       <Link
@@ -42,19 +42,18 @@ const Header: FC = () => {
             display='flex'
             alignItems='center'
             justifyContent='center'
-            gap={['8px', '8px', '8px']}
+            gap={['10px', '10px', '10px']}
             flexWrap='wrap'
-            width={['100%', 'auto', 'auto']}
+            width={['auto', 'auto', 'auto']}
             flexDirection='row'
           >
             <Button
               as={RouterLink}
               to='/create-blog'
-              width={['100%', 'auto', 'auto']}
+              width={['auto', 'auto', 'auto']}
               fontWeight='normal'
               size='md'
               colorScheme='red'
-              order={['1', '0', '0']}
               boxShadow='sm'
             >
               Create
@@ -71,10 +70,13 @@ const Header: FC = () => {
                 border='0'
                 size={['md', 'md', 'md']}
                 bgColor='transparent'
-                as={Button}
-              >
-                {user?.username}
-              </MenuButton>
+                as={Avatar}
+                name={user?.username}
+                cursor='pointer'
+                width='40px'
+                height='40px'
+                src={user?.avatar}
+              ></MenuButton>
               <MenuList border='0' rounded='sm' bgColor='#0c0c0e' boxShadow='md'>
                 <MenuItem as={RouterLink} to='/profile' color='white' bgColor='transparent'>
                   Profile
@@ -93,7 +95,7 @@ const Header: FC = () => {
           justifyContent='center'
           gap={['8px', '8px', '8px']}
           flexWrap='wrap'
-          width={['100%', 'auto', 'auto']}
+          width={['auto', 'auto', 'auto']}
           flexDirection='row'
         >
           <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red' boxShadow='sm'>

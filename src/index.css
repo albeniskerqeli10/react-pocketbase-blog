@@ -108,3 +108,32 @@ section {
 strong {
   background-color: transparent;
 }
+
+.content code {
+  font-family: Monaco, monospace; /* Use Monaco or a monospace font */
+  background-color: #121212;
+  color: #abb2bf; /* Text color */
+  padding: 20px;
+  overflow-x: auto; /* Enable horizontal scroll if needed */
+  border: 1px solid #121212; /* Border */
+  border-radius: 5px;
+  line-height: 1.5;
+}
+
+.content h2 {
+  padding: 20px 0;
+  font-weight: bold;
+}
+
+.content h3 {
+  padding: 10px;
+}
+
+.content img {
+  padding: 20px 0;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
