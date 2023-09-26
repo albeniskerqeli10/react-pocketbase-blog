@@ -102,7 +102,6 @@ export const unlikeBlog = async ({ blog, userID }: LikeBlogType) => {
 
   await pb.collection('blogs').update(blog.id, {
     likes: newLikes,
-    user: blog.user,
   });
 };
 
