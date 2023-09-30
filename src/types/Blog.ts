@@ -65,3 +65,8 @@ export type LikeCommentType = {
   comment: BlogCommentType;
   userID: string | number;
 };
+
+export type Tag = Partial<Record> & {
+  id: number;
+  name: string;
+};

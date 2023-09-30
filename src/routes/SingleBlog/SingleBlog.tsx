@@ -75,15 +75,7 @@ const SingleBlog: FC = () => {
             flexWrap='wrap'
           >
             <Box color='gray.300' display='flex' alignItems='start' flexDirection='row' flexWrap='wrap' gap='10px'>
-              <Image
-                src={blog?.expand?.user?.avatar}
-                rounded='full'
-                fetchpriority='high'
-                width='40px'
-                height='40px'
-                decoding='sync'
-                alt='avatar'
-              />
+              <Image src={blog?.expand?.user?.avatar} rounded='full' width='40px' height='40px' alt='avatar' />
 
               <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
                 <Text
@@ -109,7 +101,6 @@ const SingleBlog: FC = () => {
             </Box>
             <BlogActions blog={blog} />
           </Box>
-
           <Box
             width='100%'
             display='flex'
@@ -127,7 +118,7 @@ const SingleBlog: FC = () => {
             bgColor='transparent'
             color='white'
             width='100%'
-            className="content"
+            className='content'
             dangerouslySetInnerHTML={{ __html: sanitizedContent }}
           />
           <BlogComments blog={blog} />

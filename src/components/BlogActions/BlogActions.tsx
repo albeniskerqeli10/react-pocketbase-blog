@@ -1,23 +1,17 @@
 import { Wrap, Icon, Menu, MenuItem, MenuButton, MenuList, IconButton, Box, Text } from '@chakra-ui/react';
-import { FC, useState, startTransition, FormEvent, unstable_useCacheRefresh as useCacheRefresh } from 'react';
+import { FC, useState, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useForm from '../../hooks/useForm';
-import { BlogFormValues, BlogActionsProps } from '../../types/Blog';
+import { BlogActionsProps } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
-import { deleteBlog, editBlog, likeBlog, unlikeBlog } from '../../services/blogAPI';
+import { deleteBlog, likeBlog, unlikeBlog } from '../../services/blogAPI';
 
 const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
   const refreshCache = useCacheRefresh();
-  const { values, handleChange, resetForm } = useForm<BlogFormValues>({
-    title: '',
-    content: '',
-    image: '',
-  });
   const onClose = () => {
     setIsOpen(false);
   };
@@ -40,20 +34,6 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
     }
   };
 
-  const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const editedBlog = await editBlog({
-      blog: blog,
-      values: values,
-    });
-    if (editedBlog) {
-      startTransition(() => {
-        onClose();
-        resetForm();
-      });
-    }
-  };
-
   const handleDeleteBlog = async () => {
     if (!blog.id) {
       return console.error('Blog is undefined');
@@ -62,18 +42,20 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
     const confirmMsg = confirm('Do you want to delete this blog?');
     if (confirmMsg) {
       await deleteBlog(blog.id);
+      navigate('/');
 
       startTransition(() => {
         refreshCache();
-        navigate('/');
       });
     }
   };
   const handleShareBlog = async () => {
-    await navigator?.share({
-      title: document.title,
-      url: window.location.href,
-    });
+    if (document && window) {
+      await navigator?.share({
+        title: document.title,
+        url: window.location.href,
+      });
+    }
   };
 
   return (
@@ -89,7 +71,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
         </Text>
       </Box>
       <>
-        <Menu isLazy>
+        <Menu>
           <MenuButton
             color='white'
             _hover={{
@@ -121,15 +103,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
             </MenuItem>
           </MenuList>
         </Menu>{' '}
-        {isOpen && (
-          <EditBlogModal
-            handleSubmit={handleEditBlogPost}
-            handleChange={handleChange}
-            isOpen={isOpen}
-            blog={blog}
-            onClose={onClose}
-          />
-        )}
+        {isOpen && <EditBlogModal isOpen={isOpen} blog={blog} onClose={onClose} />}
       </>
     </Wrap>
   );

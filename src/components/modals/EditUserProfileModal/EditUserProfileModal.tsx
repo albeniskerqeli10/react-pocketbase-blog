@@ -11,17 +11,19 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { FC, ChangeEvent, FormEvent } from 'react';
+import { ExtendedUser } from '../../../types/Auth';
 
 type EditUserProfileModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  user: ExtendedUser;
   // eslint-disable-next-line no-unused-vars
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
   // eslint-disable-next-line no-unused-vars
   handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 };
 
-const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ handleSubmit, handleChange, isOpen, onClose }) => {
+const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ user, handleSubmit, handleChange, isOpen, onClose }) => {
   return (
     <>
       <Modal colorScheme='red' isOpen={isOpen} onClose={onClose} isCentered>
@@ -44,6 +46,7 @@ const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ handleSubmit, han
                 name='email'
                 onChange={handleChange}
                 placeholder='E-mail'
+                defaultValue={user.email}
                 _placeholder={{
                   color: 'gray.400',
                 }}
@@ -55,6 +58,7 @@ const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ handleSubmit, han
                 _placeholder={{
                   color: 'gray.400',
                 }}
+                defaultValue={user.username}
                 placeholder={`Username`}
               />
 
@@ -65,6 +69,7 @@ const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ handleSubmit, han
                 _placeholder={{
                   color: 'gray.400',
                 }}
+                defaultValue={user.avatar}
                 placeholder='Profile picture(only url)'
               />
             </Box>

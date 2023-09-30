@@ -8,11 +8,14 @@ type SubmitButtonProps = {
 
 const SubmitButton = ({ size, fullWidth }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
+  console.log(pending, 'Pending');
 
   useEffect(() => {
     if (!pending) {
-      const form = document.querySelector('form');
-      form?.reset();
+      if (document) {
+        const form = document.querySelector('form');
+        form?.reset();
+      }
     }
   }, [pending]);
   return (
@@ -28,6 +31,7 @@ const SubmitButton = ({ size, fullWidth }: SubmitButtonProps) => {
       size={`${size || 'md'}`}
       px='20px'
       isDisabled={pending}
+      disabled={pending}
       colorScheme='red'
     >
       {pending ? (

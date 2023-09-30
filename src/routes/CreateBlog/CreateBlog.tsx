@@ -5,20 +5,30 @@ import { useStore } from '../../lib/store';
 import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
 import { client } from '../../lib/upload';
 import { addBlog } from '../../services/blogAPI';
-import { BlogType } from '../../types/Blog';
+import { BlogType, Tag } from '../../types/Blog';
 import Editor from '../../components/UI/Editor/Editor';
+import TagInput from '../../components/TagInput/TagInput';
 
 const CreateBlog = () => {
-  const refreshCache = useCacheRefresh();
-  const navigate = useNavigate();
-  const user = useStore((state) => state.user);
   const [inputType, setInputType] = useState('file');
   const [content, setContent] = useState('');
+  const [tags, setTags] = useState<Tag[]>([]);
+  const user = useStore((state) => state.user);
+  const refreshCache = useCacheRefresh();
+  const navigate = useNavigate();
+  const handleTagClick = (tag: Tag) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+  };
+
+  const handleDeleteTag = (tagID: number) => {
+    setTags([...tags.filter((tag) => tag.id !== tagID)]);
+  };
 
   const createBlogPostAction = async (formData: FormData) => {
-    let imageSource = null;
+    let imageSource;
     const title = formData.get('title');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const image: any = formData.get('image');
 
     if (inputType === 'file' && (image?.type?.match('image.*') as string)) {
@@ -37,6 +47,7 @@ const CreateBlog = () => {
         image: imageSource,
         user: user?.id,
         likes: [],
+        tags: tags.length > 0 ? tags.map((tag) => tag.id) : [],
       } as BlogType);
       navigate(`/blog/${blog?.id}`);
       startTransition(() => {
@@ -52,7 +63,7 @@ const CreateBlog = () => {
       bgColor='transparent'
       display='flex'
       alignItems='center'
-      minHeight='80vh'
+      minHeight='100vh'
       justifyContent='start'
       flexDirection='column'
       flexWrap='wrap'
@@ -69,7 +80,7 @@ const CreateBlog = () => {
         justifyContent='center'
         flexDirection='column'
         flexWrap='wrap'
-        gap='30px'
+        gap='20px'
       >
         <Input
           name='title'
@@ -87,6 +98,7 @@ const CreateBlog = () => {
           required
         />
         <Editor content={content} setContent={setContent} />
+        <TagInput tags={tags} handleTagClick={handleTagClick} handleDeleteTag={handleDeleteTag} />
 
         <Box
           width='100%'
@@ -155,7 +167,8 @@ const CreateBlog = () => {
             {inputType === 'file' ? 'URL' : 'File Upload'}
           </Button>
         </Box>
-        <SubmitButton fullWidth />
+
+        <SubmitButton fullWidth={true} />
       </Box>
     </Box>
   );

@@ -35,6 +35,7 @@ const SearchBox = () => {
           color: 'white',
         }}
         type='search'
+        name='q'
         placeholder='Search blogs'
       />
     </Box>

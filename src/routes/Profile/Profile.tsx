@@ -155,6 +155,7 @@ const Profile: FC = () => {
         </Box>
         {isOpen && (
           <EditUserProfileModal
+            user={user}
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
             handleChange={handleChange}

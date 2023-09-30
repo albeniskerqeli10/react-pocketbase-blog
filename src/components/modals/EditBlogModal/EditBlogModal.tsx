@@ -11,24 +11,42 @@ import {
   Box,
   Textarea,
 } from '@chakra-ui/react';
-import { FC, ChangeEvent, FormEvent } from 'react';
+import { FC, FormEvent, startTransition } from 'react';
+import { BlogFormValues, BlogType } from '../../../types/Blog';
+import { editBlog } from '../../../services/blogAPI';
+import useForm from '../../../hooks/useForm';
 
 type EditBlogModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  blog: any;
-  // eslint-disable-next-line no-unused-vars
-  handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  // eslint-disable-next-line no-unused-vars
-  handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  blog: BlogType;
 };
 
-const EditBlogModal: FC<EditBlogModalProps> = ({ handleSubmit, handleChange, blog, isOpen, onClose }) => {
+const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
+  const { values, handleChange, resetForm } = useForm<BlogFormValues>({
+    title: '',
+    content: '',
+    image: '',
+  });
+  const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const editedBlog = await editBlog({
+      blog: blog,
+      values: values,
+    });
+    if (editedBlog) {
+      startTransition(() => {
+        onClose();
+        resetForm();
+      });
+    }
+  };
+
   return (
     <>
       <Modal colorScheme='red' useInert={false} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bgColor='rgba(0,0,0,0.6)' />
-        <ModalContent onSubmit={handleSubmit} borderWidth='2px' borderColor='#1b1b1d' as='form' bgColor='black'>
+        <ModalContent onSubmit={handleEditBlogPost} borderWidth='2px' borderColor='#1b1b1d' as='form' bgColor='black'>
           <ModalHeader bgColor='transparent' color='white'>
             Edit this Blog Post
           </ModalHeader>

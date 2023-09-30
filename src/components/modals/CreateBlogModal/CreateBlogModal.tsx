@@ -61,9 +61,8 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
           expand: 'user',
         },
       );
-      startTransition(() => {
-        navigate(`/blog/${createdBlog.id}`);
-      });
+      navigate(`/blog/${createdBlog.id}`);
+
       if (location.pathname !== '/') {
         startTransition(() => {
           refreshCache();

@@ -1,11 +1,12 @@
 import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList, Avatar } from '@chakra-ui/react';
-import { FC, memo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { FC, startTransition } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import SearchBox from '../SearchBox/SearchBox';
 const Header: FC = () => {
   const user = useStore((state: AppState) => state.user);
   const logout = useStore((state: AppState) => state.logoutUser);
+  const navigate = useNavigate();
   return (
     <Box
       as='header'
@@ -23,11 +24,14 @@ const Header: FC = () => {
       flexWrap='wrap'
     >
       <Link
-        as={RouterLink}
         _hover={{
           textDecoration: 'none',
         }}
-        to='/'
+        onClick={() => {
+          startTransition(() => {
+            navigate('/');
+          });
+        }}
         className='logo'
         fontSize={['md', 'md', 'lg']}
         fontWeight='bold'
@@ -71,6 +75,7 @@ const Header: FC = () => {
                 size={['md', 'md', 'md']}
                 bgColor='transparent'
                 as={Avatar}
+                ignoreFallback={true}
                 name={user?.username}
                 cursor='pointer'
                 width='40px'
@@ -118,4 +123,4 @@ const Header: FC = () => {
   );
 };
 
-export default memo(Header);
+export default Header;

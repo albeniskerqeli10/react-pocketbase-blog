@@ -8,6 +8,7 @@ import { ExtendedUser } from '../../types/Auth';
 
 const Layout: FC = () => {
   const setUser = useStore((state: AppState) => state.setUser);
+
   const logoutUser = useStore((state: AppState) => state.logoutUser);
   useEffect(() => {
     const changeUser = () => {

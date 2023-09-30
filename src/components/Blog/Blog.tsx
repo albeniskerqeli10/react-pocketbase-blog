@@ -10,7 +10,7 @@ const Blog: FC<BlogType> = ({
   image,
   avatar,
   shouldLazyLoad,
-  width,
+  width = '100%',
   priority,
   shouldPreload,
   username,
@@ -24,8 +24,9 @@ const Blog: FC<BlogType> = ({
       key={id}
       as='article'
       rounded='sm'
-      width={width}
+      width='100%'
       boxShadow='md'
+      maxWidth={width}
       pb='10px'
       bgColor='#0c0c0e'
       display='flex'
@@ -49,6 +50,7 @@ const Blog: FC<BlogType> = ({
             objectPosition='center'
             height='300px'
             src={image}
+            maxWidth='100%'
             alt='blog image'
           />
         </LinkOverlay>
