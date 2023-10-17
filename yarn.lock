@@ -1286,10 +1286,10 @@
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@remix-run/router@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.npmjs.org/@remix-run/router/-/router-1.9.0.tgz"
-  integrity sha512-bV63itrKBC0zdT27qYm6SDZHlkXwFL1xMBuhkn+X7l0+IIhNaH5wuuvZKp6eKhCD4KFhujhfhCT1YxXW6esUIA==
+"@remix-run/router@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.npmjs.org/@remix-run/router/-/router-1.10.0.tgz"
+  integrity sha512-Lm+fYpMfZoEucJ7cMxgt4dYt8jLfbpwRCzAjm9UgSLOkmlqo9gupxt6YX3DY0Fk155NT9l17d/ydi+964uS9Lw==
 
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
@@ -1379,10 +1379,10 @@
   dependencies:
     parchment "^1.1.2"
 
-"@types/react-dom@^18.2.6":
-  version "18.2.6"
-  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.2.6.tgz"
-  integrity sha512-2et4PDvg6PVCyS7fuTc4gPoksV58bW0RwSxWKcPRcHZf0PRUGq03TKcD/rUHe3azfV6/5/biUBJw+HhCQjaP0A==
+"@types/react-dom@^18.2.13":
+  version "18.2.13"
+  resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.2.13.tgz"
+  integrity sha512-eJIUv7rPP+EC45uNYp/ThhSpE16k22VJUknt5OLoH9tbXoi8bMhwLf5xRuWMywamNbWzhrSmU7IBJfPup1+3fw==
   dependencies:
     "@types/react" "*"
 
@@ -1393,10 +1393,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.2.21":
-  version "18.2.21"
-  resolved "https://registry.npmjs.org/@types/react/-/react-18.2.21.tgz"
-  integrity sha512-neFKG/sBAwGxHgXiIxnbm3/AAVQ/cMRS93hvBpg8xYRbeQSPVABp9U2bRnPf0iI4+Ucdv3plSxKK+3CW2ENJxA==
+"@types/react@*", "@types/react@^18.2.28":
+  version "18.2.28"
+  resolved "https://registry.npmjs.org/@types/react/-/react-18.2.28.tgz"
+  integrity sha512-ad4aa/RaaJS3hyGz0BGegdnSRXQBkd1CCYDCdNjBPg90UUpLgo+WlJqb9fMYUxtehmzF3PJaTWqRZjko6BRzBg==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -1750,14 +1750,14 @@ braces@^3.0.2:
     fill-range "^7.0.1"
 
 browserslist@^4.21.9:
-  version "4.21.9"
-  resolved "https://registry.npmjs.org/browserslist/-/browserslist-4.21.9.tgz"
-  integrity sha512-M0MFoZzbUrRU4KNfCrDLnvyE7gub+peetoTid3TBIqtunaDJyXlwhakT+/VkvSXcfIzFfK/nkCs4nmyTmxdNSg==
+  version "4.22.1"
+  resolved "https://registry.npmjs.org/browserslist/-/browserslist-4.22.1.tgz"
+  integrity sha512-FEVc202+2iuClEhZhrWy6ZiAcRLvNMyYcxZ8raemul1DYVOVdFsbqckWLdsixQZCpJlwe77Z3UTalE7jsjnKfQ==
   dependencies:
-    caniuse-lite "^1.0.30001503"
-    electron-to-chromium "^1.4.431"
-    node-releases "^2.0.12"
-    update-browserslist-db "^1.0.11"
+    caniuse-lite "^1.0.30001541"
+    electron-to-chromium "^1.4.535"
+    node-releases "^2.0.13"
+    update-browserslist-db "^1.0.13"
 
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
@@ -1772,10 +1772,10 @@ callsites@^3.0.0:
   resolved "https://registry.npmjs.org/callsites/-/callsites-3.1.0.tgz"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
-caniuse-lite@^1.0.30001503:
-  version "1.0.30001513"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001513.tgz"
-  integrity sha512-pnjGJo7SOOjAGytZZ203Em95MRM8Cr6jhCXNF/FAXTpCTRTECnqQWLpiTRqrFtdYcth8hf4WECUpkezuYsMVww==
+caniuse-lite@^1.0.30001541:
+  version "1.0.30001541"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001541.tgz"
+  integrity sha512-bLOsqxDgTqUBkzxbNlSBt8annkDpQB9NdzdTbO2ooJ+eC/IQcvDspDc058g84ejCelF7vHUx57KIOjEecOHXaw==
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -1984,10 +1984,10 @@ dompurify@^3.0.5:
   resolved "https://registry.npmjs.org/dompurify/-/dompurify-3.0.5.tgz"
   integrity sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==
 
-electron-to-chromium@^1.4.431:
-  version "1.4.454"
-  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.454.tgz"
-  integrity sha512-pmf1rbAStw8UEQ0sr2cdJtWl48ZMuPD9Sto8HVQOq9vx9j2WgDEN6lYoaqFvqEHYOmGA9oRGn7LqWI9ta0YugQ==
+electron-to-chromium@^1.4.535:
+  version "1.4.537"
+  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.537.tgz"
+  integrity sha512-W1+g9qs9hviII0HAwOdehGYkr+zt7KKdmCcJcjH0mYg6oL8+ioT3Skjmt7BLoAQqXhjf40AXd+HlR4oAWMlXjA==
 
 emoji-regex@^9.2.2:
   version "9.2.2"
@@ -3057,7 +3057,7 @@ natural-compare@^1.4.0:
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-node-releases@^2.0.12:
+node-releases@^2.0.13:
   version "2.0.13"
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.13.tgz"
   integrity sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==
@@ -3230,15 +3230,15 @@ picomatch@^2.2.2, picomatch@^2.3.1:
   resolved "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-pocketbase@^0.15.3:
-  version "0.15.3"
-  resolved "https://registry.npmjs.org/pocketbase/-/pocketbase-0.15.3.tgz"
-  integrity sha512-sjM0XO4wHUlVZs94VhRJi4FeYtbLqvxFbRDJlfjFb/4FkxypbGwxLM4HDAEr8q6jdreuxAM1/n/b5HB1GjQ1Vg==
+pocketbase@^0.18.3:
+  version "0.18.3"
+  resolved "https://registry.npmjs.org/pocketbase/-/pocketbase-0.18.3.tgz"
+  integrity sha512-zE4+oue0p0Ntwoil17b2geBpPwV6B6bYdsbXmNWmod6XOqBK2+jLDT5/SlAP3une4bo3U5ZAW2GvigEBAV3bBg==
 
 postcss@^8.4.27:
-  version "8.4.30"
-  resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.30.tgz"
-  integrity sha512-7ZEao1g4kd68l97aWG/etQKPKq07us0ieSZ2TnFDk11i0ZfDW2AwKHYU8qv4MZKqN2fdBfg+7q0ES06UA73C1g==
+  version "8.4.31"
+  resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.31.tgz"
+  integrity sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
@@ -3301,13 +3301,13 @@ react-clientside-effect@^1.2.6:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
-react-dom@^0.0.0-experimental-3c27178a2-20230920:
-  version "0.0.0-experimental-3c27178a2-20230920"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-0.0.0-experimental-3c27178a2-20230920.tgz"
-  integrity sha512-C5S2JnnBeoXbDO6hi6CinTIB2khngLuw47wNIv+xyRzzWri+s9pHcj8+7u/QsBQjgl61yjQQkFojjb3Hnl4FBA==
+react-dom@^0.0.0-experimental-67cc9ba87-20231016:
+  version "0.0.0-experimental-67cc9ba87-20231016"
+  resolved "https://registry.npmjs.org/react-dom/-/react-dom-0.0.0-experimental-67cc9ba87-20231016.tgz"
+  integrity sha512-QL3hmFjKhYw8gQpMqEAvVlCibgmOty344X8WCGp0/fsxCozuqAiykMrBI18PQ8Rex6N3XqmZVfzA3k97oqLzVQ==
   dependencies:
     loose-envify "^1.1.0"
-    scheduler "0.0.0-experimental-3c27178a2-20230920"
+    scheduler "0.0.0-experimental-67cc9ba87-20231016"
 
 react-fast-compare@3.2.2:
   version "3.2.2"
@@ -3364,20 +3364,20 @@ react-remove-scroll@^2.5.6:
     use-callback-ref "^1.3.0"
     use-sidecar "^1.1.2"
 
-react-router-dom@^6.16.0:
-  version "6.16.0"
-  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.16.0.tgz"
-  integrity sha512-aTfBLv3mk/gaKLxgRDUPbPw+s4Y/O+ma3rEN1u8EgEpLpPe6gNjIsWt9rxushMHHMb7mSwxRGdGlGdvmFsyPIg==
+react-router-dom@^6.17.0:
+  version "6.17.0"
+  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.17.0.tgz"
+  integrity sha512-qWHkkbXQX+6li0COUUPKAUkxjNNqPJuiBd27dVwQGDNsuFBdMbrS6UZ0CLYc4CsbdLYTckn4oB4tGDuPZpPhaQ==
   dependencies:
-    "@remix-run/router" "1.9.0"
-    react-router "6.16.0"
+    "@remix-run/router" "1.10.0"
+    react-router "6.17.0"
 
-react-router@6.16.0:
-  version "6.16.0"
-  resolved "https://registry.npmjs.org/react-router/-/react-router-6.16.0.tgz"
-  integrity sha512-VT4Mmc4jj5YyjpOi5jOf0I+TYzGpvzERy4ckNSvSh2RArv8LLoCxlsZ2D+tc7zgjxcY34oTz2hZaeX5RVprKqA==
+react-router@6.17.0:
+  version "6.17.0"
+  resolved "https://registry.npmjs.org/react-router/-/react-router-6.17.0.tgz"
+  integrity sha512-YJR3OTJzi3zhqeJYADHANCGPUu9J+6fT5GLv82UWRGSxu6oJYCKVmxUcaBQuGm9udpWmPsvpme/CdHumqgsoaA==
   dependencies:
-    "@remix-run/router" "1.9.0"
+    "@remix-run/router" "1.10.0"
 
 react-style-singleton@^2.2.1:
   version "2.2.1"
@@ -3388,10 +3388,10 @@ react-style-singleton@^2.2.1:
     invariant "^2.2.4"
     tslib "^2.0.0"
 
-react@^0.0.0-experimental-3c27178a2-20230920:
-  version "0.0.0-experimental-3c27178a2-20230920"
-  resolved "https://registry.npmjs.org/react/-/react-0.0.0-experimental-3c27178a2-20230920.tgz"
-  integrity sha512-9DnxrFUNoWW9wQ+UothQhnKo1j2IWaaADlO9rRTAlqa51sSWJwlZ/QrIulisqsQP09Q91BVDOPi02g2K+x+z+Q==
+react@^0.0.0-experimental-67cc9ba87-20231016:
+  version "0.0.0-experimental-67cc9ba87-20231016"
+  resolved "https://registry.npmjs.org/react/-/react-0.0.0-experimental-67cc9ba87-20231016.tgz"
+  integrity sha512-l3vBDCiv64FFhqyAbNkZCH43HhJTznMhMe7kT25Xh0vM+gOQ/ztVv3Om16my6tNaVoxuljB9M7mpFmrVLML3Hw==
   dependencies:
     loose-envify "^1.1.0"
 
@@ -3496,10 +3496,10 @@ safe-regex-test@^1.0.0:
     get-intrinsic "^1.1.3"
     is-regex "^1.1.4"
 
-scheduler@0.0.0-experimental-3c27178a2-20230920:
-  version "0.0.0-experimental-3c27178a2-20230920"
-  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.0.0-experimental-3c27178a2-20230920.tgz"
-  integrity sha512-xGMOXu0kfEn4awexwNQhNQwfivy3+1lWpct3dW/MKgFKmB++VstYYKk5Vrj+XLvMxqvGsCcqpoPsTjnVjRdGdw==
+scheduler@0.0.0-experimental-67cc9ba87-20231016:
+  version "0.0.0-experimental-67cc9ba87-20231016"
+  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.0.0-experimental-67cc9ba87-20231016.tgz"
+  integrity sha512-/+y6gIIU0eo0fYWh+mmfjZlcqeYUYhdT8F3O84WcNUTFDprR05rceS4K/ZgVqK3WgKjvvXFnm/klsAQWLXD3eQ==
   dependencies:
     loose-envify "^1.1.0"
 
@@ -3777,10 +3777,10 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
-update-browserslist-db@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.0.11.tgz"
-  integrity sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==
+update-browserslist-db@^1.0.13:
+  version "1.0.13"
+  resolved "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.0.13.tgz"
+  integrity sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==
   dependencies:
     escalade "^3.1.1"
     picocolors "^1.0.0"

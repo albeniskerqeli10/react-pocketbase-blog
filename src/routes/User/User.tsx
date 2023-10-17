@@ -1,24 +1,17 @@
 import { Box, Heading, Image, Text, Spinner } from '@chakra-ui/react';
-import { pb } from '../../lib/pocketbase';
 
-import { useEffect, Suspense, lazy, FC, use, cache } from 'react';
+import { useEffect, Suspense, lazy, FC, use } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
+import { getUserProfile } from '../../services/authAPI';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-
-const getUser = cache(async (id: string) => {
-  const user = await pb.collection('users').getOne(id as string, {
-    expand: 'blogs(user)',
-  });
-  return user;
-});
 
 const User: FC = () => {
   const { id } = useParams();
-  getUser(id as string);
-  const user: ExtendedUser = use(getUser(id as string));
+  getUserProfile(id as string);
+  const user = use(getUserProfile(id as string)) as ExtendedUser;
   const navigate = useNavigate();
   useEffect(() => {
     if (!user?.id) {
@@ -74,7 +67,7 @@ const User: FC = () => {
                   backgroundColor: 'transparent',
                   color: 'inherit',
                 }}
-                datetime={user.created}
+                datetime={user.created as Date}
               />
             </Text>
           </Box>

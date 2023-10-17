@@ -7,7 +7,7 @@ type TabListProps = {
 
 const TabsList: FC<TabListProps> = ({ children }) => {
   return (
-    <Tabs colorScheme='red' bgColor='yellow' variant='unstyled' color='white'>
+    <Tabs colorScheme='red' variant='unstyled' bgColor='transparent' color='white'>
       <TabList display='flex' justifyContent='stretch' border='0'>
         {children}
       </TabList>

@@ -9,12 +9,12 @@ import {
   Button,
   Input,
   Box,
-  Textarea,
 } from '@chakra-ui/react';
-import { FC, FormEvent, startTransition } from 'react';
+import { FC, FormEvent, startTransition, useState } from 'react';
 import { BlogFormValues, BlogType } from '../../../types/Blog';
 import { editBlog } from '../../../services/blogAPI';
 import useForm from '../../../hooks/useForm';
+import Editor from '../../UI/Editor/Editor';
 
 type EditBlogModalProps = {
   isOpen: boolean;
@@ -28,11 +28,16 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
     content: '',
     image: '',
   });
+  const [content, setContent] = useState(blog.content);
   const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const editedBlog = await editBlog({
       blog: blog,
-      values: values,
+      values: {
+        title: values.title,
+        content: content,
+        image: values.image,
+      },
     });
     if (editedBlog) {
       startTransition(() => {
@@ -46,7 +51,14 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
     <>
       <Modal colorScheme='red' useInert={false} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bgColor='rgba(0,0,0,0.6)' />
-        <ModalContent onSubmit={handleEditBlogPost} borderWidth='2px' borderColor='#1b1b1d' as='form' bgColor='black'>
+        <ModalContent
+          minHeight='85vh'
+          onSubmit={handleEditBlogPost}
+          borderWidth='2px'
+          borderColor='#1b1b1d'
+          as='form'
+          bgColor='black'
+        >
           <ModalHeader bgColor='transparent' color='white'>
             Edit this Blog Post
           </ModalHeader>
@@ -69,17 +81,7 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
                   color: 'gray.400',
                 }}
               />
-              <Textarea
-                name='content'
-                defaultValue={blog.content}
-                resize='horizontal'
-                minHeight='300px'
-                onChange={handleChange}
-                _placeholder={{
-                  color: 'gray.400',
-                }}
-                placeholder={`Blog content`}
-              />
+              <Editor content={content} setContent={setContent} />
 
               <Input
                 name='image'

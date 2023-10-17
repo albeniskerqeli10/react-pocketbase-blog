@@ -4,11 +4,12 @@ import QuillEditor from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 type EditorProps = {
-  content: string;
+  content?: string;
   setContent: Dispatch<SetStateAction<string>>;
+  defaultContent?: string;
 };
 
-const Editor: FC<EditorProps> = ({ content, setContent }) => {
+const Editor: FC<EditorProps> = ({ content, setContent, defaultContent }) => {
   return (
     <QuillEditor
       modules={toolbarModules}
@@ -16,7 +17,9 @@ const Editor: FC<EditorProps> = ({ content, setContent }) => {
       placeholder='Content'
       className='editor'
       id='editor'
+      
       value={content}
+      defaultValue={defaultContent}
       onChange={setContent}
     />
   );

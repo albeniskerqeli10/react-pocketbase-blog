@@ -2,7 +2,6 @@ import { Box, Heading, IconButton, Image, Text, Spinner } from '@chakra-ui/react
 import { pb } from '../../lib/pocketbase';
 
 import {
-  cache,
   Suspense,
   lazy,
   useState,
@@ -19,18 +18,12 @@ import { ExtendedUser } from '../../types/Auth';
 import { Pencil } from '@phosphor-icons/react';
 import EditUserProfileModal from '../../components/modals/EditUserProfileModal/EditUserProfileModal';
 import useForm from '../../hooks/useForm';
+import { getUserProfile } from '../../services/authAPI';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
-const getUser = cache(async (id: string) => {
-  const userProfile = await pb.collection('users').getOne(id as string, {
-    expand: 'user, blogs(user)',
-  });
-  return userProfile;
-});
-
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
-  getUser(currentUser?.id as string);
-  const user: ExtendedUser = use(getUser(currentUser?.id as string));
+  getUserProfile(currentUser?.id as string);
+  const user = use(getUserProfile(currentUser?.id as string)) as ExtendedUser;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { values, handleChange, resetForm } = useForm({
     username: '',
@@ -124,7 +117,7 @@ const Profile: FC = () => {
                     backgroundColor: 'transparent',
                     color: 'inherit',
                   }}
-                  datetime={user.created}
+                  datetime={user.created as Date}
                 />
               </Text>
             </Box>

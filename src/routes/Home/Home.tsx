@@ -24,6 +24,7 @@ const Home: FC = () => {
       flexDirection='row'
       gap='20px'
       flexWrap='wrap'
+      overflowY='auto'
     >
       <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
         <TabsList>

@@ -1,7 +1,7 @@
 import { Wrap, Icon, Menu, MenuItem, MenuButton, MenuList, IconButton, Box, Text } from '@chakra-ui/react';
 import { FC, useState, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BlogActionsProps } from '../../types/Blog';
+import { BlogActionsProps, BlogType } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
@@ -19,7 +19,11 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const handleLikeBlog = async () => {
     if (user?.id) {
       return await likeBlog({
-        blog: blog,
+        blog: {
+          id: blog.id,
+          likes: blog.likes,
+        } as BlogType,
+
         userID: user.id,
       });
     }
@@ -28,7 +32,10 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const handleUnlikeBlog = async () => {
     if (user?.id) {
       return await unlikeBlog({
-        blog: blog,
+        blog: {
+          id: blog.id,
+          likes: blog.likes,
+        } as BlogType,
         userID: user.id,
       });
     }
@@ -50,12 +57,10 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
     }
   };
   const handleShareBlog = async () => {
-    if (document && window) {
-      await navigator?.share({
-        title: document.title,
-        url: window.location.href,
-      });
-    }
+    await navigator?.share({
+      title: document.title,
+      url: window.location.href,
+    });
   };
 
   return (

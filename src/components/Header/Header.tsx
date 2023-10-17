@@ -1,16 +1,16 @@
 import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList, Avatar } from '@chakra-ui/react';
-import { FC, startTransition } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { FC } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import SearchBox from '../SearchBox/SearchBox';
 const Header: FC = () => {
   const user = useStore((state: AppState) => state.user);
   const logout = useStore((state: AppState) => state.logoutUser);
-  const navigate = useNavigate();
   return (
     <Box
       as='header'
       width='100%'
+      bgColor='#1b1b1d'
       py='10px'
       minH='70px'
       position={['static', 'sticky', 'sticky']}
@@ -24,13 +24,10 @@ const Header: FC = () => {
       flexWrap='wrap'
     >
       <Link
+        to='/'
+        as={RouterLink}
         _hover={{
           textDecoration: 'none',
-        }}
-        onClick={() => {
-          startTransition(() => {
-            navigate('/');
-          });
         }}
         className='logo'
         fontSize={['md', 'md', 'lg']}

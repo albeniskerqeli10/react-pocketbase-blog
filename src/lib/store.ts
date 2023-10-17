@@ -10,7 +10,7 @@ export type AppState = {
 };
 
 export const useStore = create<AppState>((set) => ({
-  user: pb.authStore.model ? pb.authStore.model : null,
+  user: pb.authStore.model ? (pb.authStore.model as ExtendedUser) : null,
   setUser: (user) => set(() => ({ user: user })),
   logoutUser: () => {
     pb.authStore.clear();

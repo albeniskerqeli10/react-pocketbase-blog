@@ -10,14 +10,20 @@ type BlogsType = {
 // GET requests
 export const getBlogs = cache(async (sortField: string) => {
   try {
-    const blogs: BlogsType = await pb.collection('blogs').getList(0, 20, {
+    const blogs: BlogsType = await pb.collection('blogs').getList(0, 30, {
       sort: sortField,
       expand: 'user',
+      fields: 'id,title,image,expand.user.avatar, expand.user.username, user ',
     });
     return blogs.items;
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
+});
+
+export const getTodo = cache(async (id: number) => {
+  const todo = await fetch(`https://dummyjson.com/todos/${id}`);
+  return todo.json();
 });
 
 export const searchBlogs = cache(async (query: string) => {
@@ -65,7 +71,7 @@ export const getBlogTags = cache(async (query: string) => {
 });
 
 // POST requests
-export const addBlog = async (blogData: BlogType) => {
+export const addBlog = cache(async (blogData: BlogType) => {
   try {
     const blog = await pb.collection('blogs').create(blogData, {
       expand: 'user',
@@ -75,7 +81,7 @@ export const addBlog = async (blogData: BlogType) => {
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-};
+});
 
 // PATCH/UPDATE requests
 export const editBlog = async ({ blog, values }: EditBlogType) => {

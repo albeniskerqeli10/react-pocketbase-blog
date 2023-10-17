@@ -2,7 +2,6 @@
   margin: 0;
   padding: 0;
   /* background-color: #101013; */
-  background-color: #1b1b1d;
   /* background-color: #18181c; */
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
@@ -13,10 +12,13 @@ textarea {
   font-size: 16px !important;
 }
 
-html,
-body {
+html {
   min-height: 100vh;
+
   scrollbar-gutter: stable;
+}
+body {
+  background-color: #1b1b1d !important;
 }
 
 main {
@@ -92,7 +94,8 @@ section {
 
 .ql-editor {
   background-color: #0c0c0e;
-  min-height: 200px;
+  min-height: 250px;
+  max-height: 250px;
 }
 
 .ql-editor p {
@@ -136,4 +139,8 @@ strong {
   width: 100%;
   max-width: 100%;
   height: auto;
+}
+
+a:hover {
+  text-decoration: underline;
 }

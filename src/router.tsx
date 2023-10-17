@@ -105,6 +105,6 @@ const Router: FC = () => {
       </Route>,
     ),
   );
-  return <RouterProvider future={{ v7_startTransition: true }} router={router} />;
+  return <RouterProvider router={router} />;
 };
 export default Router;

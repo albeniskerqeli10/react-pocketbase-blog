@@ -1,23 +1,23 @@
 import { Box, Button, FormControl, FormLabel, Heading, Link, Input, Text } from '@chakra-ui/react';
 import { useEffect, FC } from 'react';
-
 import { pb } from '../../lib/pocketbase';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
-import { experimental_useFormState as useFormState } from 'react-dom';
+import { useFormState } from 'react-dom';
+type PrevState = {
+  message: string | null;
+};
 const Login: FC = () => {
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
 
   const setUser = useStore((state: AppState) => state.setUser);
-  const loginAction = async (_prevState: object, formData: FormData) => {
-    const email = formData.get('email');
-    const password = formData.get('password');
+  const loginAction = async (_prevState: PrevState, formData: FormData) => {
     try {
+      const email = formData.get('email');
+      const password = formData.get('password');
       await pb.collection('users').authWithPassword(email as string, password as string);
       if (pb.authStore.isValid) {
         setUser(pb.authStore.model as ExtendedUser);
@@ -38,7 +38,9 @@ const Login: FC = () => {
       navigate('/');
     }
   }, [user, navigate]);
-  const [state, formAction] = useFormState(loginAction, {
+
+  /* Temporary use of any for loginAction - subject to change */
+  const [state, formAction] = useFormState(loginAction as any, {
     message: null,
   });
   const signInWithGithub = async () => {
