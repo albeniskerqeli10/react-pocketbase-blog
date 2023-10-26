@@ -32,7 +32,8 @@ Feel free to explore and contribute if you're interested!
 
 ### Mobile Homepage
 
-![react-pocketbase-blog vercel app_(iPhone XR)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/e805c476-2517-4627-8df5-8103319b2785)
+![image](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/48610c94-294e-451c-897d-68d112b95035)
+
 
 
 ## Additional information 
