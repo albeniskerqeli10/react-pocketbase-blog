@@ -16,7 +16,7 @@ Feel free to explore and contribute if you're interested!
 
 ### Homepage
 
-![react-pocketbase-blog vercel app_blog_2jhc6s3ls1f341u(Desktop-4K) (1)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/5204a182-66a5-41f3-81a0-6b960beb3c2b)
+![react-pocketbase-blog vercel app_(Desktop-4K)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/192c1cca-a23d-4922-b1c2-8f03a45e0f16) 
 
 ### Blog Page
 
@@ -29,6 +29,11 @@ Feel free to explore and contribute if you're interested!
 ### Login Page
 
 ![react-pocketbase-blog vercel app_login(Desktop-4K)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/be1e8db1-7abd-40b5-bf6a-fbfcd5c00e09)
+
+### Mobile Homepage
+
+![react-pocketbase-blog vercel app_(iPhone XR)](https://github.com/albeniskerqeli10/react-pocketbase-blog/assets/58092596/e805c476-2517-4627-8df5-8103319b2785)
+
 
 ## Additional information 
 
