@@ -1,6 +1,5 @@
-import { cache } from 'react';
 import { pb } from '../lib/pocketbase';
-import { BlogType, EditBlogType, LikeBlogType, LikeCommentType, Tag } from '../types/Blog';
+import { BlogType, EditBlogType, LikeBlogType, LikeCommentType, TagType } from '../types/Blog';
 import { ExtendedUser } from '../types/Auth';
 
 type BlogsType = {
@@ -8,25 +7,20 @@ type BlogsType = {
 };
 
 // GET requests
-export const getBlogs = cache(async (sortField: string) => {
+export const getBlogs = async (sortField: string) => {
   try {
     const blogs: BlogsType = await pb.collection('blogs').getList(0, 30, {
       sort: sortField,
-      expand: 'user',
-      fields: 'id,title,image,expand.user.avatar, expand.user.username, user ',
+      expand: 'user, tags',
+      fields: 'id,title,image,likes, expand.user.avatar, expand.user.username, user',
     });
     return blogs.items;
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-});
+};
 
-export const getTodo = cache(async (id: number) => {
-  const todo = await fetch(`https://dummyjson.com/todos/${id}`);
-  return todo.json();
-});
-
-export const searchBlogs = cache(async (query: string) => {
+export const searchBlogs = async (query: string) => {
   try {
     const blogs: BlogsType['items'] = await pb.collection('blogs').getFullList({
       filter: `title~"${query}"`,
@@ -36,8 +30,8 @@ export const searchBlogs = cache(async (query: string) => {
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-});
-export const searchUsers = cache(async (query: string) => {
+};
+export const searchUsers = async (query: string) => {
   try {
     const users: ExtendedUser[] = await pb.collection('users').getFullList({
       filter: `username~"${query}"`,
@@ -46,9 +40,9 @@ export const searchUsers = cache(async (query: string) => {
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-});
+};
 
-export const getSingleBlog = cache(async (id: string) => {
+export const getSingleBlog = async (id: string) => {
   try {
     const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
       expand: 'user, comments(blog).user, tags',
@@ -57,21 +51,21 @@ export const getSingleBlog = cache(async (id: string) => {
   } catch (err: unknown) {
     console.error('Blog not found');
   }
-});
+};
 
-export const getBlogTags = cache(async (query: string) => {
+export const getBlogTags = async (query: string) => {
   try {
-    const tags: Tag[] = await pb.collection('tags').getFullList({
+    const tags: TagType[] = await pb.collection('tags').getFullList({
       filter: `name~"${query}"`,
     });
     return tags;
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-});
+};
 
 // POST requests
-export const addBlog = cache(async (blogData: BlogType) => {
+export const addBlog = async (blogData: BlogType) => {
   try {
     const blog = await pb.collection('blogs').create(blogData, {
       expand: 'user',
@@ -81,7 +75,7 @@ export const addBlog = cache(async (blogData: BlogType) => {
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-});
+};
 
 // PATCH/UPDATE requests
 export const editBlog = async ({ blog, values }: EditBlogType) => {

@@ -1,17 +1,15 @@
 import { Box, Heading, Image, Text, Spinner } from '@chakra-ui/react';
 
-import { useEffect, Suspense, lazy, FC, use } from 'react';
+import { useEffect, Suspense, lazy, FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
-import { getUserProfile } from '../../services/authAPI';
+import useSingleUser from '../../hooks/useSingleUser';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 const User: FC = () => {
-  const { id } = useParams();
-  getUserProfile(id as string);
-  const user = use(getUserProfile(id as string)) as ExtendedUser;
+  const { id } = useParams() as { id: string };
+  const { user, isError } = useSingleUser(id);
   const navigate = useNavigate();
   useEffect(() => {
     if (!user?.id) {

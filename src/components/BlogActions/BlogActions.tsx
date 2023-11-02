@@ -1,17 +1,18 @@
 import { Wrap, Icon, Menu, MenuItem, MenuButton, MenuList, IconButton, Box, Text } from '@chakra-ui/react';
-import { FC, useState, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
+import { FC, startTransition, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BlogActionsProps, BlogType } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
 import { deleteBlog, likeBlog, unlikeBlog } from '../../services/blogAPI';
+import { useQueryClient } from '@tanstack/react-query';
 
 const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
-  const refreshCache = useCacheRefresh();
   const onClose = () => {
     setIsOpen(false);
   };
@@ -50,9 +51,11 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
     if (confirmMsg) {
       await deleteBlog(blog.id);
       navigate('/');
-
       startTransition(() => {
-        refreshCache();
+        queryClient.invalidateQueries({
+          queryKey: ['blogs'],
+          refetchType: 'all',
+        });
       });
     }
   };

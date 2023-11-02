@@ -1,4 +1,4 @@
-import { RecordModel, AdminModel } from 'pocketbase';
+import { Record, Admin } from 'pocketbase';
 import { BlogType } from './Blog';
 
 export interface User {
@@ -23,7 +23,7 @@ export type SignUpFormValues = LoginFormValues & {
   username: string;
 };
 
-export type ExtendedUser = User | RecordModel | AdminModel;
+export type ExtendedUser = User | Record | Admin;
 
 export type ErrorResponse = {
   status: number;

@@ -1,22 +1,23 @@
 import { Box, Button, Heading, Input } from '@chakra-ui/react';
-import { startTransition, unstable_useCacheRefresh as useCacheRefresh, useState } from 'react';
+import { startTransition, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../lib/store';
 import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
 import { client } from '../../lib/upload';
 import { addBlog } from '../../services/blogAPI';
-import { BlogType, Tag } from '../../types/Blog';
+import { BlogType, TagType } from '../../types/Blog';
 import Editor from '../../components/UI/Editor/Editor';
 import TagInput from '../../components/TagInput/TagInput';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CreateBlog = () => {
   const [inputType, setInputType] = useState('file');
   const [content, setContent] = useState('');
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<TagType[]>([]);
+  const queryClient = useQueryClient();
   const user = useStore((state) => state.user);
-  const refreshCache = useCacheRefresh();
   const navigate = useNavigate();
-  const handleTagClick = (tag: Tag) => {
+  const handleTagClick = (tag: TagType) => {
     if (!tags.includes(tag)) {
       setTags([...tags, tag]);
     }
@@ -47,12 +48,14 @@ const CreateBlog = () => {
         image: imageSource,
         user: user?.id,
         likes: [],
-        tags: tags.length > 0 ? tags.map((tag) => tag.id) : [],
+        tags: tags.length > 0 ? [...new Set(tags.map((tag) => tag.id))] : [],
       } as BlogType);
+       queryClient.invalidateQueries({
+         queryKey: ['blogs'],
+         refetchType: 'all',
+       });
+
       navigate(`/blog/${blog?.id}`);
-      startTransition(() => {
-        refreshCache();
-      });
     }
   };
 

@@ -7,6 +7,7 @@ import Skeleton from '../../components/UI/Skeleton/Skeleton';
 import UserCard from '../../components/UserCard/UserCard';
 import { ExtendedUser } from '../../types/Auth';
 import TabsList from '../../components/UI/TabsList/TabsList';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 const Search = () => {
@@ -14,8 +15,12 @@ const Search = () => {
   const searchQuery = searchParams.get('q') as string;
   const [selectedTab, setSelectedTab] = useState('blogs');
 
-  const searchData =
-    searchQuery !== '' ? use<any>(selectedTab === 'blogs' ? searchBlogs(searchQuery) : searchUsers(searchQuery)) : [];
+  const { data: searchData, isLoading } = useQuery({
+    queryKey: ['searchQuery', searchQuery, selectedTab],
+    queryFn: selectedTab === 'blogs' ? () => searchBlogs(searchQuery) : () => searchUsers(searchQuery),
+    enabled: searchQuery !== '',
+  });
+
   const navigate = useNavigate();
   useEffect(() => {
     if (!searchQuery || searchQuery === '') {
@@ -63,12 +68,14 @@ const Search = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
+        {isLoading && Array.from({ length: 3 }, (_, index) => <Skeleton key={index} />)}
+
         <Suspense
           fallback={Array.from({ length: 3 }, (_, index) => (
             <Skeleton key={index} />
           ))}
         >
-          {searchData?.length > 0 ? (
+          {searchData && searchData.length > 0 ? (
             selectedTab === 'blogs' ? (
               searchData?.map((blog: BlogType) => (
                 <Blog

@@ -1,8 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  /* background-color: #101013; */
-  /* background-color: #18181c; */
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
 }
@@ -48,24 +46,7 @@ main {
   content-visibility: auto;
   contain-intrinsic-size: auto 1000px;
 }
-/* ::-webkit-scrollbar {
-  display: none;
-} */
 
-section {
-}
-
-@keyframes transitionIn {
-  from {
-    opacity: 0;
-    /* transform: rotateX(-10deg); */
-  }
-
-  to {
-    opacity: 1;
-    /* transform: rotateX(0); */
-  }
-}
 
 ::file-selector-button {
   color: white;

@@ -1,37 +1,44 @@
-import {
-  useEffect,
-  FC,
-  use,
-  unstable_useCacheRefresh as useCacheRefresh,
-  startTransition,
-  Suspense,
-  lazy,
-} from 'react';
+import { useEffect, FC, startTransition, Suspense, lazy } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
 import { getBlogs } from '../../services/blogAPI';
 import { BlogType } from '../../types/Blog';
 import Skeleton from '../../components/UI/Skeleton/Skeleton';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { queryClient as mainQueryClient } from '../../main';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 type BlogsListProps = {
   sortField: string;
 };
 
+type BlogsQueryType = {
+  data: BlogType[];
+};
+
+const blogsQuery = { queryKey: ['blogs', '-created'], queryFn: () => getBlogs('-created') };
+
+// ⬇️ initiate a fetch before the component renders
+mainQueryClient.prefetchQuery(blogsQuery);
+
 const BlogsList: FC<BlogsListProps> = ({ sortField }) => {
-  const blogs = use(getBlogs(sortField)) as BlogType[];
-  const refreshCache = useCacheRefresh();
+  const queryClient = useQueryClient();
+  const { data: blogs }: BlogsQueryType = useSuspenseQuery({
+    queryKey: ['blogs', sortField],
+    queryFn: () => getBlogs(sortField),
+  });
 
   useEffect(() => {
+    console.log('Rerendered');
     pb.collection('blogs').subscribe('*', async function () {
-      startTransition(() => {
-        refreshCache();
+      queryClient.invalidateQueries({
+        queryKey: ['blogs'],
       });
     });
     return () => {
       pb.collection('blogs').unsubscribe('*');
     };
-  }, [refreshCache]);
+  }, [queryClient]);
 
   return (
     <Box
@@ -48,12 +55,12 @@ const BlogsList: FC<BlogsListProps> = ({ sortField }) => {
           <Skeleton key={index} />
         ))}
       >
-        {blogs?.length <= 0 ? (
+        {blogs && blogs?.length <= 0 ? (
           <Heading color='white' bgColor='white'>
             No Blogs yet
           </Heading>
         ) : (
-          blogs.map((blog: BlogType) => (
+          blogs?.map((blog: BlogType) => (
             <Blog
               key={blog.id}
               id={blog.id}

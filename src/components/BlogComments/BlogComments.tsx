@@ -5,18 +5,19 @@ import {
   useMemo,
   Suspense,
   lazy,
-  startTransition,
   FC,
   useEffect,
   unstable_useCacheRefresh as useCacheRefresh,
+  startTransition,
 } from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
 import SubmitButton from '../UI/SubmitButton/SubmitButton';
+import { useQueryClient } from '@tanstack/react-query';
 const Comment = lazy(() => import('../Comment/Comment'));
 const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
+  const queryClient = useQueryClient();
   const user = useStore((state: AppState) => state.user);
-  const refreshCache = useCacheRefresh();
 
   const createCommentAction = async (formData: FormData) => {
     const text = formData.get('text');
@@ -40,14 +41,16 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
     pb.collection('comments').subscribe('*', async function (e) {
       if (e.record.blog === blog.id) {
         startTransition(() => {
-          refreshCache();
+          queryClient.invalidateQueries({
+            queryKey: ['blog', blog?.id],
+          });
         });
       }
     });
     return () => {
       pb.collection('comments').unsubscribe('*');
     };
-  }, [blog.id, refreshCache]);
+  }, [blog.id]);
 
   return (
     <Box
@@ -73,6 +76,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
         flexDirection='column'
         flexWrap='wrap'
       >
+        <form action={createCommentAction}/>
         <Heading width='100%' color='white' my='10px' fontSize={['md', 'lg', '20px']} bgColor='transparent'>
           Comments ({sortedBlogComments?.length || 0})
           <Box

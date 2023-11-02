@@ -5,6 +5,7 @@ import TabsList from '../components/UI/TabsList/TabsList';
 import BlogsList from '../components/BlogsList/BlogsList';
 const NoAuthRoute: FC = () => {
   getBlogs('-created');
+  console.log()
   const [sortField, setSortField] = useState('-created');
 
   const handleSortBlogs = async (fieldName: string) => {

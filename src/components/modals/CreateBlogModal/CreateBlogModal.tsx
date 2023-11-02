@@ -42,7 +42,6 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
   //   image: '',
   //   content: '',
   // });
-  const refreshCache = useCacheRefresh();
 
   const createBlogPostAction = async (formData: ActionForm | FormData) => {
     const title = formData.get('title');
@@ -62,12 +61,6 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
         },
       );
       navigate(`/blog/${createdBlog.id}`);
-
-      if (location.pathname !== '/') {
-        startTransition(() => {
-          refreshCache();
-        });
-      }
       onClose();
     }
   };

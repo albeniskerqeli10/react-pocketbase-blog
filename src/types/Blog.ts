@@ -1,7 +1,7 @@
-import { RecordModel } from 'pocketbase';
+import { Record } from 'pocketbase';
 import { ReactNode } from 'react';
 import { ExtendedUser } from './Auth';
-export type BlogType = Partial<RecordModel> & {
+export type BlogType = Partial<Record> & {
   id?: string;
   title: string;
   content: string;
@@ -20,6 +20,7 @@ export type BlogType = Partial<RecordModel> & {
       avatar?: string;
       created: ReactNode;
     };
+    tags: TagType[];
   };
 };
 
@@ -66,7 +67,7 @@ export type LikeCommentType = {
   userID: string | number;
 };
 
-export type Tag = Partial<RecordModel> & {
+export type TagType = Partial<Record> & {
   id: number;
   name: string;
 };

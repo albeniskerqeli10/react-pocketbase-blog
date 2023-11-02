@@ -12,6 +12,7 @@ const Layout: FC = () => {
   const logoutUser = useStore((state: AppState) => state.logoutUser);
   useEffect(() => {
     const changeUser = () => {
+      console.log(pb.authStore, 'Auth');
       pb.authStore.onChange(() => {
         setUser(pb.authStore.model as ExtendedUser);
       });

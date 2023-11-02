@@ -10,7 +10,7 @@ const SubmitButton = ({ size, fullWidth }: SubmitButtonProps) => {
   const { pending } = useFormStatus();
   useEffect(() => {
     if (!pending) {
-      const form = document.querySelector('form');
+      const form = document.querySelector('form') as HTMLFormElement;
       form?.reset();
     }
   }, [pending]);

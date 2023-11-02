@@ -14,16 +14,15 @@ import {
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { useStore, AppState } from '../../lib/store';
-import { ExtendedUser } from '../../types/Auth';
 import { Pencil } from '@phosphor-icons/react';
 import EditUserProfileModal from '../../components/modals/EditUserProfileModal/EditUserProfileModal';
 import useForm from '../../hooks/useForm';
-import { getUserProfile } from '../../services/authAPI';
+import useSingleUser from '../../hooks/useSingleUser';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
-  getUserProfile(currentUser?.id as string);
-  const user = use(getUserProfile(currentUser?.id as string)) as ExtendedUser;
+
+  const { user, isError } = useSingleUser(currentUser?.id as string);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { values, handleChange, resetForm } = useForm({
     username: '',

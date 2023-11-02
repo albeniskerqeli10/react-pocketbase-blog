@@ -48,6 +48,11 @@ const Blog: FC<BlogType> = ({
             htmlWidth='600'
             htmlHeight='300'
             objectPosition='center'
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+
+              img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+            }}
             height='300px'
             src={image}
             maxWidth='100%'

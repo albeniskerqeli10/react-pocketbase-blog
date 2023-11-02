@@ -22,6 +22,7 @@ const ErrorPage = () => {
         as={RouterLink}
         rounded='sm'
         to='/'
+        replace={true}
         bgColor='red.500'
         color='white'
         py='12px'

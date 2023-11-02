@@ -15,6 +15,7 @@ import { BlogFormValues, BlogType } from '../../../types/Blog';
 import { editBlog } from '../../../services/blogAPI';
 import useForm from '../../../hooks/useForm';
 import Editor from '../../UI/Editor/Editor';
+import { useQueryClient } from '@tanstack/react-query';
 
 type EditBlogModalProps = {
   isOpen: boolean;
@@ -23,6 +24,7 @@ type EditBlogModalProps = {
 };
 
 const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
+  const queryClient = useQueryClient();
   const { values, handleChange, resetForm } = useForm<BlogFormValues>({
     title: '',
     content: '',
@@ -40,9 +42,13 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
       },
     });
     if (editedBlog) {
+      onClose();
+      resetForm();
       startTransition(() => {
-        onClose();
-        resetForm();
+        queryClient.invalidateQueries({
+          queryKey: ['blogs'],
+          refetchType: 'all',
+        });
       });
     }
   };

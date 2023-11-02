@@ -1,15 +1,23 @@
-import { FC, use } from 'react';
+import { FC } from 'react';
 import { getBlogTags } from '../../../services/blogAPI';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Spinner, Text } from '@chakra-ui/react';
 import { Tag } from '../../../types/Blog';
-
+import { useQuery } from '@tanstack/react-query';
 type TagsListProps = {
   query: string;
   handleTagClick: (tag: Tag) => void;
 };
 
 const TagsList: FC<TagsListProps> = ({ query, handleTagClick }) => {
-  const tags = query !== '' ? (use(getBlogTags(query)) as Tag[]) : [];
+  const { data: tags, isLoading } = useQuery({
+    queryKey: ['tags', query],
+    queryFn: () => getBlogTags(query),
+    enabled: query !== '',
+  });
+
+  if (isLoading) {
+    return <Spinner color='white' />;
+  }
 
   return (
     query !== '' && (
@@ -25,7 +33,7 @@ const TagsList: FC<TagsListProps> = ({ query, handleTagClick }) => {
         gap='10px'
         rounded='md'
       >
-        {tags?.length > 0 ? (
+        {tags && tags?.length > 0 ? (
           tags?.map((tag: Tag) => (
             <Text
               _hover={{
