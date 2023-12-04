@@ -28,6 +28,7 @@
     "react-router-dom": "^6.17.0",
     "timeago-react": "3.0.6",
     "zustand": "^4.4.1"
+
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.2",
