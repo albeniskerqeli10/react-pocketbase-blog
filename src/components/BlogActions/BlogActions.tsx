@@ -71,7 +71,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
         ) : (
           <Icon as={Heart} color='white' cursor='pointer' onClick={handleLikeBlog} boxSize={7} />
         )}
-        <Text bgColor='transparent' py='5px' color='white'>
+        <Text py='5px' color='white'>
           {blog?.likes?.length}
         </Text>
       </Box>

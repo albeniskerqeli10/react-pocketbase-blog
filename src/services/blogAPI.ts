@@ -1,11 +1,7 @@
 import { cache } from 'react';
 import { pb } from '../lib/pocketbase';
-import { BlogType, EditBlogType, LikeBlogType, LikeCommentType, Tag } from '../types/Blog';
+import { BlogType, BlogsType, EditBlogType, LikeBlogType, LikeCommentType, Tag } from '../types/Blog';
 import { ExtendedUser } from '../types/Auth';
-
-type BlogsType = {
-  items: BlogType[];
-};
 
 // GET requests
 export const getBlogs = cache(async (sortField: string) => {
@@ -21,10 +17,10 @@ export const getBlogs = cache(async (sortField: string) => {
   }
 });
 
-export const getTodo = cache(async (id: number) => {
-  const todo = await fetch(`https://dummyjson.com/todos/${id}`);
-  return todo.json();
-});
+// export const getTodo = cache(async (id: number) => {
+//   const todo = await fetch(`https://dummyjson.com/todos/${id}`);
+//   return todo.json();
+// });
 
 export const searchBlogs = cache(async (query: string) => {
   try {
@@ -71,7 +67,7 @@ export const getBlogTags = cache(async (query: string) => {
 });
 
 // POST requests
-export const addBlog = cache(async (blogData: BlogType) => {
+export const addBlog = async (blogData: BlogType) => {
   try {
     const blog = await pb.collection('blogs').create(blogData, {
       expand: 'user',
@@ -81,7 +77,7 @@ export const addBlog = cache(async (blogData: BlogType) => {
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
-});
+};
 
 // PATCH/UPDATE requests
 export const editBlog = async ({ blog, values }: EditBlogType) => {

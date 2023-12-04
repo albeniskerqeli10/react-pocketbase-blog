@@ -28,7 +28,7 @@ const SubmitButton = ({ size, fullWidth }: SubmitButtonProps) => {
       px='20px'
       isDisabled={pending}
       disabled={pending}
-      colorScheme='red'
+      colorScheme='secondaryRed'
     >
       {pending ? (
         <>

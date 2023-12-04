@@ -21,9 +21,9 @@ const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) 
       alignItems='center'
       justifyContent='start'
       flexDirection='column'
+      rounded='md'
       gap='5px'
       px='10px'
-      py='10px'
     >
       <Box width='100%' display='flex' alignItems='center' justifyContent='center' bgColor='transparent' gap='5px'>
         {tags?.length > 0 &&
@@ -74,20 +74,20 @@ const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) 
           rounded='md'
           bgColor='inherit'
           my='5px'
-          py='25px'
+          py='21.5px'
           border='0'
           type='text'
           _focus={{
             boxShadow: 'none',
             border: 'none',
           }}
-          placeholder='Write some tags e.g react,vue etc'
+          placeholder='Add some tags e.g react,vue, angular'
           _placeholder={{
             color: 'white',
           }}
         />
       </Box>
-      <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
+      <Suspense fallback={<Spinner mb='10px' colorScheme='white' color='white' />}>
         <TagsList
           query={tagInput}
           handleTagClick={(tag) => {

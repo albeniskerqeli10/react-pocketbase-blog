@@ -1,19 +1,17 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
-
 import { useEffect, FC, use, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
-import { Box, Heading, Image, Text } from '@chakra-ui/react';
+import { Box, Heading, Image, Text, Tag } from '@chakra-ui/react';
+import { AppState, useStore } from '../../lib/store';
+import { getSingleBlog } from '../../services/blogAPI';
+import { BlogType, Tag as TagType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
-import { AppState, useStore } from '../../lib/store';
-import { getSingleBlog } from '../../services/blogAPI';
-import { BlogType } from '../../types/Blog';
 import DOMPurify from 'dompurify';
 
-const SingleBlog: FC = () => {
+const SingleBlog: FC = async () => {
   const { id } = useParams();
-  getSingleBlog(id as string);
   const blog = use(getSingleBlog(id as string)) as BlogType;
   const currentUser = useStore((state: AppState) => state.user);
   const navigate = useNavigate();
@@ -47,13 +45,18 @@ const SingleBlog: FC = () => {
           gap='20px'
           flexDirection='column'
           alignItems='start'
-          justifyContent='start'
+          justifyContent='flex-start'
         >
           <title>{`${blog.title} | PocketBlog`}</title>
           <Image
             decoding='sync'
             fetchpriority='high'
             src={blog.image}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+
+              img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+            }}
             rounded='sm'
             fit='cover'
             objectFit='cover'
@@ -68,7 +71,7 @@ const SingleBlog: FC = () => {
 
           <Box
             display='flex'
-            alignItems='start'
+            alignItems='center'
             justifyContent='space-between'
             width='100%'
             flexDirection='row'
@@ -101,26 +104,40 @@ const SingleBlog: FC = () => {
             </Box>
             <BlogActions blog={blog} />
           </Box>
+
           <Box
             width='100%'
             display='flex'
             flexDirection='row'
             alignItems='center'
-            gap='20px'
             justifyContent='start'
             flexWrap='wrap'
           >
-            <Heading width='100%' color='white' fontSize={['lg', 'lg', '45px']}>
+            <Heading width='100%' color='white' fontSize={['lg', 'lg', '40px']}>
               {blog.title}
             </Heading>
           </Box>
-          <Box
-            bgColor='transparent'
-            color='white'
-            width='100%'
-            className='content'
-            dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-          />
+
+          {blog?.expand?.tags && blog.expand.tags.length > 0 && (
+            <Box
+              width='auto'
+              display='flex'
+              alignItems='center'
+              justifyContent='flex-start'
+              flexDirection='row'
+              flexWrap='wrap'
+              gap='10px'
+            >
+              {blog.expand.tags.map((tag: TagType) => (
+                <>
+                  <Tag color='white' bgColor='#0c0c0e' size='lg'>
+                    {tag.name.toUpperCase()}
+                  </Tag>
+                </>
+              ))}
+            </Box>
+          )}
+          <Box color='white' width='100%' className='content' dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
           <BlogComments blog={blog} />
         </Box>
       </>

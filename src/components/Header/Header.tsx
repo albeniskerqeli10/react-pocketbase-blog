@@ -20,7 +20,7 @@ const Header: FC = () => {
       display='flex'
       alignItems='center'
       gap={['20px', '0', '0']}
-      justifyContent={['space-between', 'space-between', 'space-between']}
+      justifyContent='space-between'
       flexWrap='wrap'
     >
       <Link
@@ -34,7 +34,7 @@ const Header: FC = () => {
         fontWeight='bold'
         color='white'
       >
-        PocketBlog
+        POCKETBLOG
       </Link>
       {user !== null ? (
         <>
@@ -54,7 +54,7 @@ const Header: FC = () => {
               width={['auto', 'auto', 'auto']}
               fontWeight='normal'
               size='md'
-              colorScheme='red'
+              colorScheme='secondaryRed'
               boxShadow='sm'
             >
               Create

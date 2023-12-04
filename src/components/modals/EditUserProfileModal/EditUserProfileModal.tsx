@@ -26,7 +26,7 @@ type EditUserProfileModalProps = {
 const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ user, handleSubmit, handleChange, isOpen, onClose }) => {
   return (
     <>
-      <Modal colorScheme='red' isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal colorScheme='secondaryRed' isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bgColor='rgba(0,0,0,0.6)' />
         <ModalContent onSubmit={handleSubmit} borderWidth='2px' borderColor='#1b1b1d' as='form' bgColor='black'>
           <ModalHeader bgColor='transparent' color='white'>
@@ -83,10 +83,17 @@ const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ user, handleSubmi
             justifyContent='start'
             gap='3'
           >
-            <Button type='submit' fontWeight='normal' colorScheme='red'>
+            <Button type='submit' fontWeight='normal' colorScheme='secondaryRed'>
               Submit
             </Button>
-            <Button type='button' fontWeight='normal' colorScheme='red' variant='outline' mr={3} onClick={onClose}>
+            <Button
+              type='button'
+              fontWeight='normal'
+              colorScheme='secondaryRed'
+              variant='outline'
+              mr={3}
+              onClick={onClose}
+            >
               Close
             </Button>
           </ModalFooter>

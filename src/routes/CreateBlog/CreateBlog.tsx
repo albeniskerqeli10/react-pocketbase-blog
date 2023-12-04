@@ -29,7 +29,7 @@ const CreateBlog = () => {
   const createBlogPostAction = async (formData: FormData) => {
     let imageSource;
     const title = formData.get('title');
-    const image: any = formData.get('image');
+    const image: string | any = formData.get('image');
 
     if (inputType === 'file' && (image?.type?.match('image.*') as string)) {
       const filey = await client.uploadFile(image);
@@ -67,8 +67,9 @@ const CreateBlog = () => {
       justifyContent='start'
       flexDirection='column'
       flexWrap='wrap'
+      py='15px'
     >
-      <Heading alignSelf='center' py='20px' pb='25px' fontSize='lg' fontFamily='inherit' fontWeight='normal'>
+      <Heading alignSelf='center' py='15px' fontSize='md' fontFamily='inherit' fontWeight='normal'>
         Create a blog
       </Heading>
       <Box
@@ -107,6 +108,7 @@ const CreateBlog = () => {
           justifyContent='center'
           flexDirection='row'
           flexWrap='wrap'
+          rounded='md'
           bgColor='#0c0c0e'
           gap='5px'
           px='5px'
@@ -121,7 +123,7 @@ const CreateBlog = () => {
               rounded='md'
               flex='1'
               accept='image/*'
-              my='5px'
+              my='7px'
               type='file'
               title=' '
               border='0'
@@ -138,7 +140,7 @@ const CreateBlog = () => {
               width='auto'
               border='0'
               boxShadow='sm'
-              py='25px'
+              py='22px'
               rounded='md'
               flex='1'
               my='5px'
@@ -161,8 +163,11 @@ const CreateBlog = () => {
             }}
             border='2px solid white'
             color='white'
+            py='2'
+            px='5'
             rounded='md'
-            onClick={() => (inputType === 'file' ? setInputType('url') : setInputType('file'))}
+            fontSize='sm'
+            onClick={() => setInputType(inputType === 'file' ? 'url' : 'file')}
           >
             {inputType === 'file' ? 'URL' : 'File Upload'}
           </Button>

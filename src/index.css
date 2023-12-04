@@ -13,11 +13,11 @@ textarea {
 }
 
 html {
-  min-height: 100vh;
-
   scrollbar-gutter: stable;
 }
 body {
+  min-height: 100vh;
+
   background-color: #1b1b1d !important;
 }
 
@@ -32,6 +32,21 @@ main {
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
+}
+
+.logo {
+  color: white !important;
+  font-family: 'Source Sans Pro';
+  letter-spacing: 2px;
+  text-shadow:
+    0 1px 0 hsl(174, 5%, 60%),
+    0 1.5px 0 hsl(174, 5%, 60%),
+    0 2px 0 hsl(174, 5%, 60%),
+    0 2.5px 0 hsl(174, 5%, 60%),
+    0 3px 0 hsl(174, 5%, 60%),
+    /* 0 3.5px 0 hsl(174, 5%, 60%),
+    0 4px 0 hsl(174, 5%, 60%), */ /* 0 4.5px 0 hsl(174, 5%, 60%); */ 0 4px 0
+      hsl(174, 5%, 60%);
 }
 
 .chakra-modal__content-container {
@@ -94,8 +109,8 @@ section {
 
 .ql-editor {
   background-color: #0c0c0e;
-  min-height: 250px;
-  max-height: 250px;
+  min-height: 200px;
+  max-height: 200px;
 }
 
 .ql-editor p {

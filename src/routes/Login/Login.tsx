@@ -167,7 +167,7 @@ const Login: FC = () => {
           >
             <Text textAlign='center' backgroundColor='transparent'>
               Don&apos;t have an account?{' '}
-              <Link colorScheme='red' color='red.500' as={RouterLink} to='/signup'>
+              <Link colorScheme='secondaryRed' color='red.500' as={RouterLink} to='/signup'>
                 Register
               </Link>
             </Text>

@@ -41,14 +41,16 @@ const BlogsList: FC<BlogsListProps> = ({ sortField }) => {
       justifyContent='start'
       flexDirection='row'
       flexWrap='wrap'
-      gap='20px'
+      gap='30px'
+      py='5px'
+      pb='10px'
     >
       <Suspense
         fallback={Array.from({ length: 3 }, (_, index) => (
           <Skeleton key={index} />
         ))}
       >
-        {blogs?.length <= 0 ? (
+        {blogs && blogs.length < 0 ? (
           <Heading color='white' bgColor='white'>
             No Blogs yet
           </Heading>

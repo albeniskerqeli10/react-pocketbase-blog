@@ -205,7 +205,7 @@ const Comment = ({ comment, userId }: CommentProps) => {
             fontSize={['sm', 'md', 'md']}
             fontWeight='normal'
             onClick={handleDeleteComment}
-            colorScheme='red'
+            colorScheme='secondaryRed'
             bgColor='red.600'
           >
             Delete

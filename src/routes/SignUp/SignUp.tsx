@@ -158,11 +158,19 @@ const SignUp: FC = () => {
           </Text>
         )}
         {isSubmitting ? (
-          <Button type='button' mt='10px' mb='15px' disabled={true} width='100%' fontWeight='normal' colorScheme='red'>
+          <Button
+            type='button'
+            mt='10px'
+            mb='15px'
+            disabled={true}
+            width='100%'
+            fontWeight='normal'
+            colorScheme='secondaryRed'
+          >
             <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
           </Button>
         ) : (
-          <Button type='submit' mt='10px' mb='15px' width='100%' fontWeight='normal' colorScheme='red'>
+          <Button type='submit' mt='10px' mb='15px' width='100%' fontWeight='normal' colorScheme='secondaryRed'>
             Submit
           </Button>
         )}

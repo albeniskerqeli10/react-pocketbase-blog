@@ -137,7 +137,14 @@ const CreateBlogModal: FC<CreateBlogModalProps> = ({ isOpen, onClose }) => {
             gap='3'
           >
             <SubmitButton />
-            <Button type='button' fontWeight='normal' colorScheme='red' variant='outline' mr={3} onClick={onClose}>
+            <Button
+              type='button'
+              fontWeight='normal'
+              colorScheme='secondaryRed'
+              variant='outline'
+              mr={3}
+              onClick={onClose}
+            >
               Close
             </Button>
           </ModalFooter>

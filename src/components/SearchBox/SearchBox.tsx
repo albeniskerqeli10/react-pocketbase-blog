@@ -1,4 +1,5 @@
 import { Box, Input } from '@chakra-ui/react';
+import { startTransition } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 const SearchBox = () => {
   const navigate = useNavigate();
@@ -26,9 +27,13 @@ const SearchBox = () => {
         border='0'
         onChange={(e) => {
           if (e.target.value !== '') {
-            navigate(`/search?q=${e.target.value}`);
+            startTransition(() => {
+              navigate(`/search?q=${e.target.value}`);
+            });
           } else {
-            navigate(`/`);
+            startTransition(() => {
+              navigate(`/`);
+            });
           }
         }}
         _placeholder={{

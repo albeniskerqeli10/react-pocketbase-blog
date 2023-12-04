@@ -1,3 +1,5 @@
+// previous vite version: vite:"4.0.1"
+
 export const toolbarModules = {
     toolbar: [
       [{ 'header': '1'}, {'header': '2'}],

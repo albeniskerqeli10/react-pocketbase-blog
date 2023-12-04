@@ -37,7 +37,7 @@ const Blog: FC<BlogType> = ({
       aria-label='Blog post'
       flexWrap='wrap'
     >
-      <Box bgColor='inherit' width='100%' display='flex' flexDirection='column'>
+      <Box width='100%' display='flex' flexDirection='column'>
         <LinkOverlay as={Link} to={`/blog/${id}`}>
           <Image
             decoding={shouldDecode}
@@ -46,8 +46,14 @@ const Blog: FC<BlogType> = ({
             fetchpriority={priority}
             loading={shouldLazyLoad}
             htmlWidth='600'
+            border='1px solid #232323'
             htmlHeight='300'
             objectPosition='center'
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+
+              img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+            }}
             height='300px'
             src={image}
             maxWidth='100%'
@@ -58,7 +64,6 @@ const Blog: FC<BlogType> = ({
           px='10px'
           width='100%'
           display='flex'
-          bgColor='inherit'
           alignItems='center'
           justifyContent='start'
           flexWrap='wrap'
@@ -84,18 +89,16 @@ const Blog: FC<BlogType> = ({
               textDecoration: 'underline',
             }}
             color='white'
-            bgColor='transparent'
           >
             {username}
           </Text>
         </Box>
 
-        <Heading fontSize='xl' px='10px' py='5px' bgColor='inherit' color='white'>
+        <Heading fontSize='xl' px='10px' py='5px' pb='7px' color='white'>
           {title}
         </Heading>
         <Box
           color='white'
-          bgColor='transparent'
           width='100%'
           display='flex'
           px='10px'

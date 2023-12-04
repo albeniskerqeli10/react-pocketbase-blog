@@ -17,12 +17,14 @@ const TagsList: FC<TagsListProps> = ({ query, handleTagClick }) => {
         width='100%'
         bgColor='black'
         display='flex'
-        alignItems='start'
-        justifyContent='start'
+        alignItems='center'
+        justifyContent='center'
         flexWrap='wrap'
         flexDirection='column'
-        py='20px'
-        gap='10px'
+        borderWidth='2px'
+        borderColor='#1b1b1d'
+        gap='5px'
+        mb='10px'
         rounded='md'
       >
         {tags?.length > 0 ? (
@@ -31,7 +33,7 @@ const TagsList: FC<TagsListProps> = ({ query, handleTagClick }) => {
               _hover={{
                 bgColor: '#1b1b1d',
               }}
-              py='5px'
+              py='10px'
               px='10px'
               rounded='sm'
               bgColor='transparent'

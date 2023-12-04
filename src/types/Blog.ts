@@ -22,6 +22,9 @@ export type BlogType = Partial<RecordModel> & {
     };
   };
 };
+export type BlogsType = {
+  items: BlogType[];
+};
 
 export type ActionForm = {
   // eslint-disable-next-line no-unused-vars

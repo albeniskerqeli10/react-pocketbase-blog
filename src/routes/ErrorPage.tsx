@@ -21,8 +21,9 @@ const ErrorPage = () => {
       <Link
         as={RouterLink}
         rounded='sm'
+        replace={true}
         to='/'
-        bgColor='red.500'
+        bgColor='secondaryRed.500'
         color='white'
         py='12px'
         px='14px'

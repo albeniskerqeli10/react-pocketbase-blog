@@ -58,7 +58,6 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
       alignItems='flex-start'
       justifyContent='center'
       flexDirection='column'
-      bgColor='transparent'
       borderTop='1px solid gray'
       flexWrap='wrap'
       py='10px'
@@ -73,7 +72,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Heading width='100%' color='white' my='10px' fontSize={['md', 'lg', '20px']} bgColor='transparent'>
+        <Heading width='100%' color='white' my='10px' fontSize={['md', 'lg', '20px']}>
           Comments ({sortedBlogComments?.length || 0})
           <Box
             my='20px'
@@ -126,7 +125,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
                   <Comment key={comment.id} comment={comment} userId={user?.id} />
                 ))
               ) : (
-                <Text pt='20px' fontWeight='bold' bgColor='transparent' fontSize='md'>
+                <Text pt='20px' fontWeight='normal' bgColor='transparent' fontSize='md'>
                   No comments yet. Be the first to share your thoughts!
                 </Text>
               )}
