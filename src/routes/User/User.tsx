@@ -1,38 +1,25 @@
 import { Box, Heading, Image, Text, Spinner } from '@chakra-ui/react';
-import { pb } from '../../lib/pocketbase';
-import { useEffect, useState, Suspense, lazy, FC } from 'react';
+
+import { useEffect, Suspense, lazy, FC, use } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ErrorResponse, ExtendedUser } from '../../types/Auth';
+import { ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
-import { Helmet } from 'react-helmet';
+import { getUserProfile } from '../../services/authAPI';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
+
 const User: FC = () => {
   const { id } = useParams();
-  const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
+  getUserProfile(id as string);
+  const user = use(getUserProfile(id as string)) as ExtendedUser;
   const navigate = useNavigate();
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const user = await pb.collection('users').getOne(id as string, {
-          expand: 'blogs(user)',
-        });
-        if (user) {
-          setUser(user);
-        }
-      } catch (err: unknown) {
-        const errorResponse = err as ErrorResponse;
-        if (errorResponse.status === 404) {
-          navigate('/');
-        }
-      }
-    };
-    getUser();
-  }, [id, navigate]);
-
-  useEffect;
+    if (!user?.id) {
+      navigate('/');
+    }
+  }, [user, navigate]);
   return (
-    Object.keys(user).length > 0 && (
+    user.id && (
       <Box
         width='600px'
         maxWidth='calc(100% - 10%)'
@@ -43,13 +30,11 @@ const User: FC = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Helmet>
-          <title> {user.username} | PocketBlog</title>
-        </Helmet>
+        <title> {user.username} | PocketBlog</title>
         <Box
           width='100%'
-          as="section"
-          boxShadow='lg'
+          as='section'
+          boxShadow='md'
           px='20px'
           display='flex'
           gap='20px'
@@ -57,7 +42,7 @@ const User: FC = () => {
           my='20px'
           alignItems='center'
           justifyContent='start'
-          bgColor='black'
+          bgColor='#0c0c0e'
           flexDirection='row'
           flexWrap='wrap'
         >
@@ -121,7 +106,7 @@ const User: FC = () => {
           </>
         ) : (
           <Heading py='30px' color='white' bgColor='transparent'>
-            No Blogs Yet
+            No blogs yet
           </Heading>
         )}
       </Box>

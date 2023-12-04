@@ -1,44 +1,34 @@
-import { Box, Button, FormControl, FormLabel, Heading, Input, Spinner, Text } from '@chakra-ui/react';
-import { useState, useEffect, FormEvent, FC, startTransition } from 'react';
+import { Box, Button, FormControl, FormLabel, Heading, Link, Input, Text } from '@chakra-ui/react';
+import { useEffect, FC } from 'react';
 import { pb } from '../../lib/pocketbase';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
-import useForm from '../../hooks/useForm';
+import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
+import { useFormState } from 'react-dom';
+type PrevState = {
+  message: string | null;
+};
 const Login: FC = () => {
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
-  const setUser = useStore((state: AppState) => state.setUser);
-  const { values, handleChange } = useForm({
-    email: '',
-    password: '',
-  age: '',
-  });
-  const [error, setError] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const handleAuthLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setIsSubmitting(true);
 
-      if (values.email !== '' || values.password !== '') {
-        await pb.collection('users').authWithPassword(values.email, values.password);
-        if (pb.authStore.isValid) {
-          setUser(pb.authStore.model as ExtendedUser);
-          navigate('/');
-          startTransition(() => {
-            setError('');
-            setIsSubmitting(false);
-          });
-        }
+  const setUser = useStore((state: AppState) => state.setUser);
+  const loginAction = async (_prevState: PrevState, formData: FormData) => {
+    try {
+      const email = formData.get('email');
+      const password = formData.get('password');
+      await pb.collection('users').authWithPassword(email as string, password as string);
+      if (pb.authStore.isValid) {
+        setUser(pb.authStore.model as ExtendedUser);
+        navigate('/');
       }
     } catch (err: unknown) {
-      setIsSubmitting(false);
       const errorResponse = err as ErrorResponse;
       if (errorResponse.status === 400) {
-        setError('Invalid Credentials');
+        return { message: 'Invalid Credentials' };
       } else {
-        setError('Something went wrong, please try again');
+        return { message: 'Something went wrong, please try again' };
       }
     }
   };
@@ -49,13 +39,17 @@ const Login: FC = () => {
     }
   }, [user, navigate]);
 
-  const signInWithGoogle = async () => {
-    try {
-      await pb.collection('users').authWithOAuth2({ provider: 'google' });
-      setUser(pb.authStore.model as ExtendedUser);
-    } catch (err) {
-      /* */
-    }
+  /* Temporary use of any for loginAction - subject to change */
+  const [state, formAction] = useFormState(loginAction as any, {
+    message: null,
+  });
+  const signInWithGithub = async () => {
+    const user = await pb.collection('users').authWithOAuth2({ provider: 'github' });
+    await pb.collection('users').update(pb?.authStore?.model?.id as string, {
+      avatar: user?.meta?.avatarUrl,
+    });
+
+    setUser(pb.authStore.model as ExtendedUser);
   };
 
   return (
@@ -67,21 +61,22 @@ const Login: FC = () => {
       alignItems='center'
       justifyContent='center'
       flexWrap='wrap'
-      flexDirection='column'
+      flexDirection='row'
     >
       <Box
-        onSubmit={handleAuthLogin}
+        action={formAction}
         as='form'
         width='400px'
         px='20px'
         display='flex'
-        bgColor='black'
+        bgColor='#0c0c0e'
         boxShadow='lg'
         alignItems='start'
         justifyContent='center'
         py='10px'
         gap='20px'
         minH='400px'
+        rounded='sm'
         flexDirection='column'
       >
         <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='10px'>
@@ -93,7 +88,6 @@ const Login: FC = () => {
           </FormLabel>
           <Input
             name='email'
-            onChange={handleChange}
             type='email'
             color='white'
             bgColor='#1b1b1d'
@@ -111,7 +105,6 @@ const Login: FC = () => {
           </FormLabel>
           <Input
             name='password'
-            onChange={handleChange}
             color='white'
             bgColor='#1b1b1d'
             py='25px'
@@ -129,24 +122,57 @@ const Login: FC = () => {
           Forgot password?
         </Text>
 
-        {error !== '' && (
+        {state.message !== null && (
           <Text borderBottomColor='red.500' borderBottomWidth='2px' bgColor='transparent' color='white'>
-            {error}
+            {state.message}
           </Text>
         )}
-        {isSubmitting ? (
-          <Button type='button' disabled={true} width='100%' fontWeight='normal' colorScheme='red'>
-            <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
-          </Button>
-        ) : (
-          <Button type='submit' width='100%' fontWeight='normal' colorScheme='red'>
-            Submit
-          </Button>
-        )}
+        <SubmitButton fullWidth />
 
-        <Button type='button' onClick={signInWithGoogle} mb='5' width='100%' fontWeight='normal' colorScheme='blue'>
-          Login with Google
-        </Button>
+        <Box
+          width='100%'
+          display='flex'
+          alignItems='center'
+          justifyContent='space-between'
+          flexDirection='row'
+          flexWrap='wrap'
+          bgColor='transparent'
+          gap='10px'
+        >
+          <Button
+            type='button'
+            onClick={signInWithGithub}
+            mb='5'
+            width='auto'
+            fontWeight='normal'
+            bgColor='black'
+            color='white'
+            flexGrow='1'
+            _hover={{
+              bgColor: 'white',
+              color: 'black',
+            }}
+          >
+            Continue with Github
+          </Button>
+          <Box
+            width='100%'
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            flexDirection='row'
+            backgroundColor='transparent'
+            color='white'
+            flexWrap='wrap'
+          >
+            <Text textAlign='center' backgroundColor='transparent'>
+              Don&apos;t have an account?{' '}
+              <Link colorScheme='secondaryRed' color='red.500' as={RouterLink} to='/signup'>
+                Register
+              </Link>
+            </Text>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

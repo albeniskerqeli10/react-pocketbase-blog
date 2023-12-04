@@ -1,39 +1,35 @@
-import { Box, Heading, Button, Textarea, Spinner, Text } from '@chakra-ui/react';
-import useForm from '../../hooks/useForm';
+import { Box, Heading, Textarea, Spinner, Text } from '@chakra-ui/react';
 import { AppState, useStore } from '../../lib/store';
-import { useMemo, FormEvent, Suspense, lazy, useState, startTransition, FC, useEffect } from 'react';
+
+import {
+  useMemo,
+  Suspense,
+  lazy,
+  startTransition,
+  FC,
+  useEffect,
+  unstable_useCacheRefresh as useCacheRefresh,
+} from 'react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogCommentType } from '../../types/Blog';
+import SubmitButton from '../UI/SubmitButton/SubmitButton';
 const Comment = lazy(() => import('../Comment/Comment'));
-const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
+const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
   const user = useStore((state: AppState) => state.user);
-  const { values, handleChange, resetForm } = useForm({
-    text: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const refreshCache = useCacheRefresh();
 
-  const handleCreateComment = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (values.text !== '' && user?.id !== null) {
-      setIsSubmitting(true);
+  const createCommentAction = async (formData: FormData) => {
+    const text = formData.get('text');
+    if (text !== '' && user?.id !== null) {
       await pb.collection('comments').create({
-        text: values.text,
+        text: text,
         user: user?.id,
         blog: blog.id,
-      });
-      startTransition(() => {
-        setIsSubmitting(false);
-        resetForm();
+        likes: [],
       });
     }
   };
 
-  const handleDeleteComment = async (id: number) => {
-    const confirmMsg = confirm('Do you want to delete this comment?');
-    if (confirmMsg) {
-      await pb.collection('comments').delete(id.toString());
-    }
-  };
   const sortedBlogComments: BlogCommentType[] = useMemo(() => {
     return blog?.expand?.['comments(blog)']
       ?.slice()
@@ -43,18 +39,15 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
   useEffect(() => {
     pb.collection('comments').subscribe('*', async function (e) {
       if (e.record.blog === blog.id) {
-        const updatedBlog: BlogType = await pb.collection('blogs').getOne(blog.id as string, {
-          expand: 'user, comments(blog).user',
-        });
         startTransition(() => {
-          onUpdate(updatedBlog);
+          refreshCache();
         });
       }
     });
     return () => {
-      pb.collection('comments').unsubscribe('');
+      pb.collection('comments').unsubscribe('*');
     };
-  }, [blog.id, onUpdate]);
+  }, [blog.id, refreshCache]);
 
   return (
     <Box
@@ -65,7 +58,6 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
       alignItems='flex-start'
       justifyContent='center'
       flexDirection='column'
-      bgColor='transparent'
       borderTop='1px solid gray'
       flexWrap='wrap'
       py='10px'
@@ -80,7 +72,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Heading width='100%' color='white' my='10px' fontSize={['lg', 'lg', '30px']} bgColor='transparent'>
+        <Heading width='100%' color='white' my='10px' fontSize={['md', 'lg', '20px']}>
           Comments ({sortedBlogComments?.length || 0})
           <Box
             my='20px'
@@ -95,7 +87,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
             <Box
               width='100%'
               as='form'
-              onSubmit={handleCreateComment}
+              action={createCommentAction}
               display='flex'
               alignItems='flex-start'
               justifyContent='center'
@@ -103,7 +95,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
               py='20px'
               gap='20px'
               flexDirection='column'
-              bgColor='black'
+              bgColor='#0c0c0e'
               flexWrap='wrap'
               minHeight='100px'
               border='1px'
@@ -113,8 +105,6 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
             >
               <Textarea
                 resize='none'
-                value={values.text}
-                onChange={handleChange}
                 rounded='none'
                 name='text'
                 placeholder='Write a comment'
@@ -127,44 +117,15 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog, onUpdate }) => {
                 }}
                 required
               />
-              {isSubmitting ? (
-                <Button
-                  type='button'
-                  disabled={true}
-                  fontWeight='normal'
-                  fontSize={['sm', 'md', 'md']}
-                  colorScheme='red'
-                >
-                  <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
-                </Button>
-              ) : (
-                <Button
-                  outline='0'
-                  _focus={{
-                    outline: '0px',
-                    border: '0',
-                  }}
-                  type='submit'
-                  fontWeight='normal'
-                  colorScheme='red'
-                  fontSize={['sm', 'md', 'md']}
-                >
-                  Submit
-                </Button>
-              )}
+              <SubmitButton size='md' />
             </Box>
             <Suspense fallback={<Spinner colorScheme='white' color='white' />}>
               {sortedBlogComments?.length > 0 ? (
                 sortedBlogComments?.map((comment: BlogCommentType) => (
-                  <Comment
-                    key={comment.id}
-                    comment={comment}
-                    userId={user?.id}
-                    handleDeleteComment={handleDeleteComment}
-                  />
+                  <Comment key={comment.id} comment={comment} userId={user?.id} />
                 ))
               ) : (
-                <Text pt='20px' fontWeight='bold' bgColor='transparent' fontSize='md'>
+                <Text pt='20px' fontWeight='normal' bgColor='transparent' fontSize='md'>
                   No comments yet. Be the first to share your thoughts!
                 </Text>
               )}

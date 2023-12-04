@@ -1,45 +1,17 @@
-import { Box, Text, Tabs, TabList, Tab } from '@chakra-ui/react';
-import { useEffect, useState, Suspense, lazy, FC, useCallback, startTransition } from 'react';
-import { pb } from '../lib/pocketbase';
-import { BlogType } from '../types/Blog';
-import Spinner from '../components/Spinner/Spinner';
-import { ErrorResponse } from '../types/Auth';
-const Blog = lazy(() => import('../components/Blog/Blog'));
+import { useState, FC, startTransition } from 'react';
+import { Box, Tab } from '@chakra-ui/react';
+import { getBlogs } from '../services/blogAPI';
+import TabsList from '../components/UI/TabsList/TabsList';
+import BlogsList from '../components/BlogsList/BlogsList';
 const NoAuthRoute: FC = () => {
-  const [blogs, setBlogs] = useState<BlogType[]>([]);
-  const [error, setError] = useState<string>();
+  getBlogs('-created');
   const [sortField, setSortField] = useState('-created');
-  useEffect(() => {
-    const getBlogs = async () => {
-      try {
-        const blogs: BlogType[] = await pb.collection('blogs').getFullList({
-          sort: sortField,
-          expand: 'user',
-        });
 
-        setBlogs(blogs);
-      } catch (err) {
-        const errorResponse = err as ErrorResponse;
-        setError(errorResponse.message);
-      }
-    };
-
-    getBlogs();
-    pb.collection('blogs').subscribe('*', async function (e) {
-      const latestBlog = await pb.collection('blogs').getOne(e.record.id, { expand: 'user' });
-      setBlogs((prevBlogs: BlogType[]) => [latestBlog, ...prevBlogs] as BlogType[]);
-    });
-
-    return () => {
-      pb.collection('blogs').unsubscribe();
-    };
-  }, [sortField]);
-
-  const handleSortBlogs = useCallback((sortField: string) => {
+  const handleSortBlogs = async (fieldName: string) => {
     startTransition(() => {
-      setSortField(sortField);
+      setSortField(fieldName);
     });
-  }, []);
+  };
 
   return (
     <Box
@@ -53,54 +25,20 @@ const NoAuthRoute: FC = () => {
       gap='20px'
       flexWrap='wrap'
     >
-      <Suspense fallback={<Spinner />}>
-        <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
-          <Tabs colorScheme='red' color='white'>
-            <TabList display='flex' justifyContent='stretch' border='0'>
-              <Tab
-                _active={{
-                  bgColor: 'transparent',
-                }}
-                display='flex'
-                justifyContent='stretch'
-                onClick={() => sortField !== '-created' && handleSortBlogs('-created')}
-              >
-                Latest
-              </Tab>
-              <Tab
-                _active={{
-                  bgColor: 'transparent',
-                }}
-                onClick={() => sortField !== 'likes' && handleSortBlogs('likes')}
-              >
-                Popular
-              </Tab>
-            </TabList>
-          </Tabs>
-        </Box>
-        {blogs.map((blog: BlogType) => (
-          <Blog
-            key={blog.id}
-            id={blog.id}
-            width='600px'
-            title={blog.title}
-            image={blog.image}
-            shouldLazyLoad={blogs[0].id === blog.id || blogs[1].id === blog.id ? 'eager' : 'lazy'}
-            shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-            shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
-            content={blog.content}
-            avatar={blog?.expand?.user?.avatar}
-            username={blog?.expand?.user?.username}
-            user={blog.user}
-            likes={blog.likes}
-          />
-        ))}
-      </Suspense>
-      {error !== '' && (
-        <Text color='white' bgColor='transparent'>
-          {error}
-        </Text>
-      )}
+      <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
+        <TabsList>
+          <Tab onClick={() => sortField !== '-created' && handleSortBlogs('-created')}>Latest</Tab>
+          <Tab
+            _active={{
+              bgColor: 'transparent',
+            }}
+            onClick={() => sortField !== '-likes' && handleSortBlogs('-likes')}
+          >
+            Popular
+          </Tab>
+        </TabsList>
+      </Box>
+      <BlogsList sortField={sortField} />
     </Box>
   );
 };

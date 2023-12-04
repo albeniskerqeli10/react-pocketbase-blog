@@ -2,17 +2,18 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import Layout from './components/Layout/Layout';
 import { Suspense, lazy, FC } from 'react';
 import ProtectedRoute from './routes/ProtectedRoute';
-import Spinner from './components/Spinner/Spinner';
+import Spinner from './components/UI/Spinner/Spinner';
 import ErrorPage from './routes/ErrorPage';
-
+import Skeleton from './components/UI/Skeleton/Skeleton';
 const Home = lazy(() => import('./routes/Home/Home'));
 const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
+const CreateBlog = lazy(() => import('./routes/CreateBlog/CreateBlog'));
 const Login = lazy(() => import('./routes/Login/Login'));
 const SignUp = lazy(() => import('./routes/SignUp/SignUp'));
 const Profile = lazy(() => import('./routes/Profile/Profile'));
 const User = lazy(() => import('./routes/User/User'));
 const NoAuthRoute = lazy(() => import('./routes/NoAuthRoute'));
-
+const Search = lazy(() => import('./routes/Search/Search'));
 const Router: FC = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -52,9 +53,29 @@ const Router: FC = () => {
           }
         />
         <Route
-          path='blog/:id'
+          path='create-blog'
           element={
             <Suspense fallback={<Spinner />}>
+              <ProtectedRoute>
+                <CreateBlog />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path='search'
+          element={
+            <Suspense fallback={<Spinner />}>
+              <ProtectedRoute>
+                <Search />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path='blog/:id'
+          element={
+            <Suspense fallback={<Skeleton width='100%' mainSkeletonHeight='400px' />}>
               <ProtectedRoute>
                 <SingleBlog />
               </ProtectedRoute>

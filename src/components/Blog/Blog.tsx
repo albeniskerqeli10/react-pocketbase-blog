@@ -10,21 +10,25 @@ const Blog: FC<BlogType> = ({
   image,
   avatar,
   shouldLazyLoad,
-  width,
+  width = '100%',
+  priority,
   shouldPreload,
   username,
   shouldDecode,
 }) => {
   const currentUser = useStore((state: AppState) => state.user);
+
   return (
     <LinkBox
       className='blog'
       key={id}
       as='article'
-      width={width}
-      boxShadow='lg'
+      rounded='sm'
+      width='100%'
+      boxShadow='md'
+      maxWidth={width}
       pb='10px'
-      bgColor='black'
+      bgColor='#0c0c0e'
       display='flex'
       gap='5px'
       alignItems='start'
@@ -33,19 +37,26 @@ const Blog: FC<BlogType> = ({
       aria-label='Blog post'
       flexWrap='wrap'
     >
-      <Box bgColor='inherit' width='100%' display='flex' flexDirection='column'>
+      <Box width='100%' display='flex' flexDirection='column'>
         <LinkOverlay as={Link} to={`/blog/${id}`}>
           <Image
             decoding={shouldDecode}
             width='100%'
             objectFit='cover'
-            fetchpriority={shouldPreload}
+            fetchpriority={priority}
             loading={shouldLazyLoad}
             htmlWidth='600'
+            border='1px solid #232323'
             htmlHeight='300'
             objectPosition='center'
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+
+              img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+            }}
             height='300px'
             src={image}
+            maxWidth='100%'
             alt='blog image'
           />
         </LinkOverlay>
@@ -53,7 +64,6 @@ const Blog: FC<BlogType> = ({
           px='10px'
           width='100%'
           display='flex'
-          bgColor='inherit'
           alignItems='center'
           justifyContent='start'
           flexWrap='wrap'
@@ -79,15 +89,24 @@ const Blog: FC<BlogType> = ({
               textDecoration: 'underline',
             }}
             color='white'
-            bgColor='transparent'
           >
             {username}
           </Text>
         </Box>
 
-        <Heading fontSize='xl' px='10px' py='5px' bgColor='inherit' color='white'>
+        <Heading fontSize='xl' px='10px' py='5px' pb='7px' color='white'>
           {title}
         </Heading>
+        <Box
+          color='white'
+          width='100%'
+          display='flex'
+          px='10px'
+          alignItems='center'
+          justifyContent='start'
+          gap='10px'
+          flexDirection='row'
+        ></Box>
       </Box>
     </LinkBox>
   );

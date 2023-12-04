@@ -32,8 +32,8 @@ const SignUp: FC = () => {
           avatar: `${`https://avatar.oxro.io/avatar.svg?name=${username.toUpperCase()}`}`,
           emailVisibility: true,
         });
-        await pb.collection('users').authWithPassword(email, password);
-        const authSignIn = await pb.collection('user').authWithPassword(email, password);
+        // await pb.collection('users').authWithPassword(email, password);
+        const authSignIn = await pb.collection('users').authWithPassword(email, password);
         if (authSignIn) {
           setUser(pb.authStore.model as ExtendedUser);
           navigate('/');
@@ -80,8 +80,8 @@ const SignUp: FC = () => {
         width='400px'
         px='20px'
         display='flex'
-        bgColor='black'
-        boxShadow='lg'
+        bgColor='#0c0c0e'
+        boxShadow='md'
         alignItems='start'
         justifyContent='center'
         py='10px'
@@ -158,11 +158,19 @@ const SignUp: FC = () => {
           </Text>
         )}
         {isSubmitting ? (
-          <Button type='button' mt='10px' mb='15px' disabled={true} width='100%' fontWeight='normal' colorScheme='red'>
+          <Button
+            type='button'
+            mt='10px'
+            mb='15px'
+            disabled={true}
+            width='100%'
+            fontWeight='normal'
+            colorScheme='secondaryRed'
+          >
             <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
           </Button>
         ) : (
-          <Button type='submit' mt='10px' mb='15px' width='100%' fontWeight='normal' colorScheme='red'>
+          <Button type='submit' mt='10px' mb='15px' width='100%' fontWeight='normal' colorScheme='secondaryRed'>
             Submit
           </Button>
         )}

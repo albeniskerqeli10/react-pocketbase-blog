@@ -1,76 +1,59 @@
 import { Wrap, Icon, Menu, MenuItem, MenuButton, MenuList, IconButton, Box, Text } from '@chakra-ui/react';
-import { FC, useState, startTransition, FormEvent } from 'react';
+import { FC, useState, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useForm from '../../hooks/useForm';
-import { BlogFormValues, BlogActionsProps, BlogType } from '../../types/Blog';
+import { BlogActionsProps, BlogType } from '../../types/Blog';
 import { useStore, AppState } from '../../lib/store';
 import EditBlogModal from '../modals/EditBlogModal/EditBlogModal';
-import { pb } from '../../lib/pocketbase';
 import { Heart, DotsThreeOutlineVertical as MoreVertical } from '@phosphor-icons/react';
+import { deleteBlog, likeBlog, unlikeBlog } from '../../services/blogAPI';
 
-const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
+const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = useStore((state: AppState) => state.user);
-  const { values, handleChange, resetForm } = useForm<BlogFormValues>({
-    title: '',
-    content: '',
-    image: '',
-  });
+  const refreshCache = useCacheRefresh();
   const onClose = () => {
     setIsOpen(false);
   };
 
   const handleLikeBlog = async () => {
-    const existingBlogLikes: Array<string> = blog.likes;
-    await pb.collection('blogs').update(blog.id, {
-      likes: [...existingBlogLikes, user?.id],
-      user: blog.user,
-    });
+    if (user?.id) {
+      return await likeBlog({
+        blog: {
+          id: blog.id,
+          likes: blog.likes,
+        } as BlogType,
+
+        userID: user.id,
+      });
+    }
   };
 
   const handleUnlikeBlog = async () => {
-    const existingBlogLikes: Array<string> = blog.likes;
-
-    const newLikes = existingBlogLikes?.filter((likeId: string) => likeId !== user?.id);
-
-    await pb.collection('blogs').update(blog.id, {
-      likes: newLikes,
-      user: blog.user,
-    });
-  };
-
-  const handleEditBlogPost = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const updatedBlog: BlogType = await pb.collection('blogs').update(
-        blog.id as string,
-        {
-          title: values.title !== '' ? values.title : blog.title,
-          content: values.content !== '' ? values.content : blog.content,
-          image: values.image !== '' ? values.image : blog.image,
-        },
-        {
-          expand: 'user',
-        },
-      );
-
-      startTransition(() => {
-        onUpdate(updatedBlog);
-        onClose();
-        resetForm();
+    if (user?.id) {
+      return await unlikeBlog({
+        blog: {
+          id: blog.id,
+          likes: blog.likes,
+        } as BlogType,
+        userID: user.id,
       });
-    } catch (err) {
-      alert('Something went wrong, try again');
     }
   };
 
   const handleDeleteBlog = async () => {
+    if (!blog.id) {
+      return console.error('Blog is undefined');
+    }
+
     const confirmMsg = confirm('Do you want to delete this blog?');
     if (confirmMsg) {
-      await pb.collection('blogs').delete(blog.id as string);
-
+      await deleteBlog(blog.id);
       navigate('/');
+
+      startTransition(() => {
+        refreshCache();
+      });
     }
   };
   const handleShareBlog = async () => {
@@ -88,12 +71,12 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
         ) : (
           <Icon as={Heart} color='white' cursor='pointer' onClick={handleLikeBlog} boxSize={7} />
         )}
-        <Text bgColor='transparent' py='5px' color='white'>
+        <Text py='5px' color='white'>
           {blog?.likes?.length}
         </Text>
       </Box>
       <>
-        <Menu isLazy>
+        <Menu>
           <MenuButton
             color='white'
             _hover={{
@@ -107,9 +90,9 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
             boxSize={8}
             paddingBottom='5px'
             as={IconButton}
-            icon={<MoreVertical size='24' />}
+            icon={<MoreVertical weight='fill' size='24' />}
           ></MenuButton>
-          <MenuList border='0' bgColor='black'>
+          <MenuList border='0' bgColor='#0c0c0e'>
             {blog.user === user?.id && (
               <>
                 <MenuItem onClick={() => setIsOpen(true)} color='white' bgColor='transparent'>
@@ -125,14 +108,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog, onUpdate }) => {
             </MenuItem>
           </MenuList>
         </Menu>{' '}
-        {isOpen && (
-          <EditBlogModal
-            handleSubmit={handleEditBlogPost}
-            handleChange={handleChange}
-            isOpen={isOpen}
-            onClose={onClose}
-          />
-        )}
+        {isOpen && <EditBlogModal isOpen={isOpen} blog={blog} onClose={onClose} />}
       </>
     </Wrap>
   );

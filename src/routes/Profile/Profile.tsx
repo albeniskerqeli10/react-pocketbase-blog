@@ -1,6 +1,16 @@
 import { Box, Heading, IconButton, Image, Text, Spinner } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { useEffect, Suspense, lazy, useState, FormEvent, startTransition, FC } from 'react';
+
+import {
+  Suspense,
+  lazy,
+  useState,
+  use,
+  FormEvent,
+  startTransition,
+  FC,
+  unstable_useCacheRefresh as useCacheRefresh,
+} from 'react';
 import { BlogType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import { useStore, AppState } from '../../lib/store';
@@ -8,28 +18,19 @@ import { ExtendedUser } from '../../types/Auth';
 import { Pencil } from '@phosphor-icons/react';
 import EditUserProfileModal from '../../components/modals/EditUserProfileModal/EditUserProfileModal';
 import useForm from '../../hooks/useForm';
-import { Helmet } from 'react-helmet';
+import { getUserProfile } from '../../services/authAPI';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
-  const [user, setUser] = useState<ExtendedUser>({} as ExtendedUser);
+  getUserProfile(currentUser?.id as string);
+  const user = use(getUserProfile(currentUser?.id as string)) as ExtendedUser;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { values, handleChange, resetForm } = useForm({
     username: '',
     email: '',
     avatar: '',
   });
-  useEffect(() => {
-    const getUser = async () => {
-      const userProfile = await pb.collection('users').getOne(currentUser?.id as string, {
-        expand: 'user, blogs(user)',
-      });
-      if (userProfile) {
-        setUser(userProfile);
-      }
-    };
-    getUser();
-  }, [currentUser]);
+  const refreshCache = useCacheRefresh();
 
   const handleEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,8 +46,10 @@ const Profile: FC = () => {
           expand: 'blogs(user)',
         },
       );
-      setIsOpen(false);
+
       startTransition(() => {
+        refreshCache();
+        setIsOpen(false);
         resetForm();
       });
     } catch (err) {
@@ -67,12 +70,10 @@ const Profile: FC = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <Helmet>
-          <title> Profile | MicroBlog</title>
-        </Helmet>
+        <title> Profile | PocketBlog</title>
         <Box
           width='100%'
-          boxShadow='lg'
+          boxShadow='md'
           px='20px'
           display='flex'
           gap='20px'
@@ -81,7 +82,7 @@ const Profile: FC = () => {
           alignItems='center'
           justifyContent='space-between'
           flexWrap='wrap'
-          bgColor='black'
+          bgColor='#0c0c0e'
           flexDirection='row'
         >
           <Box
@@ -107,6 +108,7 @@ const Profile: FC = () => {
               <Heading bgColor='transparent' color='white'>
                 {user.username}
               </Heading>
+
               <Text fontSize='14px' color='gray.300' bgColor='transparent'>
                 You joined{' '}
                 <TimeAgo
@@ -122,28 +124,31 @@ const Profile: FC = () => {
           </Box>
           <IconButton
             onClick={() => setIsOpen(true)}
-            bgColor='transparent'
             aria-label='edit profile'
+            bgColor='#0766eb'
             _hover={{
-              border: '0',
-              bgColor: 'blue.500',
+              bgColor: 'blue.600',
             }}
             _active={{
               bgColor: 'transparent',
+              transition: '1s ease-in all ',
             }}
+            color='white'
             icon={
               <Pencil
+                size={40}
                 style={{
                   backgroundColor: 'transparent',
+                  padding: '5px',
+                  borderRadius: '5px',
                 }}
-                fontSize='30'
-                color='white'
               />
             }
           />
         </Box>
         {isOpen && (
           <EditUserProfileModal
+            user={user}
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
             handleChange={handleChange}
@@ -184,7 +189,7 @@ const Profile: FC = () => {
           </>
         ) : (
           <Heading py='30px' color='white' bgColor='transparent'>
-            No Blogs Yet
+            No blogs yet
           </Heading>
         )}
       </Box>

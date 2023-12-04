@@ -37,5 +37,4 @@ Feel free to explore and contribute if you're interested!
 
 
 ## Additional information 
-
 You can find an alternative version of this blog application in the `dev` branch where I've been testing out some upcoming/experimental React features.

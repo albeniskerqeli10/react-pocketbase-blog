@@ -1,22 +1,16 @@
-import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { useState, FC } from 'react';
-import CreateBlogModal from '../modals/CreateBlogModal/CreateBlogModal';
+import { Button, Box, Link, Menu, MenuButton, MenuItem, MenuList, Avatar } from '@chakra-ui/react';
+import { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
+import SearchBox from '../SearchBox/SearchBox';
 const Header: FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const user = useStore((state: AppState) => state.user);
   const logout = useStore((state: AppState) => state.logoutUser);
-  const onClose = () => {
-    setIsOpen(false);
-  };
-  const handleModalClick = () => {
-    setIsOpen(true);
-  };
   return (
     <Box
       as='header'
       width='100%'
+      bgColor='#1b1b1d'
       py='10px'
       minH='70px'
       position={['static', 'sticky', 'sticky']}
@@ -26,44 +20,46 @@ const Header: FC = () => {
       display='flex'
       alignItems='center'
       gap={['20px', '0', '0']}
-      justifyContent={['center', 'space-between', 'space-between']}
+      justifyContent='space-between'
       flexWrap='wrap'
     >
       <Link
+        to='/'
         as={RouterLink}
         _hover={{
           textDecoration: 'none',
         }}
-        to='/'
-        fontSize={['md', 'md', 'xl']}
+        className='logo'
+        fontSize={['md', 'md', 'lg']}
         fontWeight='bold'
         color='white'
       >
-        PocketBlog
+        POCKETBLOG
       </Link>
-      <Box
-        display='flex'
-        alignItems='center'
-        justifyContent='center'
-        gap={['8px', '8px', '8px']}
-        flexWrap='wrap'
-        width={['100%', 'auto', 'auto']}
-        flexDirection='row'
-      >
-        {user !== null ? (
-          <>
+      {user !== null ? (
+        <>
+          <SearchBox />
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='center'
+            gap={['10px', '10px', '10px']}
+            flexWrap='wrap'
+            width={['auto', 'auto', 'auto']}
+            flexDirection='row'
+          >
             <Button
-              width={['100%', 'auto', 'auto']}
+              as={RouterLink}
+              to='/create-blog'
+              width={['auto', 'auto', 'auto']}
               fontWeight='normal'
-              onClick={handleModalClick}
               size='md'
-              colorScheme='red'
-              order={["1","0","0"]}
+              colorScheme='secondaryRed'
+              boxShadow='sm'
             >
               Create
             </Button>
-            {isOpen && <CreateBlogModal isOpen={isOpen} onClose={onClose} />}
-            <Menu isLazy>
+            <Menu isLazy={true}>
               <MenuButton
                 color='white'
                 _hover={{
@@ -75,11 +71,15 @@ const Header: FC = () => {
                 border='0'
                 size={['md', 'md', 'md']}
                 bgColor='transparent'
-                as={Button}
-              >
-                {user?.username}
-              </MenuButton>
-              <MenuList border='0' bgColor='black'>
+                as={Avatar}
+                ignoreFallback={true}
+                name={user?.username}
+                cursor='pointer'
+                width='40px'
+                height='40px'
+                src={user?.avatar}
+              ></MenuButton>
+              <MenuList border='0' rounded='sm' bgColor='#0c0c0e' boxShadow='md'>
                 <MenuItem as={RouterLink} to='/profile' color='white' bgColor='transparent'>
                   Profile
                 </MenuItem>
@@ -88,25 +88,34 @@ const Header: FC = () => {
                 </MenuItem>
               </MenuList>
             </Menu>{' '}
-          </>
-        ) : (
-          <>
-            <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red'>
-              Sign In
-            </Button>
-            <Button
-              fontWeight='normal'
-              as={RouterLink}
-              to='/signup'
-              size='md'
-              colorScheme='black'
-              border='2px solid white'
-            >
-              Sign Up
-            </Button>
-          </>
-        )}
-      </Box>
+          </Box>
+        </>
+      ) : (
+        <Box
+          display='flex'
+          alignItems='center'
+          justifyContent='center'
+          gap={['8px', '8px', '8px']}
+          flexWrap='wrap'
+          width={['auto', 'auto', 'auto']}
+          flexDirection='row'
+        >
+          <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red' boxShadow='sm'>
+            Sign In
+          </Button>
+          <Button
+            fontWeight='normal'
+            as={RouterLink}
+            to='/signup'
+            size='md'
+            colorScheme='black'
+            border='2px solid white'
+            boxShadow='sm'
+          >
+            Sign Up
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -1,161 +1,146 @@
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
-import { useState, useEffect, FC, useCallback } from 'react';
-import { Box, Heading, Image, Text } from '@chakra-ui/react';
-import { BlogType } from '../../types/Blog';
-import { ErrorResponse } from '../../types/Auth';
+import { useEffect, FC, use, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
+import { Box, Heading, Image, Text, Tag } from '@chakra-ui/react';
+import { AppState, useStore } from '../../lib/store';
+import { getSingleBlog } from '../../services/blogAPI';
+import { BlogType, Tag as TagType } from '../../types/Blog';
 import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
-import { AppState, useStore } from '../../lib/store';
-import { Helmet } from 'react-helmet';
+import DOMPurify from 'dompurify';
 
-const SingleBlog: FC = () => {
-  const [blog, setBlog] = useState<BlogType>({} as BlogType);
+const SingleBlog: FC = async () => {
   const { id } = useParams();
+  const blog = use(getSingleBlog(id as string)) as BlogType;
   const currentUser = useStore((state: AppState) => state.user);
   const navigate = useNavigate();
-
-  const handleStateUpdate = useCallback((updatedBlog: BlogType) => {
-    setBlog(updatedBlog);
-  }, []);
+  const refreshCache = useCacheRefresh();
+  const sanitizedContent = DOMPurify.sanitize(blog.content);
 
   useEffect(() => {
-    const getSingleBlog = async () => {
-      try {
-        const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-          expand: 'user, comments(blog).user',
-        });
-        setBlog(blog);
-      } catch (err: unknown) {
-        const errorResponse = err as ErrorResponse;
-        if (errorResponse.status === 404) {
-          navigate('/');
-        }
-      }
-    };
-
-    getSingleBlog();
-    pb.collection('blogs').subscribe(id as string, async function () {
-      const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
-        expand: 'user, comments(blog).user',
-      });
-      setBlog(blog);
-    });
-    return () => {
-      pb.collection('blogs').unsubscribe(id);
-    };
-  }, [id, navigate]);
-
-  const parts = blog?.content?.split(/(\*.*?\*|#.*?#)/);
-
-  const splittedContent = parts?.map((part: string, index: number) => {
-    if (part.startsWith('*') && part.endsWith('*')) {
-      const content = part.substring(1, part.length - 1);
-      return (
-        <Heading as='h2' fontSize={['md', 'md', 'xl']} color='white' key={index}>
-          {content}
-        </Heading>
-      );
+    if (!blog?.id) {
+      navigate('/');
     } else {
-      return (
-        <Text width='100%' key={index} fontSize='sm' paddingBottom='30px' lineHeight='30px' color='gray.100'>
-          {part}
-        </Text>
-      );
+      pb.collection('blogs').subscribe(blog?.id as string, async function () {
+        startTransition(() => {
+          refreshCache();
+        });
+      });
     }
-  });
+    return () => {
+      pb.collection('blogs').unsubscribe(id as string);
+    };
+  }, [id, blog?.id, refreshCache, navigate]);
 
   return (
-    blog.title && (
-      <Box
-        key={blog.id}
-        width='100%'
-        as='section'
-        py='10px'
-        display='flex'
-        gap='20px'
-        flexDirection='column'
-        alignItems='start'
-        justifyContent='start'
-      >
-        <Helmet>
-          <title> {blog.title} | PocketBlog</title>
-        </Helmet>
-        <Image
-          decoding='sync'
-          fetchpriority='high'
-          src={blog.image}
-          fit='cover'
-          objectFit='cover'
-          objectPosition='center'
-          loading='eager'
-          width='100%'
-          htmlWidth='600px'
-          htmlHeight='400px'
-          height='400px'
-          alt='blog image'
-        />
-
+    blog?.id && (
+      <>
         <Box
-          display='flex'
-          alignItems='start'
-          justifyContent='space-between'
+          key={blog.id}
           width='100%'
-          flexDirection='row'
-          flexWrap='wrap'
-        >
-          <Box color='gray.300' display='flex' alignItems='start' flexDirection='row' flexWrap='wrap' gap='10px'>
-            <Image
-              src={blog?.expand?.user?.avatar}
-              rounded='full'
-              width='40px'
-              height='40px'
-              decoding='async'
-              alt='avatar'
-            />
-
-            <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
-              <Text
-                as={Link}
-                to={currentUser?.id === blog?.user ? '/profile' : `../../user/${blog?.user}`}
-                color='white'
-                _hover={{
-                  textDecoration: 'underline',
-                }}
-                fontSize='lg'
-              >
-                {blog?.expand?.user?.username}
-              </Text>
-
-              <TimeAgo
-                style={{
-                  fontSize: '12px',
-                }}
-                live={false}
-                datetime={blog.created as string}
-              />
-            </Box>
-          </Box>
-          <BlogActions blog={blog} onUpdate={handleStateUpdate} />
-        </Box>
-
-        <Box
-          width='100%'
+          as='section'
+          py='10px'
           display='flex'
-          flexDirection='row'
-          alignItems='center'
           gap='20px'
-          justifyContent='start'
-          flexWrap='wrap'
+          flexDirection='column'
+          alignItems='start'
+          justifyContent='flex-start'
         >
-          <Heading color='white' fontSize={['lg', 'lg', '45px']}>
-            {blog.title}
-          </Heading>
+          <title>{`${blog.title} | PocketBlog`}</title>
+          <Image
+            decoding='sync'
+            fetchpriority='high'
+            src={blog.image}
+            onError={(e) => {
+              const img = e.target as HTMLImageElement;
+
+              img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+            }}
+            rounded='sm'
+            fit='cover'
+            objectFit='cover'
+            objectPosition='center'
+            loading='eager'
+            width='100%'
+            htmlWidth='600px'
+            htmlHeight='400px'
+            height='400px'
+            alt='blog image'
+          />
+
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='space-between'
+            width='100%'
+            flexDirection='row'
+            flexWrap='wrap'
+          >
+            <Box color='gray.300' display='flex' alignItems='start' flexDirection='row' flexWrap='wrap' gap='10px'>
+              <Image src={blog?.expand?.user?.avatar} rounded='full' width='40px' height='40px' alt='avatar' />
+
+              <Box color='gray.300' display='flex' alignItems='start' flexDirection='column' flexWrap='wrap'>
+                <Text
+                  as={Link}
+                  to={currentUser?.id === blog?.user ? '/profile' : `../../user/${blog?.user}`}
+                  color='white'
+                  _hover={{
+                    textDecoration: 'underline',
+                  }}
+                  fontSize='lg'
+                >
+                  {blog?.expand?.user?.username}
+                </Text>
+
+                <TimeAgo
+                  style={{
+                    fontSize: '12px',
+                  }}
+                  live={false}
+                  datetime={blog.created as string}
+                />
+              </Box>
+            </Box>
+            <BlogActions blog={blog} />
+          </Box>
+
+          <Box
+            width='100%'
+            display='flex'
+            flexDirection='row'
+            alignItems='center'
+            justifyContent='start'
+            flexWrap='wrap'
+          >
+            <Heading width='100%' color='white' fontSize={['lg', 'lg', '40px']}>
+              {blog.title}
+            </Heading>
+          </Box>
+
+          {blog?.expand?.tags && blog.expand.tags.length > 0 && (
+            <Box
+              width='auto'
+              display='flex'
+              alignItems='center'
+              justifyContent='flex-start'
+              flexDirection='row'
+              flexWrap='wrap'
+              gap='10px'
+            >
+              {blog.expand.tags.map((tag: TagType) => (
+                <>
+                  <Tag color='white' bgColor='#0c0c0e' size='lg'>
+                    {tag.name.toUpperCase()}
+                  </Tag>
+                </>
+              ))}
+            </Box>
+          )}
+          <Box color='white' width='100%' className='content' dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+          <BlogComments blog={blog} />
         </Box>
-        {splittedContent}
-        <BlogComments blog={blog} onUpdate={handleStateUpdate} />
-      </Box>
+      </>
     )
   );
 };

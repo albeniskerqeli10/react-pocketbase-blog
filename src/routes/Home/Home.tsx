@@ -1,45 +1,19 @@
-import { useEffect, useState, Suspense, lazy, FC, useCallback } from 'react';
+import { useState, FC, startTransition } from 'react';
+import { Box, Tab } from '@chakra-ui/react';
+import { getBlogs } from '../../services/blogAPI';
+import TabsList from '../../components/UI/TabsList/TabsList';
+import BlogsList from '../../components/BlogsList/BlogsList';
 
-import { Box, Tab, TabList, Tabs, Text } from '@chakra-ui/react';
-import Spinner from '../../components/Spinner/Spinner';
-
-import { pb } from '../../lib/pocketbase';
-import { BlogType } from '../../types/Blog';
-import { ErrorResponse } from '../../types/Auth';
-const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Home: FC = () => {
-  const [blogs, setBlogs] = useState<BlogType[]>([]);
-  const [error, setError] = useState<string>();
+  getBlogs('-created');
+
   const [sortField, setSortField] = useState('-created');
-  useEffect(() => {
-    const getBlogs = async () => {
-      try {
-        const blogs: BlogType[] = await pb.collection('blogs').getFullList({
-          sort: sortField,
-          expand: 'user',
-        });
 
-        setBlogs(blogs);
-      } catch (err) {
-        const errorResponse = err as ErrorResponse;
-        setError(errorResponse.message);
-      }
-    };
-
-    getBlogs();
-    pb.collection('blogs').subscribe('*', async function (e) {
-      const latestBlog = await pb.collection('blogs').getOne(e.record.id, { expand: 'user' });
-      setBlogs((prevBlogs: BlogType[]) => [latestBlog, ...prevBlogs] as BlogType[]);
+  const handleSortBlogs = async (fieldName: string) => {
+    startTransition(() => {
+      setSortField(fieldName);
     });
-
-    return () => {
-      pb.collection('blogs').unsubscribe();
-    };
-  }, [sortField]);
-
-  const handleSortBlogs = useCallback((sortField: string) => {
-    setSortField(sortField);
-  }, []);
+  };
 
   return (
     <Box
@@ -52,53 +26,22 @@ const Home: FC = () => {
       flexDirection='row'
       gap='20px'
       flexWrap='wrap'
+      overflowY='auto'
     >
       <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
-        <Tabs colorScheme='red' color='white'>
-          <TabList display='flex' justifyContent='stretch' border='0'>
-            <Tab
-              _active={{
-                bgColor: 'transparent',
-              }}
-              onClick={() => sortField !== '-created' && handleSortBlogs('-created')}
-            >
-              Latest
-            </Tab>
-            <Tab
-              _active={{
-                bgColor: 'transparent',
-              }}
-              onClick={() => sortField !== 'likes' && handleSortBlogs('likes')}
-            >
-              Popular
-            </Tab>
-          </TabList>
-        </Tabs>
+        <TabsList>
+          <Tab onClick={() => sortField !== '-created' && handleSortBlogs('-created')}>Latest</Tab>
+          <Tab
+            _active={{
+              bgColor: 'transparent',
+            }}
+            onClick={() => sortField !== '-likes' && handleSortBlogs('-likes')}
+          >
+            Popular
+          </Tab>
+        </TabsList>
       </Box>
-      <Suspense fallback={<Spinner />}>
-        {blogs.map((blog: BlogType) => (
-          <Blog
-            key={blog.id}
-            id={blog.id}
-            width='600px'
-            title={blog.title}
-            image={blog.image}
-            shouldLazyLoad={blogs[0].id === blog.id || blogs[1].id === blog.id ? 'eager' : 'lazy'}
-            shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-            shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
-            content={blog.content}
-            avatar={blog?.expand?.user?.avatar}
-            username={blog?.expand?.user?.username}
-            user={blog.user}
-            likes={blog.likes}
-          />
-        ))}
-      </Suspense>
-      {error !== '' && (
-        <Text color='white' bgColor='transparent'>
-          {error}
-        </Text>
-      )}
+      <BlogsList sortField={sortField} />
     </Box>
   );
 };

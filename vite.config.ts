@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import eslintPlugin from 'vite-eslint-plugin';
+import eslintPlugin from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,19 +16,7 @@ export default defineConfig({
 
   base: '/',
   server: {
-    port: 8000,
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore
-          if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString();
-          }
-        },
-      },
-    },
+    port: 3000,
+
   },
 });

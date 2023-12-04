@@ -5,15 +5,17 @@ import { useEffect, FC } from 'react';
 import { AppState, useStore } from '../../lib/store';
 import { pb } from '../../lib/pocketbase';
 import { ExtendedUser } from '../../types/Auth';
+
 const Layout: FC = () => {
   const setUser = useStore((state: AppState) => state.setUser);
+
   const logoutUser = useStore((state: AppState) => state.logoutUser);
   useEffect(() => {
     const changeUser = () => {
       pb.authStore.onChange(() => {
         setUser(pb.authStore.model as ExtendedUser);
       });
-      if (!pb.authStore.isValid) {
+      if (!pb.authStore.isValid === true) {
         logoutUser();
       }
     };

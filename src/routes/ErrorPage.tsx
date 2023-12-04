@@ -1,4 +1,5 @@
-import { Button, Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading, Text, Link } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 const ErrorPage = () => {
   return (
@@ -16,9 +17,25 @@ const ErrorPage = () => {
       <Heading bgColor='transparent' color='white'>
         404 Not Found
       </Heading>
-      <Button onClick={() => history.back()} colorScheme='red' size='lg'>
-        Go Back
-      </Button>
+      <Text color='white'>Sorry, the page you are looking for does not exist.</Text>
+      <Link
+        as={RouterLink}
+        rounded='sm'
+        replace={true}
+        to='/'
+        bgColor='secondaryRed.500'
+        color='white'
+        py='12px'
+        px='14px'
+        boxShadow='lg'
+        _hover={{
+          textDecoration: 'none',
+          bgColor: '#0c0c0e',
+          transition: '0.3s linear all',
+        }}
+      >
+        GO TO HOMEPAGE
+      </Link>
     </Flex>
   );
 };
