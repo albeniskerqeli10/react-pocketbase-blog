@@ -3,19 +3,7 @@ import { Link } from 'react-router-dom';
 import { BlogType } from '../../types/Blog';
 import { FC, memo } from 'react';
 import { AppState, useStore } from '../../lib/store';
-const Blog: FC<BlogType> = ({
-  id,
-  title,
-  user,
-  image,
-  avatar,
-  shouldLazyLoad,
-  width = '100%',
-  priority,
-  shouldPreload,
-  username,
-  shouldDecode,
-}) => {
+const Blog: FC<BlogType> = ({ id, title, user, image, avatar, width = '100%', username }) => {
   const currentUser = useStore((state: AppState) => state.user);
 
   return (
@@ -25,10 +13,10 @@ const Blog: FC<BlogType> = ({
       as='article'
       rounded='sm'
       width='100%'
-      boxShadow='md'
+      boxShadow='lg'
       maxWidth={width}
       pb='10px'
-      bgColor='#0c0c0e'
+      bgColor='#060608'
       display='flex'
       gap='5px'
       alignItems='start'
@@ -39,26 +27,26 @@ const Blog: FC<BlogType> = ({
     >
       <Box width='100%' display='flex' flexDirection='column'>
         <LinkOverlay as={Link} to={`/blog/${id}`}>
-          <Image
-            decoding={shouldDecode}
-            width='100%'
-            objectFit='cover'
-            fetchpriority={priority}
-            loading={shouldLazyLoad}
-            htmlWidth='600'
-            border='1px solid #232323'
-            htmlHeight='300'
-            objectPosition='center'
-            onError={(e) => {
-              const img = e.target as HTMLImageElement;
+          <Box>
+            <Image
+              src={image}
+              alt='blog image'
+              width='100%'
+              height='auto'
+              objectFit='cover'
+              objectPosition='center'
+              htmlWidth='600'
+              maxHeight='330px'
+              border='1px solid #232323'
+              decoding='async'
+              loading='lazy'
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
 
-              img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
-            }}
-            height='300px'
-            src={image}
-            maxWidth='100%'
-            alt='blog image'
-          />
+                img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+              }}
+            />
+          </Box>
         </LinkOverlay>
         <Box
           px='10px'
@@ -72,14 +60,13 @@ const Blog: FC<BlogType> = ({
           flexDirection='row'
         >
           <Image
-            fetchpriority={shouldPreload}
-            loading={shouldLazyLoad}
+            loading='lazy'
             src={avatar}
             alt=' author avatar'
-            width='30px'
+            width='25px'
             decoding='async'
             rounded='3xl'
-            height='30px'
+            height='25px'
           />
           <Text
             as={Link}

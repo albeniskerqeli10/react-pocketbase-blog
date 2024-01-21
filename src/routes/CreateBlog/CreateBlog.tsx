@@ -87,7 +87,7 @@ const CreateBlog = () => {
           name='title'
           boxShadow='sm'
           rounded='md'
-          bgColor='#0c0c0e'
+          bgColor='#060608'
           my='5px'
           py='25px'
           border='0'
@@ -109,7 +109,7 @@ const CreateBlog = () => {
           flexDirection='row'
           flexWrap='wrap'
           rounded='md'
-          bgColor='#0c0c0e'
+          bgColor='#060608'
           gap='5px'
           px='5px'
         >

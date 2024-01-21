@@ -17,6 +17,12 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 };
 const theme = extendTheme(config, {
+  styles: {
+    global: {
+      '*:focus-visible': {},
+    },
+  },
+
   colors: {
     secondaryRed: {
       500: '#cf2f2f',

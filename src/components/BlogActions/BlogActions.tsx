@@ -92,7 +92,7 @@ const BlogActions: FC<BlogActionsProps> = ({ blog }) => {
             as={IconButton}
             icon={<MoreVertical weight='fill' size='24' />}
           ></MenuButton>
-          <MenuList border='0' bgColor='#0c0c0e'>
+          <MenuList border='0' bgColor='#060608'>
             {blog.user === user?.id && (
               <>
                 <MenuItem onClick={() => setIsOpen(true)} color='white' bgColor='transparent'>

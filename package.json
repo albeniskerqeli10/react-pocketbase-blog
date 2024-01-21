@@ -20,6 +20,7 @@
     "@phosphor-icons/react": "^2.0.10",
     "@uploadcare/upload-client": "^6.6.1",
     "@vercel/analytics": "^1.0.2",
+    "@vercel/speed-insights": "^1.0.5",
     "dompurify": "^3.0.5",
     "framer-motion": "^10.16.4",
     "react": "^0.0.0-experimental-6c7b41da3-20231123",
@@ -28,7 +29,6 @@
     "react-router-dom": "^6.17.0",
     "timeago-react": "3.0.6",
     "zustand": "^4.4.1"
-
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.2",

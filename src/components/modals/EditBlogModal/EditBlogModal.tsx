@@ -54,6 +54,7 @@ const EditBlogModal: FC<EditBlogModalProps> = ({ blog, isOpen, onClose }) => {
         minHeight='85vh'
         onSubmit={handleEditBlogPost}
         borderWidth='2px'
+        mx='10px'
         borderColor='#1b1b1d'
         as='form'
         bgColor='black'

@@ -4,12 +4,12 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 const SearchBox = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
   const query = searchParams.get('q');
   return (
     <Box
-      flex={['initial', 0.8, 0.6]}
       width={['100%', 'auto', 'auto']}
+      my={['5px', 0, 0]}
+      flex={['initial', 0.8, 0.6]}
       order={[1, 0, 0]}
       display='flex'
       alignItems='center'
@@ -19,29 +19,25 @@ const SearchBox = () => {
     >
       <Input
         // 232229
-        bgColor=' #0c0c0e'
+        bgColor='#060608'
         color='white'
         boxShadow='md'
+        appearance='auto'
         py='23px'
         defaultValue={query || ''}
+        flex={[1, 1, 0.8]}
         border='0'
         onChange={(e) => {
-          if (e.target.value !== '') {
-            startTransition(() => {
-              navigate(`/search?q=${e.target.value}`);
-            });
-          } else {
-            startTransition(() => {
-              navigate(`/`);
-            });
-          }
+          startTransition(() => {
+            navigate(e.target.value !== '' ? `/search?q=${e.target.value}` : '/');
+          });
         }}
         _placeholder={{
-          color: 'white',
+          color: '#ececec',
         }}
         type='search'
         name='q'
-        placeholder='Search blogs'
+        placeholder='Search for blogs or users...'
       />
     </Box>
   );

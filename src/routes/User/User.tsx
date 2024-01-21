@@ -22,7 +22,7 @@ const User: FC = () => {
     user.id && (
       <Box
         width='600px'
-        maxWidth='calc(100% - 10%)'
+        maxWidth='100%'
         py='10px'
         display='flex'
         alignItems='center'
@@ -30,23 +30,30 @@ const User: FC = () => {
         flexDirection='column'
         flexWrap='wrap'
       >
-        <title> {user.username} | PocketBlog</title>
+        <title>{user && user.username + ' | PocketBlog'}</title>
         <Box
           width='100%'
           as='section'
           boxShadow='md'
           px='20px'
+          rounded='sm'
           display='flex'
           gap='20px'
           py='30px'
           my='20px'
-          alignItems='center'
-          justifyContent='start'
-          bgColor='#0c0c0e'
+          alignItems='start'
+          justifyContent='flex-start'
+          bgColor='#060608'
           flexDirection='row'
           flexWrap='wrap'
         >
-          <Image src={user.avatar} alt='user avatar' rounded='sm' width='70px' height='70px' />
+          <Image
+            src={user.avatar}
+            alt='user avatar'
+            rounded='sm'
+            width={['60px', '70px', '70px']}
+            height={['60px', '70px', '70px']}
+          />
 
           <Box
             bgColor='transparent'
@@ -57,10 +64,10 @@ const User: FC = () => {
             flexDirection='column'
             flexWrap='wrap'
           >
-            <Heading bgColor='transparent' color='white'>
+            <Heading fontSize={['xl', '2xl', '3xl']} bgColor='transparent' color='white'>
               {user.username}
             </Heading>
-            <Text fontSize='14px' color='gray.300' bgColor='transparent'>
+            <Text fontSize={['12px', '14px', '14px']} color='gray.300' bgColor='transparent'>
               Joined{' '}
               <TimeAgo
                 style={{

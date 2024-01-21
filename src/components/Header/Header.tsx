@@ -10,7 +10,7 @@ const Header: FC = () => {
     <Box
       as='header'
       width='100%'
-      bgColor='#1b1b1d'
+      bgColor='#121212'
       py='10px'
       minH='70px'
       position={['static', 'sticky', 'sticky']}
@@ -43,7 +43,7 @@ const Header: FC = () => {
             display='flex'
             alignItems='center'
             justifyContent='center'
-            gap={['10px', '10px', '10px']}
+            gap='15px'
             flexWrap='wrap'
             width={['auto', 'auto', 'auto']}
             flexDirection='row'
@@ -68,6 +68,7 @@ const Header: FC = () => {
                 _active={{
                   border: 'none',
                 }}
+                tabIndex={0}
                 border='0'
                 size={['md', 'md', 'md']}
                 bgColor='transparent'
@@ -79,7 +80,7 @@ const Header: FC = () => {
                 height='40px'
                 src={user?.avatar}
               ></MenuButton>
-              <MenuList border='0' rounded='sm' bgColor='#0c0c0e' boxShadow='md'>
+              <MenuList border='0' rounded='sm' bgColor='#060608' boxShadow='md'>
                 <MenuItem as={RouterLink} to='/profile' color='white' bgColor='transparent'>
                   Profile
                 </MenuItem>
@@ -97,7 +98,7 @@ const Header: FC = () => {
           justifyContent='center'
           gap={['8px', '8px', '8px']}
           flexWrap='wrap'
-          width={['auto', 'auto', 'auto']}
+          width='auto'
           flexDirection='row'
         >
           <Button fontWeight='normal' to='/login' as={RouterLink} size='md' colorScheme='red' boxShadow='sm'>

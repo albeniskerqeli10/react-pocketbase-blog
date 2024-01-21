@@ -62,9 +62,6 @@ const BlogsList: FC<BlogsListProps> = ({ sortField }) => {
               width='600px'
               title={blog.title}
               image={blog.image}
-              shouldLazyLoad={blogs[0].id === blog.id ? 'eager' : 'lazy'}
-              shouldPreload={blogs[0].id === blog.id ? 'high' : 'low'}
-              shouldDecode={blogs[0].id === blog.id ? 'sync' : 'async'}
               content={blog.content}
               avatar={blog?.expand?.user?.avatar}
               username={blog?.expand?.user?.username}

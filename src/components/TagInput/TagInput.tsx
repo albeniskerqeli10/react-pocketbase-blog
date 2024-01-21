@@ -16,7 +16,7 @@ const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) 
   return (
     <Box
       width='100%'
-      bgColor='#0c0c0e'
+      bgColor='#060608'
       display='flex'
       alignItems='center'
       justifyContent='start'

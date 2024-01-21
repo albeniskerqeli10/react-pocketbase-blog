@@ -80,7 +80,7 @@ const SignUp: FC = () => {
         width='400px'
         px='20px'
         display='flex'
-        bgColor='#0c0c0e'
+        bgColor='#060608'
         boxShadow='md'
         alignItems='start'
         justifyContent='center'

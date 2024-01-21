@@ -6,6 +6,12 @@
   font-family: 'Roboto', sans-serif;
   box-sizing: border-box;
 }
+
+*:focus-visible {
+  z-index: 1 !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 0 1px #fff !important;
+}
 input,
 select,
 textarea {
@@ -16,9 +22,9 @@ html {
   scrollbar-gutter: stable;
 }
 body {
-  min-height: 100vh;
+  height: 100vh !important;
 
-  background-color: #1b1b1d !important;
+  background-color: #121212 !important;
 }
 
 main {
@@ -96,19 +102,19 @@ section {
 }
 
 .ql-toolbar {
-  background-color: #0c0c0e;
+  background-color: #060608;
   border-color: transparent !important;
   border-bottom: 2px solid #1b1b1d !important;
 }
 
 .ql-container {
-  background-color: #0c0c0e !important;
-  background: #0c0c0e !important;
+  background-color: #060608 !important;
+  background: #060608 !important;
   border: 0 !important;
 }
 
 .ql-editor {
-  background-color: #0c0c0e;
+  background-color: #060608;
   min-height: 200px;
   max-height: 200px;
 }

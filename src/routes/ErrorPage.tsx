@@ -30,7 +30,7 @@ const ErrorPage = () => {
         boxShadow='lg'
         _hover={{
           textDecoration: 'none',
-          bgColor: '#0c0c0e',
+          bgColor: '#060608',
           transition: '0.3s linear all',
         }}
       >

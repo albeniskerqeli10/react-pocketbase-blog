@@ -48,7 +48,7 @@ const Comment = ({ comment, userId }: CommentProps) => {
       px='10px'
       gap='10px'
       flexDirection='row'
-      bgColor='#0c0c0e'
+      bgColor='#060608'
       flexWrap='wrap'
       minHeight='100px'
       rounded='sm'

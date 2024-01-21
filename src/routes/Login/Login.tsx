@@ -69,7 +69,7 @@ const Login: FC = () => {
         width='400px'
         px='20px'
         display='flex'
-        bgColor='#0c0c0e'
+        bgColor='#060608'
         boxShadow='lg'
         alignItems='start'
         justifyContent='center'
@@ -145,7 +145,7 @@ const Login: FC = () => {
             mb='5'
             width='auto'
             fontWeight='normal'
-            bgColor='black'
+            bgColor='#0c0c0e'
             color='white'
             flexGrow='1'
             _hover={{

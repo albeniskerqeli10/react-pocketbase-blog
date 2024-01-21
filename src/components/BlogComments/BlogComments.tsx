@@ -95,7 +95,7 @@ const BlogComments: FC<Partial<BlogType>> = ({ blog }) => {
               py='20px'
               gap='20px'
               flexDirection='column'
-              bgColor='#0c0c0e'
+              bgColor='#060608'
               flexWrap='wrap'
               minHeight='100px'
               border='1px'

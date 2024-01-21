@@ -1,4 +1,4 @@
-import { Box, Heading, IconButton, Image, Text, Spinner } from '@chakra-ui/react';
+import { Box, Heading, Image, Text, Spinner, Button } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
 
 import {
@@ -62,7 +62,7 @@ const Profile: FC = () => {
       <Box
         width='600px'
         as='section'
-        maxWidth='calc(100% - 10%)'
+        maxWidth='100%'
         py='10px'
         display='flex'
         alignItems='center'
@@ -79,11 +79,11 @@ const Profile: FC = () => {
           gap='20px'
           py='30px'
           my='20px'
-          alignItems='center'
-          justifyContent='space-between'
+          alignItems={['flex-start', 'center', 'center']}
+          justifyContent={['center', 'space-between', 'space-between']}
           flexWrap='wrap'
-          bgColor='#0c0c0e'
-          flexDirection='row'
+          bgColor='#060608'
+          flexDirection={['column', 'row', 'row']}
         >
           <Box
             flexDirection='row'
@@ -94,7 +94,13 @@ const Profile: FC = () => {
             gap='20px'
             flexWrap='wrap'
           >
-            <Image src={user.avatar} alt='user avatar' rounded='sm' width='70px' height='70px' />
+            <Image
+              src={user.avatar}
+              alt='user avatar'
+              rounded='sm'
+              width={['60px', '70px', '70px']}
+              height={['60px', '70px', '70px']}
+            />
 
             <Box
               bgColor='transparent'
@@ -105,11 +111,11 @@ const Profile: FC = () => {
               flexDirection='column'
               flexWrap='wrap'
             >
-              <Heading bgColor='transparent' color='white'>
+              <Heading fontSize={['xl', '2xl', '3xl']} bgColor='transparent' color='white'>
                 {user.username}
               </Heading>
 
-              <Text fontSize='14px' color='gray.300' bgColor='transparent'>
+              <Text fontSize={['12px', '14px', '14px']} color='gray.300' bgColor='transparent'>
                 You joined{' '}
                 <TimeAgo
                   live={false}
@@ -122,29 +128,38 @@ const Profile: FC = () => {
               </Text>
             </Box>
           </Box>
-          <IconButton
+          <Button
             onClick={() => setIsOpen(true)}
-            aria-label='edit profile'
-            bgColor='#0766eb'
-            _hover={{
-              bgColor: 'blue.600',
-            }}
-            _active={{
-              bgColor: 'transparent',
-              transition: '1s ease-in all ',
-            }}
+            backgroundColor='#0766eb'
+            display='inline-flex'
+            flexDirection='row'
+            alignItems='center'
+            justifyContent='start'
+            alignContent='center'
+            margin='0'
+            padding={['1px 2px', '5px 2px', '5px 2px']}
             color='white'
-            icon={
-              <Pencil
-                size={40}
-                style={{
-                  backgroundColor: 'transparent',
-                  padding: '5px',
-                  borderRadius: '5px',
-                }}
-              />
-            }
-          />
+            flex={['1', 'initial', 'initial']}
+            gap='5px'
+            width='130px'
+            flexWrap='wrap'
+            height='100%'
+            _hover={{
+              bgColor: '#1331d4',
+            }}
+          >
+            <Pencil
+              aria-label='edit profile'
+              size={35}
+              style={{
+                padding: '5px',
+                borderRadius: '5px',
+              }}
+            />
+            <Box mt={['2.6px', 0, 0]} fontSize={['sm', 'md', 'md']} as='span' flex='0.5'>
+              Edit Profile
+            </Box>
+          </Button>
         </Box>
         {isOpen && (
           <EditUserProfileModal

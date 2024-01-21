@@ -13,7 +13,7 @@ const UserCard: FC<UserProps> = ({ user }) => {
   return (
     <Box
       width='100%'
-      bgColor='#0c0c0e'
+      bgColor='#060608'
       maxWidth='400px'
       display='flex'
       flexDirection='row'
@@ -34,7 +34,7 @@ const UserCard: FC<UserProps> = ({ user }) => {
           _hover={{
             textDecoration: 'underline',
           }}
-          bgColor='#0c0c0e'
+          bgColor='#060608'
           color='white'
         >
           {user.username}
