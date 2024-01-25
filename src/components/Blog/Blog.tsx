@@ -36,6 +36,7 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, width = '100%', us
               objectFit='cover'
               objectPosition='center'
               htmlWidth='600'
+              htmlHeight='330'
               maxHeight='330px'
               border='1px solid #232323'
               decoding='async'
