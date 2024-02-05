@@ -19,6 +19,7 @@ const SearchBox = () => {
     >
       <Input
         // 232229
+        key={query}
         bgColor='#060608'
         color='white'
         boxShadow='md'

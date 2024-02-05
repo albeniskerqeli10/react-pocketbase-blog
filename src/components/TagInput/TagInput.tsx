@@ -81,7 +81,7 @@ const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) 
             boxShadow: 'none',
             border: 'none',
           }}
-          placeholder='Add some tags e.g react,vue, angular'
+          placeholder='Add some tags e.g react, vue, angular'
           _placeholder={{
             color: 'white',
           }}

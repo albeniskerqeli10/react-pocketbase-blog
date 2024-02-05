@@ -1,15 +1,15 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { pb } from '../../lib/pocketbase';
+/*@ts-ignore*/
 import { useEffect, FC, use, startTransition, unstable_useCacheRefresh as useCacheRefresh } from 'react';
 import { Box, Heading, Image, Text, Tag } from '@chakra-ui/react';
 import { AppState, useStore } from '../../lib/store';
 import { getSingleBlog } from '../../services/blogAPI';
 import { BlogType, Tag as TagType } from '../../types/Blog';
-import TimeAgo from 'timeago-react';
 import BlogActions from '../../components/BlogActions/BlogActions';
 import BlogComments from '../../components/BlogComments/BlogComments';
 import DOMPurify from 'dompurify';
-
+import DateTime from '../../components/DateTime/DateTime';
 const SingleBlog: FC = () => {
   const { id } = useParams();
   const blog = use(getSingleBlog(id as string)) as BlogType;
@@ -17,7 +17,6 @@ const SingleBlog: FC = () => {
   const navigate = useNavigate();
   const refreshCache = useCacheRefresh();
   const sanitizedContent = DOMPurify.sanitize(blog.content);
-
   useEffect(() => {
     if (!blog?.id) {
       navigate('/');
@@ -92,13 +91,7 @@ const SingleBlog: FC = () => {
                 {blog?.expand?.user?.username}
               </Text>
 
-              <TimeAgo
-                style={{
-                  fontSize: '12px',
-                }}
-                live={false}
-                datetime={blog.created as string}
-              />
+              <DateTime date={blog.created as string} />
             </Box>
           </Box>
           <BlogActions blog={blog} />

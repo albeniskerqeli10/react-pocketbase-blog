@@ -37,10 +37,14 @@ const CreateBlog = () => {
     } else if (inputType === 'url') {
       imageSource = image;
     } else {
-      alert('Please upload a valid image');
+      imageSource = '';
     }
 
-    if (imageSource !== null) {
+    if (title !== '' && content !== '') {
+      if (!imageSource.includes('/')) {
+        alert('Please upload a valid image');
+        return;
+      }
       const blog = await addBlog({
         title: title,
         content: content,
@@ -53,6 +57,8 @@ const CreateBlog = () => {
       startTransition(() => {
         refreshCache();
       });
+    } else {
+      alert('Please fill all the fields');
     }
   };
 
@@ -96,7 +102,6 @@ const CreateBlog = () => {
           _placeholder={{
             color: 'white',
           }}
-          required
         />
         <Editor content={content} setContent={setContent} />
         <TagInput tags={tags} handleTagClick={handleTagClick} handleDeleteTag={handleDeleteTag} />
@@ -131,7 +136,6 @@ const CreateBlog = () => {
               _placeholder={{
                 color: 'white',
               }}
-              required
             />
           ) : (
             <Input
@@ -149,7 +153,6 @@ const CreateBlog = () => {
               _placeholder={{
                 color: 'white',
               }}
-              required
             />
           )}
           <Button

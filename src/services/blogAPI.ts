@@ -24,7 +24,7 @@ export const getBlogs = cache(async (sortField: string) => {
 
 export const searchBlogs = cache(async (query: string) => {
   try {
-    const blogs: BlogsType['items'] = await pb.collection('blogs').getFullList({
+    const blogs = await pb.collection('blogs').getFullList({
       filter: `title~"${query}"`,
       expand: 'user',
     });

@@ -8,7 +8,7 @@ import { Pencil } from '@phosphor-icons/react';
 import { useState } from 'react';
 import SubmitButton from '../UI/SubmitButton/SubmitButton';
 import CommentActions from './CommentActions';
-import TimeAgo from 'timeago-react';
+import DateTime from '../DateTime/DateTime';
 type CommentProps = {
   comment: BlogCommentType;
   userId?: User['id'];
@@ -151,15 +151,14 @@ const Comment = ({ comment, userId }: CommentProps) => {
                 >
                   {comment?.expand?.user?.username}
                 </Link>
-                <TimeAgo
+                <DateTime
                   style={{
                     fontSize: '12px',
                     color: '#CBD5E0',
                     backgroundColor: 'transparent',
                     fontWeight: 'normal',
                   }}
-                  live={false}
-                  datetime={comment.created as string}
+                  date={comment.created as string}
                 />
               </Box>
             </Box>

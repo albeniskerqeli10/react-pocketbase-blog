@@ -2,8 +2,8 @@ import { ExtendedUser } from '../../types/Auth';
 import { Box, Heading, Image, Text } from '@chakra-ui/react';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import TimeAgo from 'timeago-react';
 import { AppState, useStore } from '../../lib/store';
+import DateTime from '../DateTime/DateTime';
 type UserProps = {
   user: ExtendedUser;
 };
@@ -41,13 +41,12 @@ const UserCard: FC<UserProps> = ({ user }) => {
         </Heading>
         <Text fontSize='12px' color='gray.300' bgColor='transparent'>
           Joined{' '}
-          <TimeAgo
-            live={false}
+          <DateTime
             style={{
               backgroundColor: 'transparent',
               color: 'inherit',
             }}
-            datetime={user.created as Date}
+            date={user.created as string}
           />
         </Text>
       </Box>

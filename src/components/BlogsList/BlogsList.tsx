@@ -1,25 +1,16 @@
-import {
-  useEffect,
-  FC,
-  use,
-  unstable_useCacheRefresh as useCacheRefresh,
-  startTransition,
-  Suspense,
-  lazy,
-} from 'react';
+import { useEffect, FC, unstable_useCacheRefresh as useCacheRefresh, startTransition, Suspense, lazy } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
-import { getBlogs } from '../../services/blogAPI';
-import { BlogType } from '../../types/Blog';
+import { BlogType, BlogsType } from '../../types/Blog';
 import Skeleton from '../../components/UI/Skeleton/Skeleton';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 type BlogsListProps = {
-  sortField: string;
+  blogs: BlogsType['items'];
 };
 
-const BlogsList: FC<BlogsListProps> = ({ sortField }) => {
-  const blogs = use(getBlogs(sortField)) as BlogType[];
+const BlogsList: FC<BlogsListProps> = ({ blogs }) => {
+  // const blogs = use(getBlogs(blo)) as BlogType[];
   const refreshCache = useCacheRefresh();
 
   useEffect(() => {

@@ -9,8 +9,8 @@
 
 *:focus-visible {
   z-index: 1 !important;
-  border-color: #fff !important;
-  box-shadow: 0 0 0 1px #fff !important;
+  border-color: #cf2f2f !important;
+  box-shadow: 0 0 0 1px #cf2f2f !important;
 }
 input,
 select,
@@ -62,7 +62,7 @@ main {
 
 .blog {
   content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
+  contain-intrinsic-size: 600px;
 }
 
 .commentsList {

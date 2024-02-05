@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchBlogs, searchUsers } from '../../services/blogAPI';
-import { Suspense, lazy, startTransition, use, useEffect, useState } from 'react';
+import { Suspense, experimental_useEffectEvent, lazy, startTransition, use, useEffect, useState } from 'react';
 import { Box, Heading, Tab } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import Skeleton from '../../components/UI/Skeleton/Skeleton';
@@ -23,11 +23,11 @@ const Search = () => {
     }
   }, [searchQuery, navigate]);
 
-  const handleSelectTab = (selectedTab: string) => {
+  const handleSelectTab = experimental_useEffectEvent((selectedTab: string) => {
     startTransition(() => {
       setSelectedTab(selectedTab);
     });
-  };
+  });
 
   return searchQuery.length > 0 ? (
     <Box
@@ -43,6 +43,16 @@ const Search = () => {
       gap='20px'
       flexWrap='wrap'
     >
+      <Heading py='5px' fontWeight='normal' color='white' size='sm'>
+        Showing {searchData.length} results for{' '}
+        <strong
+          style={{
+            fontWeight: 'bold',
+          }}
+        >
+          "{searchQuery}"
+        </strong>
+      </Heading>
       <TabsList>
         <Tab onClick={() => selectedTab !== 'blogs' && handleSelectTab('blogs')}>Blogs</Tab>
         <Tab

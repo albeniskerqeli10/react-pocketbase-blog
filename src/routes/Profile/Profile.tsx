@@ -12,13 +12,13 @@ import {
   unstable_useCacheRefresh as useCacheRefresh,
 } from 'react';
 import { BlogType } from '../../types/Blog';
-import TimeAgo from 'timeago-react';
 import { useStore, AppState } from '../../lib/store';
 import { ExtendedUser } from '../../types/Auth';
 import { Pencil } from '@phosphor-icons/react';
 import EditUserProfileModal from '../../components/modals/EditUserProfileModal/EditUserProfileModal';
 import useForm from '../../hooks/useForm';
 import { getUserProfile } from '../../services/authAPI';
+import DateTime from '../../components/DateTime/DateTime';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 const Profile: FC = () => {
   const currentUser = useStore((state: AppState) => state.user);
@@ -117,13 +117,12 @@ const Profile: FC = () => {
 
               <Text fontSize={['12px', '14px', '14px']} color='gray.300' bgColor='transparent'>
                 You joined{' '}
-                <TimeAgo
-                  live={false}
+                <DateTime
                   style={{
                     backgroundColor: 'transparent',
                     color: 'inherit',
                   }}
-                  datetime={user.created as Date}
+                  date={user.created as string}
                 />
               </Text>
             </Box>

@@ -4,8 +4,8 @@ import { useEffect, Suspense, lazy, FC, use } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ExtendedUser } from '../../types/Auth';
 import { BlogType } from '../../types/Blog';
-import TimeAgo from 'timeago-react';
 import { getUserProfile } from '../../services/authAPI';
+import DateTime from '../../components/DateTime/DateTime';
 const Blog = lazy(() => import('../../components/Blog/Blog'));
 
 const User: FC = () => {
@@ -69,12 +69,12 @@ const User: FC = () => {
             </Heading>
             <Text fontSize={['12px', '14px', '14px']} color='gray.300' bgColor='transparent'>
               Joined{' '}
-              <TimeAgo
+              <DateTime
                 style={{
                   backgroundColor: 'transparent',
                   color: 'inherit',
                 }}
-                datetime={user.created as Date}
+                date={user.created as string}
               />
             </Text>
           </Box>

@@ -5,7 +5,6 @@ import { FC, memo } from 'react';
 import { AppState, useStore } from '../../lib/store';
 const Blog: FC<BlogType> = ({ id, title, user, image, avatar, width = '100%', username }) => {
   const currentUser = useStore((state: AppState) => state.user);
-
   return (
     <LinkBox
       className='blog'
@@ -36,9 +35,9 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, width = '100%', us
               objectFit='cover'
               objectPosition='center'
               htmlWidth='600'
+              htmlHeight='330'
               maxHeight='330px'
               border='1px solid #232323'
-              decoding='async'
               loading='lazy'
               onError={(e) => {
                 const img = e.target as HTMLImageElement;
@@ -59,15 +58,7 @@ const Blog: FC<BlogType> = ({ id, title, user, image, avatar, width = '100%', us
           py='10px'
           flexDirection='row'
         >
-          <Image
-            loading='lazy'
-            src={avatar}
-            alt=' author avatar'
-            width='25px'
-            decoding='async'
-            rounded='3xl'
-            height='25px'
-          />
+          <Image loading='lazy' src={avatar} alt=' author avatar' width='25px' rounded='3xl' height='25px' />
           <Text
             as={Link}
             to={currentUser?.id === user ? '/profile' : `../../user/${user}`}

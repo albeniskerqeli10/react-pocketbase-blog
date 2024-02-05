@@ -1,11 +1,11 @@
-import { useState, FC, startTransition } from 'react';
+import { useState, FC, startTransition, use } from 'react';
 import { Box, Tab } from '@chakra-ui/react';
 import { getBlogs } from '../services/blogAPI';
 import TabsList from '../components/UI/TabsList/TabsList';
 import BlogsList from '../components/BlogsList/BlogsList';
 const NoAuthRoute: FC = () => {
-  getBlogs('-created');
   const [sortField, setSortField] = useState('-created');
+  const blogs = getBlogs(sortField);
 
   const handleSortBlogs = async (fieldName: string) => {
     startTransition(() => {
@@ -24,6 +24,7 @@ const NoAuthRoute: FC = () => {
       flexDirection='row'
       gap='20px'
       flexWrap='wrap'
+      overflowY='auto'
     >
       <Box width='100%' border='0' display='flex' alignItems='center' flexDirection='row' justifyContent='start'>
         <TabsList>
@@ -38,7 +39,7 @@ const NoAuthRoute: FC = () => {
           </Tab>
         </TabsList>
       </Box>
-      <BlogsList sortField={sortField} />
+      <BlogsList blogs={use(blogs) as any} />
     </Box>
   );
 };
