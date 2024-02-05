@@ -4,12 +4,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import '@fontsource/roboto/400.css'; // Defaults to weight 400
 import '@fontsource/source-sans-pro'; // Defaults to weight 400
 
-// import { inject } from '@vercel/analytics';
+import { inject } from '@vercel/analytics';
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
-// inject({
-//   mode: 'development',
-// });
+ inject({
+   mode: 'production',
+});
 
 // 2. Add your color mode config
 const config: ThemeConfig = {
