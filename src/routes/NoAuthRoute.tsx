@@ -39,6 +39,7 @@ const NoAuthRoute: FC = () => {
           </Tab>
         </TabsList>
       </Box>
+      {/* */}
       <BlogsList blogs={use(blogs) as any} />
     </Box>
   );

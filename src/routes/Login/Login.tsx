@@ -1,11 +1,12 @@
 import { Box, Button, FormControl, FormLabel, Heading, Link, Input, Text } from '@chakra-ui/react';
 import { useEffect, FC } from 'react';
+
+import { useFormState as useActionState } from 'react-dom';
 import { pb } from '../../lib/pocketbase';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import { ErrorResponse, ExtendedUser } from '../../types/Auth';
 import SubmitButton from '../../components/UI/SubmitButton/SubmitButton';
-import { useFormState } from 'react-dom';
 type PrevState = {
   message: string | null;
 };
@@ -40,7 +41,7 @@ const Login: FC = () => {
   }, [user, navigate]);
 
   /* Temporary use of any for loginAction - subject to change */
-  const [state, formAction] = useFormState(loginAction as any, {
+  const [state, formAction] = useActionState(loginAction as any, {
     message: null,
   });
   const signInWithGithub = async () => {
@@ -70,7 +71,8 @@ const Login: FC = () => {
         px='20px'
         display='flex'
         bgColor='#060608'
-        boxShadow='lg'
+        // border='2px solid #191b1c'
+        boxShadow='md'
         alignItems='start'
         justifyContent='center'
         py='10px'
@@ -79,7 +81,7 @@ const Login: FC = () => {
         rounded='sm'
         flexDirection='column'
       >
-        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='10px'>
+        <Heading fontWeight='bold' alignSelf='center' fontSize='2xl' bgColor='transparent' color='white' py='15px'>
           Login
         </Heading>
         <FormControl bgColor='transparent'>
@@ -92,7 +94,7 @@ const Login: FC = () => {
             color='white'
             bgColor='#1b1b1d'
             fontSize='sm'
-            py='25px'
+            py='23px'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
             placeholder='Enter your E-mail Address'
@@ -107,7 +109,7 @@ const Login: FC = () => {
             name='password'
             color='white'
             bgColor='#1b1b1d'
-            py='25px'
+            py='23px'
             fontSize='sm'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
@@ -127,26 +129,27 @@ const Login: FC = () => {
             {state.message}
           </Text>
         )}
-        <SubmitButton fullWidth />
-
         <Box
           width='100%'
           display='flex'
           alignItems='center'
-          justifyContent='space-between'
-          flexDirection='row'
+          justifyContent='center'
+          flexDirection='column'
           flexWrap='wrap'
           bgColor='transparent'
-          gap='10px'
+          gap='15px'
         >
+          <SubmitButton fullWidth />
+          {/* <p style={{ color: 'white', fontSize: '12px' }}>OR</p> */}
+
           <Button
             type='button'
             onClick={signInWithGithub}
-            mb='5'
-            width='auto'
+            width='100%'
             fontWeight='normal'
-            bgColor='#0c0c0e'
+            bgColor='#141415'
             color='white'
+            py='22px'
             flexGrow='1'
             _hover={{
               bgColor: 'white',
@@ -155,23 +158,25 @@ const Login: FC = () => {
           >
             Continue with Github
           </Button>
-          <Box
-            width='100%'
-            display='flex'
-            alignItems='center'
-            justifyContent='center'
-            flexDirection='row'
-            backgroundColor='transparent'
-            color='white'
-            flexWrap='wrap'
-          >
-            <Text textAlign='center' backgroundColor='transparent'>
-              Don&apos;t have an account?{' '}
-              <Link colorScheme='secondaryRed' color='red.500' as={RouterLink} to='/signup'>
-                Register
-              </Link>
-            </Text>
-          </Box>
+        </Box>
+
+        <Box
+          width='100%'
+          display='flex'
+          alignItems='center'
+          py='5px'
+          justifyContent='center'
+          flexDirection='row'
+          backgroundColor='transparent'
+          color='white'
+          flexWrap='wrap'
+        >
+          <Text textAlign='center' backgroundColor='transparent' fontSize='sm' py='5px'>
+            Don&apos;t have an account?{' '}
+            <Link colorScheme='secondaryRed' color='red.500' as={RouterLink} to='/signup'>
+              Register
+            </Link>
+          </Text>
         </Box>
       </Box>
     </Box>

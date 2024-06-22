@@ -11,6 +11,8 @@ import BlogComments from '../../components/BlogComments/BlogComments';
 import DOMPurify from 'dompurify';
 import DateTime from '../../components/DateTime/DateTime';
 const SingleBlog: FC = () => {
+  // <link rel='preload' href='/src/routes/SingleBlog/SingleBlog.tsx' as='script' crossOrigin='anonymous' />;
+
   const { id } = useParams();
   const blog = use(getSingleBlog(id as string)) as BlogType;
   const currentUser = useStore((state: AppState) => state.user);
@@ -18,22 +20,21 @@ const SingleBlog: FC = () => {
   const refreshCache = useCacheRefresh();
   const sanitizedContent = DOMPurify.sanitize(blog.content);
   useEffect(() => {
-    if (!blog?.id) {
+    if (!blog.id) {
       navigate('/');
-    } else {
-      pb.collection('blogs').subscribe(blog?.id as string, async function () {
-        startTransition(() => {
-          refreshCache();
-        });
-      });
     }
+    pb.collection('blogs').subscribe(blog.id as string, async function () {
+      startTransition(() => {
+        refreshCache();
+      });
+    });
     return () => {
-      pb.collection('blogs').unsubscribe(id as string);
+      pb.collection('blogs').unsubscribe(blog?.id as string);
     };
-  }, [id, blog?.id, refreshCache, navigate]);
+  }, [blog.id, refreshCache, navigate]);
 
   return (
-    blog?.id && (
+    blog.id && (
       <Box
         key={blog.id}
         width='100%'
@@ -47,9 +48,8 @@ const SingleBlog: FC = () => {
       >
         <title>{`${blog.title} | PocketBlog`}</title>
         <Image
-          decoding='sync'
-          fetchpriority='high'
           src={blog.image}
+          border='2px solid #18181b'
           onError={(e) => {
             const img = e.target as HTMLImageElement;
 
@@ -115,7 +115,7 @@ const SingleBlog: FC = () => {
           >
             {blog.expand.tags.map((tag: TagType) => (
               <>
-                <Tag color='white' bgColor='#060608' size='lg'>
+                <Tag key={tag.id} color='white' bgColor='#060608' size='lg'>
                   {tag.name.toUpperCase()}
                 </Tag>
               </>

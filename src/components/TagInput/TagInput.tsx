@@ -1,5 +1,5 @@
-import { Box, Text, Input, IconButton, Spinner } from '@chakra-ui/react';
-import { FC, Suspense, useState, useRef } from 'react';
+import { Box, Text, Input, IconButton } from '@chakra-ui/react';
+import { FC, useState, useRef, useEffect, startTransition } from 'react';
 import TagsList from '../UI/TagsList/TagsList';
 import { XCircle } from '@phosphor-icons/react';
 import { Tag } from '../../types/Blog';
@@ -13,6 +13,16 @@ type TagInputProps = {
 const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) => {
   const [tagInput, setTagInput] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <Box
       width='100%'
@@ -68,7 +78,16 @@ const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) 
           ref={inputRef}
           value={tagInput}
           onChange={(e) => {
-            setTagInput(e.target.value);
+            startTransition(() => {
+              setTagInput(e.target.value);
+            });
+            // const val = e.target.value;
+            // if (timeoutRef.current) {
+            //   clearTimeout(timeoutRef.current);
+            // }
+            // timeoutRef.current = setTimeout(() => {
+            //   setTagInput(val);
+            // }, 500);
           }}
           boxShadow='sm'
           rounded='md'
@@ -87,16 +106,14 @@ const TagInput: FC<TagInputProps> = ({ tags, handleTagClick, handleDeleteTag }) 
           }}
         />
       </Box>
-      <Suspense fallback={<Spinner mb='10px' colorScheme='white' color='white' />}>
-        <TagsList
-          query={tagInput}
-          handleTagClick={(tag) => {
-            handleTagClick(tag);
-            setTagInput('');
-            inputRef.current?.focus();
-          }}
-        />
-      </Suspense>
+      <TagsList
+        query={tagInput}
+        handleTagClick={(tag) => {
+          handleTagClick(tag);
+          setTagInput('');
+          inputRef.current?.focus();
+        }}
+      />
     </Box>
   );
 };

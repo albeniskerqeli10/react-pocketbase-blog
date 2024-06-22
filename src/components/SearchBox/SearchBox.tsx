@@ -1,10 +1,33 @@
 import { Box, Input } from '@chakra-ui/react';
-import { startTransition } from 'react';
+import { ChangeEvent, startTransition, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+
 const SearchBox = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
+  const debounceTimeout = useRef<number>(); // To store the timeout ID
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, []);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      startTransition(() => {
+        navigate(e.target.value !== '' ? `/search?q=${e.target.value}` : '/');
+      });
+    }, 500);
+  };
+
   return (
     <Box
       width={['100%', 'auto', 'auto']}
@@ -18,7 +41,6 @@ const SearchBox = () => {
       flexWrap='wrap'
     >
       <Input
-        // 232229
         key={query}
         bgColor='#060608'
         color='white'
@@ -28,11 +50,7 @@ const SearchBox = () => {
         defaultValue={query || ''}
         flex={[1, 1, 0.8]}
         border='0'
-        onChange={(e) => {
-          startTransition(() => {
-            navigate(e.target.value !== '' ? `/search?q=${e.target.value}` : '/');
-          });
-        }}
+        onChange={handleInputChange}
         _placeholder={{
           color: '#ececec',
         }}

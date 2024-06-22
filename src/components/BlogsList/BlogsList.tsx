@@ -1,32 +1,43 @@
-import { useEffect, FC, unstable_useCacheRefresh as useCacheRefresh, startTransition, Suspense, lazy } from 'react';
+import { useEffect, FC, unstable_useCacheRefresh as useCacheRefresh, Suspense, lazy } from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import { pb } from '../../lib/pocketbase';
 import { BlogType, BlogsType } from '../../types/Blog';
 import Skeleton from '../../components/UI/Skeleton/Skeleton';
-const Blog = lazy(() => import('../../components/Blog/Blog'));
+// import { appCache, getBlogs, refreshCache } from '../../services/blogAPI';
+const blogPromise = import('../../components/Blog/Blog');
+const Blog = lazy(() => blogPromise);
 
 type BlogsListProps = {
   blogs: BlogsType['items'];
 };
 
+// const blogsQuery = fetchData(
+//   'https://react-pocketbase-microblog.pockethost.io/api/collections/blogs/records?page=0&perPage=30&sort=-created&expand=user',
+// );
+
 const BlogsList: FC<BlogsListProps> = ({ blogs }) => {
-  // const blogs = use(getBlogs(blo)) as BlogType[];
+  // const blogs: [] | any = [];
   const refreshCache = useCacheRefresh();
 
   useEffect(() => {
     pb.collection('blogs').subscribe('*', async function () {
-      startTransition(() => {
-        refreshCache();
+      await pb.collection('blogs').getList(0, 30, {
+        sort: '-created',
+        expand: 'user',
+        fields: 'id,title,image,expand.user.avatar, expand.user.username, user ',
       });
+      refreshCache();
     });
     return () => {
       pb.collection('blogs').unsubscribe('*');
     };
-  }, [refreshCache]);
+  }, []);
 
   return (
     <Box
       width='100%'
+      // flexBasis='500px'
+      // border='2px solid white'
       display='flex'
       alignItems='center'
       justifyContent='start'
@@ -46,7 +57,7 @@ const BlogsList: FC<BlogsListProps> = ({ blogs }) => {
             No Blogs yet
           </Heading>
         ) : (
-          blogs.map((blog: BlogType) => (
+          blogs?.map((blog: BlogType) => (
             <Blog
               key={blog.id}
               id={blog.id}

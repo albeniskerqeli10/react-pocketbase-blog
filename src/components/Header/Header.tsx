@@ -3,9 +3,20 @@ import { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { AppState, useStore } from '../../lib/store';
 import SearchBox from '../SearchBox/SearchBox';
+// import { BellRinging } from '@phosphor-icons/react';
 const Header: FC = () => {
   const user = useStore((state: AppState) => state.user);
   const logout = useStore((state: AppState) => state.logoutUser);
+
+  // const scrollPagetoTop = () => {
+  //   if (window.scrollY !== 0) {
+  //     window.scrollTo({
+  //       top: 0,
+  //       behavior: 'smooth',
+  //     });
+  //   }
+  // };
+
   return (
     <Box
       as='header'
@@ -25,6 +36,7 @@ const Header: FC = () => {
     >
       <Link
         to='/'
+        // onClick={scrollPagetoTop}
         as={RouterLink}
         _hover={{
           textDecoration: 'none',
@@ -49,6 +61,9 @@ const Header: FC = () => {
             flexDirection='row'
           >
             <Button
+              onMouseEnter={async () => {
+                return await import('../../routes/CreateBlog/CreateBlog');
+              }}
               as={RouterLink}
               to='/create-blog'
               width={['auto', 'auto', 'auto']}

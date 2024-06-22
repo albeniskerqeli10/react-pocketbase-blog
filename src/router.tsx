@@ -1,10 +1,13 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
+//@ts-nocheck
 import { Suspense, lazy, FC } from 'react';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Spinner from './components/UI/Spinner/Spinner';
 import ErrorPage from './routes/ErrorPage';
 import Skeleton from './components/UI/Skeleton/Skeleton';
+// import fetchData from './utils/fetchData';
+// import { getBlogs, getSingleBlog } from './services/blogAPI';
 const Home = lazy(() => import('./routes/Home/Home'));
 const SingleBlog = lazy(() => import('./routes/SingleBlog/SingleBlog'));
 const CreateBlog = lazy(() => import('./routes/CreateBlog/CreateBlog'));
@@ -14,19 +17,35 @@ const Profile = lazy(() => import('./routes/Profile/Profile'));
 const User = lazy(() => import('./routes/User/User'));
 const NoAuthRoute = lazy(() => import('./routes/NoAuthRoute'));
 const Search = lazy(() => import('./routes/Search/Search'));
+
+// export const dd = cd.read();
+
 const Router: FC = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path='/' element={<Layout />} errorElement={<ErrorPage />}>
+      <Route
+        // loader={async ({}) => {
+        //   await import('./routes/Home/Home');
+        //   return [];
+        // }}
+        path='/'
+        element={<Layout />}
+        errorElement={<ErrorPage />}
+      >
         <Route
           index
           element={
             <Suspense fallback={<Spinner />}>
               <ProtectedRoute>
+                {/*@ts-ignore*/}
                 <Home />
               </ProtectedRoute>
             </Suspense>
           }
+          // loader={async () => {
+          //   await import('./routes/Home/Home');
+          //   return null;
+          // }}
         />
         <Route
           path='login'
@@ -105,6 +124,13 @@ const Router: FC = () => {
       </Route>,
     ),
   );
-  return <RouterProvider router={router} />;
+  return (
+    <RouterProvider
+      // future={{
+      //   v7_startTransition: true,
+      // }}
+      router={router}
+    />
+  );
 };
 export default Router;

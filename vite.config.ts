@@ -2,10 +2,18 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import eslintPlugin from 'vite-plugin-eslint';
 
+// const ReactCompilerConfig = {
+//   /* ... */
+// };
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // babel: {
+      //   plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
+      // },
+    }),
 
     eslintPlugin({
       cache: false,
@@ -17,6 +25,5 @@ export default defineConfig({
   base: '/',
   server: {
     port: 3000,
-
   },
 });

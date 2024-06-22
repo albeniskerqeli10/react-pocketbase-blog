@@ -84,7 +84,7 @@ const SignUp: FC = () => {
         boxShadow='md'
         alignItems='start'
         justifyContent='center'
-        py='10px'
+        py='15px'
         gap='20px'
         minH='450px'
         flexDirection='column'
@@ -105,7 +105,7 @@ const SignUp: FC = () => {
             color='white'
             fontSize='sm'
             bgColor='#1b1b1d'
-            py='25px'
+            py='23px'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
             placeholder='Enter your E-mail Address'
@@ -123,7 +123,7 @@ const SignUp: FC = () => {
             value={values.username || ''}
             color='white'
             bgColor='#1b1b1d'
-            py='25px'
+            py='23px'
             fontSize='sm'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
@@ -143,7 +143,7 @@ const SignUp: FC = () => {
             fontSize='sm'
             minLength={8}
             bgColor='#1b1b1d'
-            py='25px'
+            py='23px'
             _placeholder={{ opacity: 1, color: 'gray.300' }}
             border='transparent'
             type='password'
@@ -163,6 +163,7 @@ const SignUp: FC = () => {
             mt='10px'
             mb='15px'
             disabled={true}
+            py='23px'
             width='100%'
             fontWeight='normal'
             colorScheme='secondaryRed'
@@ -170,7 +171,15 @@ const SignUp: FC = () => {
             <Spinner size='sm' mr={4} color='white' bgColor='transparent' /> Submitting
           </Button>
         ) : (
-          <Button type='submit' mt='10px' mb='15px' width='100%' fontWeight='normal' colorScheme='secondaryRed'>
+          <Button
+            type='submit'
+            mt='10px'
+            mb='15px'
+            width='100%'
+            py='23px'
+            fontWeight='normal'
+            colorScheme='secondaryRed'
+          >
             Submit
           </Button>
         )}

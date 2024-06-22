@@ -1,5 +1,6 @@
 //@ts-nocheck
-import { cache, unstable_postpone } from 'react';
+import { Image as ChakraImg } from '@chakra-ui/react';
+import { cache } from 'react';
 import { preload } from 'react-dom';
 
 const loadImage = cache((src: string) => {
@@ -21,11 +22,31 @@ type Props = React.ComponentPropsWithoutRef<'img'>;
 export default async function SuspendableImage({ src, ...props }: Props) {
   preload(src, { as: 'image' });
 
-  if (typeof window === 'undefined') {
-    unstable_postpone('client only');
-  }
+  // if (typeof window === 'undefined') {
+  //   unstable_postpone('client only');
+  // }
 
   await loadImage(src);
+  return (
+    <ChakraImg
+      src={src}
+      alt='blog image'
+      width='100%'
+      height='auto'
+      objectFit='cover'
+      objectPosition='center'
+      htmlWidth='600'
+      backgroundColor='black'
+      htmlHeight='330'
+      maxHeight='330px'
+      // border='1px solid #232323'
+      loading='lazy'
+      onError={(e) => {
+        const img = e.target as HTMLImageElement;
 
-  return <img src={src} {...props} />;
+        img.src = 'https://placehold.co/600x400/000/FFF/webp?text=Image&font=roboto';
+      }}
+      {...props}
+    />
+  );
 }

@@ -20,8 +20,9 @@ textarea {
 
 html {
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
-body {
+body {`
   height: 100vh !important;
 
   background-color: #121212 !important;

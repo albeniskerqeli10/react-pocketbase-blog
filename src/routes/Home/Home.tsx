@@ -1,12 +1,14 @@
 import { useState, FC, startTransition, use } from 'react';
 import { Box, Tab } from '@chakra-ui/react';
-import { getBlogs } from '../../services/blogAPI';
 import TabsList from '../../components/UI/TabsList/TabsList';
 import BlogsList from '../../components/BlogsList/BlogsList';
-const Home: FC = () => {
-  const [sortField, setSortField] = useState('-created');
-  const blogs = getBlogs(sortField);
+import { getBlogs } from '../../services/blogAPI';
+// import { pb } from '../../lib/pocketbase';
 
+export const Home: FC = () => {
+  const [sortField, setSortField] = useState<string>('-created');
+  const blogs = use(getBlogs(sortField));
+  // console.log({ blogs }, 'react-19');
   const handleSortBlogs = async (fieldName: string) => {
     startTransition(() => {
       setSortField(fieldName);
@@ -39,7 +41,7 @@ const Home: FC = () => {
           </Tab>
         </TabsList>
       </Box>
-      <BlogsList blogs={use(blogs) as any} />
+      <BlogsList blogs={blogs as any} />
     </Box>
   );
 };

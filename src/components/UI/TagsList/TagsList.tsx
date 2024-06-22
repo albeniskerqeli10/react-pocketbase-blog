@@ -1,15 +1,34 @@
-import { FC, use } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { getBlogTags } from '../../../services/blogAPI';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Spinner } from '@chakra-ui/react';
 import { Tag } from '../../../types/Blog';
 
 type TagsListProps = {
   query: string;
   handleTagClick: (tag: Tag) => void;
 };
-
 const TagsList: FC<TagsListProps> = ({ query, handleTagClick }) => {
-  const tags = query !== '' ? (use(getBlogTags(query)) as Tag[]) : [];
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const timeoutRef = useRef<number>();
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (query) {
+      timeoutRef.current = setTimeout(async () => {
+        const tags = await getBlogTags(query);
+
+        setTags(tags as any);
+        setIsLoading(false);
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timeoutRef.current);
+      setIsLoading(false);
+    };
+  }, [query]);
 
   return (
     query !== '' && (
@@ -27,7 +46,9 @@ const TagsList: FC<TagsListProps> = ({ query, handleTagClick }) => {
         mb='10px'
         rounded='md'
       >
-        {tags?.length > 0 ? (
+        {isLoading ? (
+          <Spinner size='md' my='5px' colorScheme='white' color='white' />
+        ) : tags?.length > 0 ? (
           tags?.map((tag: Tag) => (
             <Text
               _hover={{

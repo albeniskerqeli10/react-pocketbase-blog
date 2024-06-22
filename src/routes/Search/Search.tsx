@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchBlogs, searchUsers } from '../../services/blogAPI';
-import { Suspense, experimental_useEffectEvent, lazy, startTransition, use, useEffect, useState } from 'react';
+import { Suspense, lazy, startTransition, use, useEffect, useState } from 'react';
 import { Box, Heading, Tab } from '@chakra-ui/react';
 import { BlogType } from '../../types/Blog';
 import Skeleton from '../../components/UI/Skeleton/Skeleton';
@@ -23,13 +23,13 @@ const Search = () => {
     }
   }, [searchQuery, navigate]);
 
-  const handleSelectTab = experimental_useEffectEvent((selectedTab: string) => {
+  const handleSelectTab = (selectedTab: string) => {
     startTransition(() => {
       setSelectedTab(selectedTab);
     });
-  });
+  };
 
-  return searchQuery.length > 0 ? (
+  return searchQuery?.length > 0 ? (
     <Box
       width='100%'
       as='section'
@@ -87,9 +87,9 @@ const Search = () => {
                   width='600px'
                   title={blog.title}
                   image={blog.image}
-                  shouldPreload={searchData[0].id === blog.id ? 'high' : 'low'}
-                  shouldLazyLoad={searchData[0].id === blog.id ? 'eager' : 'lazy'}
-                  shouldDecode={searchData[0].id === blog.id ? 'sync' : 'async'}
+                  // shouldPreload={searchData[0].id === blog.id ? 'high' : 'low'}
+                  // shouldLazyLoad={searchData[0].id === blog.id ? 'eager' : 'lazy'}
+                  // shouldDecode={searchData[0].id === blog.id ? 'sync' : 'async'}
                   content={blog.content}
                   avatar={blog?.expand?.user?.avatar}
                   username={blog?.expand?.user?.username}

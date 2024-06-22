@@ -97,7 +97,7 @@ const EditUserProfileModal: FC<EditUserProfileModalProps> = ({ user, handleSubmi
               type='button'
               fontWeight='normal'
               colorScheme='secondaryRed'
-              variant='outline'
+              variant='danger'
               mr={3}
               onClick={onClose}
             >

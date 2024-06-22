@@ -1,0 +1,8 @@
+previous react version of this project/app:
+  //"react": "^19.0.0-beta-94eed63c49-20240425",
+ //"react-dom": "^19.0.0-beta-94eed63c49-20240425",
+
+
+previous react version of this project/app:
+ // "react": "^0.0.0-experimental-6c7b41da3-20231123",
+ // "react-dom": "^0.0.0-experimental-6c7b41da3-20231123",

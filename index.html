@@ -9,9 +9,40 @@
 
     <link rel="icon" type="image/svg+xml" href="./src/assets/react.svg" />
     <link rel="stylesheet" href="./src/index.css" media="none" onload="if(media!='all')media='all'" />
+    <link
+      rel="prefetch"
+      crossorigin="anonymous"
+      href="https://react-pocketbase-microblog.pockethost.io/api/collections/blogs/records?page=0&perPage=30&sort=-created&expand=user&fields=id%2Ctitle%2Cimage%2Cexpand.user.avatar%2C%20expand.user.username%2C%20user%20"
+      as="fetch"
+    />
+
+    <!-- <link rel="modulepreload" href="./src/routes/SingleBlog/SingleBlog.tsx" /> -->
+    <!-- <link
+      rel="preload"
+      crossorigin="anonymous"
+      href="/src/routes/Home/Home.tsx?t=1717117456612"
+      as="script"
+      type="text/javascript"
+    />
+    <link
+      rel="preload"
+      crossorigin="anonymous"
+      href="/src/components/BlogsList/BlogsList.tsx?t=1717117102691"
+      as="script"
+      type="text/javascript"
+    />
+    <link
+      rel="preload"
+      crossorigin="anonymous"
+      href="/src/components/Blog/Blog.tsx?t=1717117102691"
+      as="script"
+      type="text/javascript"
+    /> -->
     <!-- <link rel="preload" as="style" href="./src/index.css" fetchpriority="high" onload="this.rel='stylesheet'" /> -->
     <!-- <link rel="preconnect" as="link" href="https://avatar.oxro.io" />
     <link rel="preconnect" as="link" href="https://pockethost.io/" /> -->
+
+    <!-- <link rel="modulepreload" href="/src/main.tsx" /> -->
 
     <title>PocketBlog</title>
   </head>

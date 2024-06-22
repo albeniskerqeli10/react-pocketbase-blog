@@ -21,6 +21,7 @@
     "@uploadcare/upload-client": "^6.6.1",
     "@vercel/analytics": "^1.0.2",
     "@vercel/speed-insights": "^1.0.5",
+    "babel-plugin-react-compiler": "^0.0.0-experimental-592953e-20240517",
     "dompurify": "^3.0.5",
     "framer-motion": "^10.16.4",
     "react": "^0.0.0-experimental-6c7b41da3-20231123",
@@ -32,7 +33,7 @@
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.2",
-    "@types/react": "^18.2.48",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.2.18",
     "@types/react-helmet": "^6.1.6",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
@@ -49,7 +50,7 @@
     "pocketbase": "^0.18.3",
     "prettier": "3.0.3",
     "typescript": "^5.2.2",
-    "vite": "^5.0.5",
+    "vite": "^5.1.0",
     "vite-plugin-eslint": "^1.8.1"
   }
 }

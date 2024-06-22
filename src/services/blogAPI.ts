@@ -4,18 +4,60 @@ import { BlogType, BlogsType, EditBlogType, LikeBlogType, LikeCommentType, Tag }
 import { ExtendedUser } from '../types/Auth';
 
 // GET requests
+// export const getBlogs = cache(async (sortField: string) => {
+//   try {
+//     const res: any = await fetch(
+//       'https://react-pocketbase-microblog.pockethost.io/api/collections/blogs/records?page=0&perPage=30&sort=-created&expand=user&fields=id%2Ctitle%2Cimage%2Cexpand.user.avatar%2C%20expand.user.username%2C%20user%20',
+//     );
+//     const data = await res.json();
+//     // console.log(
+//     //   'https://react-pocketbase-microblog.pockethost.io/api/collections/blogs/records?page=0&perPage=30&sort=-created&expand=user&fields=id%2Ctitle%2Cimage%2Cexpand.user.avatar%2C%20expand.user.username%2C%20user%20',
+//     // );
+//     console.log(data, 'data');
+//     return data.items;
+//   } catch (err: unknown) {
+//     throw new Error('Something went wrong' + err);
+//   }
+// });
+export const appCache = new Map();
+
+export const refreshCache = ({ key, data }: { key: string; data: any }) => {
+  console.log('do', appCache);
+  appCache.set(key, data);
+};
+// console.log(appCache.get('blogs'), 'asdlasldlasdl');
 export const getBlogs = cache(async (sortField: string) => {
   try {
+    // if (appCache.has('blogs')) {
+    //   return appCache.get('blogs');
+    // }
+
     const blogs: BlogsType = await pb.collection('blogs').getList(0, 30, {
       sort: sortField,
       expand: 'user',
       fields: 'id,title,image,expand.user.avatar, expand.user.username, user ',
     });
+    // appCache.set('blogs', blogs.items);
+    // console.log(appCache.get('blogs'), 'asdlasldlasdl');
+
     return blogs.items;
   } catch (err: unknown) {
     console.error('Something went wrong' + err);
   }
 });
+
+// export const getSynkBlogs = cache(async () => {
+//   try {
+//     const blogs: BlogsType = await pb.collection('blogs').getList(0, 30, {
+//       sort: '-likes',
+//       expand: 'user',
+//       fields: 'id,title,image,expand.user.avatar, expand.user.username, user ',
+//     });
+//     return blogs.items;
+//   } catch (err: unknown) {
+//     console.error('Something went wrong' + err);
+//   }
+// });
 
 // export const getTodo = cache(async (id: number) => {
 //   const todo = await fetch(`https://dummyjson.com/todos/${id}`);
@@ -46,14 +88,25 @@ export const searchUsers = cache(async (query: string) => {
 
 export const getSingleBlog = cache(async (id: string) => {
   try {
+    // if (appCache.has(id)) {
+    //   return appCache.get(id);
+    // }
     const blog: BlogType = await pb.collection('blogs').getOne(id as string, {
       expand: 'user, comments(blog).user, tags',
     });
+    // appCache.set(id, blog);
     return blog;
   } catch (err: unknown) {
     console.error('Blog not found');
   }
 });
+
+// const getCommentsById = async (id: string) => {
+//   const comments = await pb.collection('comments').getFullList({
+//     filter: `blog~"${id}"`,
+//   });
+//   return comments;
+// };
 
 export const getBlogTags = cache(async (query: string) => {
   try {
